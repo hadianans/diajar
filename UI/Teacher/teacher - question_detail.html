@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Question Detail - Diajar LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "outline-variant": "#c3c6d7",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#6cf8bb",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed": "#00174b",
+                        "primary-container": "#2563eb",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#0053db",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container-high": "#dce9ff",
+                        "background": "#f8f9ff",
+                        "on-primary-container": "#eeefff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#006c49",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#ffeedd",
+                        "tertiary": "#784b00",
+                        "secondary-fixed-dim": "#4edea3",
+                        "primary": "#004ac6",
+                        "tertiary-fixed": "#ffddb8",
+                        "tertiary-container": "#996100",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-surface": "#213145",
+                        "surface": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-bright": "#f8f9ff",
+                        "outline": "#737686",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed": "#002113",
+                        "on-background": "#0b1c30",
+                        "on-tertiary-fixed": "#2a1700",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#00714d",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface-variant": "#434655"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "8px",
+                        "lg": "8px",
+                        "xl": "16px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem",
+                        "stack-lg": "2rem",
+                        "margin-desktop": "2.5rem",
+                        "gutter": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .answer-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .custom-shadow { box-shadow: 0 4px 12px 0 rgba(15, 23, 42, 0.05); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-150 ease-in-out hover:bg-surface-container-low p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">Question Detail</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="active:scale-95 duration-150 ease-in-out hover:bg-surface-container-low p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">edit</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-20 px-margin-mobile max-w-2xl mx-auto space-y-stack-lg">
+<!-- Question Header Section -->
+<section class="flex flex-wrap gap-2 pt-4">
+<span class="inline-flex items-center px-3 py-1 bg-surface-container text-primary font-label-md text-label-md rounded-full border border-primary/10">
+                Level 1: Understand
+            </span>
+<span class="inline-flex items-center px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-md text-label-md rounded-full">
+                5 pts
+            </span>
+<span class="inline-flex items-center px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-md text-label-md rounded-full">
+                Biology
+            </span>
+</section>
+<!-- Question Preview Card -->
+<section class="space-y-stack-md">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 custom-shadow">
+<div class="mb-stack-lg">
+<p class="text-on-surface font-headline-md text-headline-md leading-relaxed">
+                        What is the primary function of mitochondria?
+                    </p>
+</div>
+<!-- Answer Options -->
+<div class="space-y-3">
+<!-- Option A -->
+<div class="answer-card flex items-center gap-4 p-4 rounded-lg border border-outline-variant bg-surface-bright hover:bg-surface-container-low cursor-default">
+<div class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-label-md font-bold text-on-surface-variant">A</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Protein synthesis</p>
+</div>
+<!-- Option B (Correct Answer) -->
+<div class="answer-card flex items-center gap-4 p-4 rounded-lg border-2 border-secondary bg-secondary-container/10 cursor-default relative overflow-hidden">
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-label-md font-bold">B</div>
+<p class="font-body-md text-body-md text-on-secondary-container font-semibold">Energy production (ATP)</p>
+</div>
+<!-- Option C -->
+<div class="answer-card flex items-center gap-4 p-4 rounded-lg border border-outline-variant bg-surface-bright hover:bg-surface-container-low cursor-default">
+<div class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-label-md font-bold text-on-surface-variant">C</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Waste removal</p>
+</div>
+<!-- Option D -->
+<div class="answer-card flex items-center gap-4 p-4 rounded-lg border border-outline-variant bg-surface-bright hover:bg-surface-container-low cursor-default">
+<div class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-label-md font-bold text-on-surface-variant">D</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Genetic storage</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Teacher Metadata Section -->
+<section class="space-y-stack-md bg-white rounded-xl p-6 border border-outline-variant/50 custom-shadow">
+<div class="space-y-stack-sm">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-wider">Student Explanation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Mitochondria are known as the powerhouse of the cell, converting oxygen and nutrients into adenosine triphosphate (ATP), which serves as the main energy currency for cellular functions.
+                </p>
+</div>
+<div class="pt-2 border-t border-outline-variant/30">
+<h3 class="font-label-md text-label-md text-on-surface mb-2">Tags</h3>
+<div class="flex flex-wrap gap-2">
+<span class="text-primary font-label-md text-label-md">#CellBiology</span>
+<span class="text-primary font-label-md text-label-md">#Organelles</span>
+<span class="text-primary font-label-md text-label-md">#Mitochondria</span>
+</div>
+</div>
+<div class="pt-4 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">link</span>
+<span class="font-label-sm text-label-sm">Used in 3 Assessments</span>
+</div>
+<button class="text-primary font-label-md text-label-md hover:underline">View History</button>
+</div>
+</section>
+<!-- Decorative Illustration -->
+<div class="relative h-48 w-full rounded-xl overflow-hidden mt-stack-lg border border-outline-variant/30">
+<img class="w-full h-full object-cover grayscale opacity-20 hover:grayscale-0 hover:opacity-100 transition-all duration-700" data-alt="A clean, minimalist 3D medical illustration of a mitochondria cell organelle. The style is professional and educational with soft studio lighting. The color palette uses deep blues and soft greens to match the Diajar LMS branding. High-key background with subtle depth of field effects." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAys9Q3-b7hFufqYfchektPOs-su7QnFQH7ITsdGmE7Nq9RxifN_fi5rmcCEf40h6IwB2rEgCx4II1u7E4gryrSiuvej6O6hJaLtLM7wrRt5x9WKN1b2zhJe5DfhFI86nl2a5PCXFIiPlJ5btB1g_wFPfA2Gg97gQbD2EaZLQXUsw36SBxLc07OChyKrCSWxYYZaw3yqhD2ho_h6ghLT_w_QUGiRbpm3lFqpaGHCVronWQiGGEutWKMPxSpre8G84ID-cB189LOrrg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface shadow-[0_-4px_12px_0_rgba(15,23,42,0.05)] z-50 rounded-t-xl border-t border-outline-variant/30">
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-90 duration-200 px-4 py-1.5 rounded-full">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-90 duration-200 px-4 py-1.5 rounded-full">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-sm text-label-sm">Classes</span>
+</button>
+<!-- Active Tab: Assessments -->
+<button class="flex flex-col items-center justify-center gap-1 bg-secondary-container text-on-secondary-container rounded-full px-5 py-1.5 active:scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-label-sm text-label-sm">Assessments</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-90 duration-200 px-4 py-1.5 rounded-full">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for answer hover simulation or logic if needed
+        document.querySelectorAll('.answer-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Potential teacher toggle for "view as student" mode could go here
+            });
+        });
+    </script>
+</body></html>

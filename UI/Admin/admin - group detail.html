@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar Admin - Group Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E2E8F0;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#cbdbf5",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "inverse-primary": "#b4c5ff",
+                    "tertiary": "#784b00",
+                    "on-error": "#ffffff",
+                    "primary": "#004ac6",
+                    "background": "#f8f9ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#00714d",
+                    "tertiary-container": "#996100",
+                    "on-surface": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-background": "#0b1c30",
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#00174b",
+                    "outline-variant": "#c3c6d7",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-container": "#6cf8bb",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-surface": "#213145",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dbe1ff",
+                    "on-secondary-fixed": "#002113",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container-high": "#dce9ff",
+                    "secondary": "#006c49",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#2563eb",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#737686",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-container": "#ffeedd",
+                    "on-surface-variant": "#434655"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "2rem",
+                    "margin-mobile": "1.25rem",
+                    "margin-desktop": "2.5rem",
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "gutter": "1rem"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface selection:bg-primary-fixed-dim">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-bright border-b border-outline-variant flex justify-center">
+<div class="flex justify-between items-center w-full px-margin-desktop py-stack-md max-w-7xl">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:bg-surface-container transition-colors p-2 rounded-full" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Group Details</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface-variant hidden md:block">Admin View</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Side Navigation (Web) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-0 h-full z-40 p-stack-md bg-surface-container-low w-72 rounded-r-xl shadow-sm">
+<div class="mb-10 mt-20 px-4">
+<span class="text-headline-md font-headline-md font-bold text-primary">Diajar Admin</span>
+<div class="mt-8 flex items-center gap-3 p-3 bg-surface-container rounded-xl">
+<img class="w-10 h-10 rounded-full bg-surface-dim" data-alt="A clean, minimalist profile portrait of a modern school administrator with a professional yet friendly expression. Soft, high-key lighting creates a sense of openness and calm. The background is a blurred school environment with clean blue and white tones, matching a professional corporate educational aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO96RRqPjWuENuxmWrWN6BjLgdQLUvrv5ZgMv3i2n1j1sSUr3vdrOaWU1omcaIPYPL5kZ8e4l1G9-cYGdAcx7wcTQLIgNSDRZjgvAV1r-bEGK104N9bTMYsHX3sG6j4Nva0uMpU4O-4tkGiZ9VfOkM9tTDR_L9BLxbvianKE3gXbaR0WEazzeftxzZxS50VipelMYawOOgNbBstF8S-K6vw3DXqnYmQwPFwHHXpQQ2VUa28EW2GqDZKfbGcaOAexAtnz4qC2W92Vw"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Admin User</span>
+<span class="text-xs text-on-surface-variant">Lead Administrator</span>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2 px-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-full font-bold scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-md">Student Groups</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-label-md">Assignments</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md">Analytics</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 md:pb-10 md:ml-72 px-margin-mobile md:px-margin-desktop max-w-5xl mx-auto">
+<!-- Group Header Section -->
+<section class="mb-stack-lg animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">Grade 10</span>
+<span class="text-on-surface-variant text-sm font-medium">2024/2025 Academic Year</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg font-extrabold text-on-surface tracking-tight">10A - Grade 10</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-3 rounded-xl font-label-md transition-all flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="person_add">person_add</span>
+                        Add Students
+                    </button>
+<button class="bg-surface-container-highest text-on-surface-variant hover:bg-surface-dim px-6 py-3 rounded-xl font-label-md transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="upload_file">upload_file</span>
+                        Import CSV
+                    </button>
+</div>
+</div>
+</section>
+<!-- Summary & Stats Bento -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-stack-lg">
+<!-- Summary Card -->
+<div class="md:col-span-4 glass-card p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-label-md text-on-surface-variant">Group Summary</h3>
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+</div>
+<div class="flex flex-col items-center py-4">
+<span class="text-5xl font-bold text-primary mb-2">24</span>
+<span class="text-on-surface-variant font-label-md">Students Linked</span>
+</div>
+<div class="mt-4 p-3 bg-surface-container-low rounded-lg text-sm text-center border border-outline-variant">
+<span class="text-on-surface font-semibold">72 students</span> are currently unlinked in the school system.
+                </div>
+</div>
+<!-- Progress Card -->
+<div class="md:col-span-8 glass-card p-6 rounded-xl shadow-sm">
+<h3 class="font-label-md text-on-surface-variant mb-6">Student Assignment Progress</h3>
+<div class="space-y-6">
+<div class="flex justify-between items-end mb-2">
+<span class="text-sm font-medium text-on-surface">Yearly Capacity Tracking</span>
+<span class="text-headline-md font-bold text-secondary">40%</span>
+</div>
+<div class="w-full bg-surface-container h-4 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full transition-all duration-1000 ease-out" style="width: 40%"></div>
+</div>
+<div class="flex items-center gap-3 p-4 bg-secondary-container/20 rounded-xl">
+<span class="material-symbols-outlined text-secondary" data-icon="assignment_turned_in">assignment_turned_in</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+<strong class="text-secondary">48 of 120</strong> students assigned across all groups this academic year. 
+                            Progress is consistent with the mid-term target.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Student List Container -->
+<section class="glass-card rounded-xl shadow-sm overflow-hidden mb-stack-lg">
+<div class="p-6 border-b border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="groups">groups</span>
+<h3 class="font-headline-md text-headline-md font-bold">Students in This Group (24)</h3>
+</div>
+<div class="relative w-full md:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-xl pl-10 pr-4 py-2 text-sm text-on-surface placeholder-on-surface-variant" placeholder="Search students..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-4 font-label-md text-on-surface-variant border-b border-outline-variant">Student Name</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant border-b border-outline-variant">Email Address</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant border-b border-outline-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Student Rows -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs">AR</div>
+<span class="font-body-md text-on-surface">Alex Rivers</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">l.rivers@diajar.edu</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error font-label-md hover:bg-error-container/20 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="link_off">link_off</span>
+                                    Unlink
+                                </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs">SM</div>
+<span class="font-body-md text-on-surface">Sarah Miller</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">s.miller@diajar.edu</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error font-label-md hover:bg-error-container/20 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="link_off">link_off</span>
+                                    Unlink
+                                </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-xs">JD</div>
+<span class="font-body-md text-on-surface">Jordan Davis</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">j.davis@diajar.edu</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error font-label-md hover:bg-error-container/20 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="link_off">link_off</span>
+                                    Unlink
+                                </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-dim text-on-surface flex items-center justify-center font-bold text-xs">KL</div>
+<span class="font-body-md text-on-surface">Kevin Lee</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">k.lee@diajar.edu</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error font-label-md hover:bg-error-container/20 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="link_off">link_off</span>
+                                    Unlink
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Empty State Illustration Placeholder (Invisible if content exists) -->
+<div class="hidden p-12 text-center flex flex-col items-center" id="empty-state">
+<span class="material-symbols-outlined text-6xl text-outline mb-4" data-icon="person_off">person_off</span>
+<h4 class="text-lg font-bold text-on-surface mb-2">No students linked to this group</h4>
+<p class="text-on-surface-variant mb-6 max-w-xs mx-auto">Get started by adding students manually or importing from a CSV file.</p>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-xl font-label-md">Add First Student</button>
+</div>
+<div class="p-6 bg-surface-container-low flex justify-center border-t border-outline-variant">
+<button class="text-primary font-label-md hover:underline flex items-center gap-2">
+                    Show All 24 Students
+                    <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm">Groups</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="task">task</span>
+<span class="font-label-sm">Tasks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple search interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        const rows = document.querySelectorAll('tbody tr');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            rows.forEach(row => {
+                const name = row.querySelector('span').textContent.toLowerCase();
+                const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                if (name.includes(term) || email.includes(term)) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // "Unlink" animation
+        document.querySelectorAll('.text-error').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(confirm('Are you sure you want to unlink this student?')) {
+                    const row = this.closest('tr');
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        row.remove();
+                        // Add check for empty table here to show empty state if needed
+                    }, 300);
+                }
+            });
+        });
+    </script>
+</body></html>

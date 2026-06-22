@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Detail - Liam Chen</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#cbdbf5",
+                    "secondary-container": "#6cf8bb",
+                    "outline-variant": "#c3c6d7",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-secondary-fixed-variant": "#005236",
+                    "secondary": "#006c49",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "error": "#ba1a1a",
+                    "on-background": "#0b1c30",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dbe1ff",
+                    "on-surface": "#0b1c30",
+                    "on-primary-container": "#eeefff",
+                    "primary-container": "#2563eb",
+                    "primary": "#004ac6",
+                    "on-primary-fixed": "#00174b",
+                    "tertiary": "#784b00",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "surface": "#f8f9ff",
+                    "on-secondary-fixed": "#002113",
+                    "outline": "#737686",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#434655",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#ffeedd",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-fixed-dim": "#4edea3",
+                    "background": "#f8f9ff",
+                    "surface-container-high": "#dce9ff",
+                    "surface-container": "#e5eeff",
+                    "surface-bright": "#f8f9ff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#996100",
+                    "on-secondary-container": "#00714d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "1rem",
+                    "stack-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "stack-lg": "2rem",
+                    "margin-desktop": "2.5rem",
+                    "stack-sm": "0.5rem"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+        }
+        .tonal-layer {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- Top Navigation Anchor (Shared Component: TopAppBar) -->
+<header class="bg-surface shadow-sm docked full-width top-0 z-40 sticky">
+<div class="flex justify-between items-center w-full px-margin-mobile h-16 max-w-[1280px] mx-auto">
+<div class="flex items-center gap-4">
+<button aria-label="Back" class="p-2 hover:bg-surface-container-low transition-colors rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Account Detail</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-label-md">
+                    A
+                </div>
+</div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-margin-mobile pt-stack-lg">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-lg">
+<!-- Profile Overview Header (Asymmetric Layout Column) -->
+<section class="md:col-span-12 lg:col-span-4 flex flex-col gap-stack-md">
+<div class="tonal-layer rounded-xl p-6 flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-lg mb-4 shadow-lg">
+                        LC
+                    </div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Liam Chen</h2>
+<div class="flex flex-col gap-1 mb-4">
+<p class="font-body-md text-on-surface-variant">l.chen@diajar.edu</p>
+<p class="font-label-sm text-outline">@liamc_student</p>
+</div>
+<span class="px-4 py-1 rounded-full bg-primary-container text-on-primary-container font-label-md mb-6 uppercase tracking-wider">
+                        STUDENT
+                    </span>
+<div class="flex flex-col w-full gap-3">
+<button class="w-full bg-primary text-on-primary py-2.5 rounded-lg font-label-md transition-all hover:opacity-90 active:scale-[0.98]">
+                            Edit Profile
+                        </button>
+<button class="w-full border border-outline-variant text-primary py-2.5 rounded-lg font-label-md hover:bg-surface-container-low transition-all">
+                            Reset Password
+                        </button>
+</div>
+</div>
+<!-- Account Information Card -->
+<div class="tonal-layer rounded-xl p-6">
+<h3 class="font-label-md text-on-surface mb-4 border-b border-outline-variant pb-2">Account Information</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-on-surface-variant">Created</span>
+<span class="font-body-md text-on-surface">Sep 01, 2024</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-on-surface-variant">Last Login</span>
+<span class="font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant">Never</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Content Area: Warning & Details -->
+<section class="md:col-span-12 lg:col-span-8 flex flex-col gap-stack-lg">
+<!-- Role-Specific Section: Linked Groups (WARNING STATE) -->
+<div class="tonal-layer rounded-xl overflow-hidden border-tertiary border-l-4">
+<div class="p-6 bg-surface">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary">group</span>
+<h3 class="font-headline-md text-headline-md">Linked Groups</h3>
+</div>
+<!-- Warning Box -->
+<div class="bg-tertiary-container/10 border border-tertiary-container/20 rounded-xl p-6 flex flex-col md:flex-row gap-5 items-start md:items-center">
+<div class="bg-tertiary-container p-3 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-on-surface mb-2 font-semibold">Missing Group Assignment</p>
+<p class="font-body-md text-on-surface-variant">
+                                    This student is not assigned to any group. They will not be able to access any course content until linked.
+                                </p>
+</div>
+<button class="bg-tertiary-container text-on-tertiary-container px-6 py-2.5 rounded-lg font-label-md hover:brightness-110 transition-all whitespace-nowrap shadow-sm">
+                                Go to Groups
+                            </button>
+</div>
+</div>
+</div>
+<!-- Bento Grid Style: Supplementary Data -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="tonal-layer rounded-xl p-6">
+<h4 class="font-label-md text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">history</span> Recent Activity
+                        </h4>
+<div class="text-center py-8">
+<p class="font-label-sm text-outline">No activity recorded for this period.</p>
+</div>
+</div>
+<div class="tonal-layer rounded-xl p-6 relative overflow-hidden group">
+<!-- Atmospheric Micro-interaction placeholder -->
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+<h4 class="font-label-md text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">school</span> Performance
+                        </h4>
+<div class="flex flex-col items-center justify-center py-4">
+<div class="w-16 h-16 rounded-full border-4 border-outline-variant flex items-center justify-center text-outline font-label-md mb-2">
+                                0%
+                            </div>
+<p class="font-label-sm text-on-surface-variant">No data available</p>
+</div>
+</div>
+</div>
+<!-- Account Actions (Destructive) -->
+<div class="mt-8 pt-8 border-t border-outline-variant">
+<div class="flex items-center justify-between p-6 bg-error-container/10 border border-error-container/30 rounded-xl">
+<div>
+<h4 class="font-label-md text-error">Danger Zone</h4>
+<p class="font-label-sm text-on-surface-variant">Once you delete an account, there is no going back.</p>
+</div>
+<button class="flex items-center gap-2 bg-error text-on-error px-6 py-2.5 rounded-lg font-label-md hover:bg-error/90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                            Delete Account
+                        </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation (Shared Component: BottomNavBar) -->
+<!-- Determined active state: "Users" because this is an Account Detail page -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest shadow-lg border-t border-outline-variant md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-transform duration-150 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-transform duration-150 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-sm text-label-sm">Academic</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform duration-150 scale-95 active:scale-90 shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm">Users</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-transform duration-150 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for page entrance
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section > div');
+            sections.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    el.style.transition = 'all 0.5s ease-out';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body></html>

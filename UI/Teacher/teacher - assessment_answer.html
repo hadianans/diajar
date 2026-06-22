@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Assessment Review - Teacher Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "background": "#f8f9ff",
+                    "on-primary-fixed": "#00174b",
+                    "secondary-container": "#6cf8bb",
+                    "error-container": "#ffdad6",
+                    "surface": "#f8f9ff",
+                    "tertiary-container": "#996100",
+                    "on-background": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "tertiary": "#784b00",
+                    "secondary-fixed": "#6ffbbe",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#002113",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#2563eb",
+                    "inverse-primary": "#b4c5ff",
+                    "on-surface": "#0b1c30",
+                    "surface-tint": "#0053db",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-container-high": "#dce9ff",
+                    "on-surface-variant": "#434655",
+                    "outline": "#737686",
+                    "on-tertiary-container": "#ffeedd",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-container": "#eeefff",
+                    "on-error-container": "#93000a",
+                    "primary": "#004ac6",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-dim": "#cbdbf5",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary": "#006c49",
+                    "on-secondary-container": "#00714d",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "outline-variant": "#c3c6d7",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "inverse-surface": "#213145",
+                    "on-tertiary-fixed": "#2a1700"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "1.25rem",
+                    "stack-lg": "2rem",
+                    "gutter": "1rem",
+                    "stack-md": "1rem",
+                    "stack-sm": "0.5rem",
+                    "margin-desktop": "2.5rem"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.8s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="bg-surface border-b border-outline-variant flex items-center justify-between px-margin-mobile h-16 w-full z-50 sticky top-0">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary active:opacity-80 transition-colors">arrow_back</button>
+<h1 class="font-headline-md text-headline-md text-primary">Teacher Hub</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors">print</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors">more_vert</button>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<!-- Hero Summary Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start mb-stack-lg">
+<!-- Left: Student Details -->
+<div class="lg:col-span-8 flex flex-col gap-stack-md">
+<div class="flex flex-col gap-stack-sm">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Assessment Report</span>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Biology Midterm Quiz</h2>
+<div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">person</span>
+<span class="font-body-md text-body-md">Alex Johnson (Group A)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">calendar_today</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Submitted: Oct 25, 10:30 AM</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter mt-stack-md">
+<div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Questions</span>
+<span class="text-headline-md font-headline-md">30</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Correct</span>
+<span class="text-headline-md font-headline-md text-secondary">24</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Incorrect</span>
+<span class="text-headline-md font-headline-md text-error">6</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Time Spent</span>
+<span class="text-headline-md font-headline-md">42m 15s</span>
+</div>
+</div>
+</div>
+<!-- Right: Score Ring -->
+<div class="lg:col-span-4 bg-white p-8 rounded-xl border border-outline-variant shadow-sm flex flex-col items-center justify-center relative">
+<div class="relative w-40 h-40">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-surface-container-high stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="10"></circle>
+<circle class="text-secondary stroke-current progress-ring__circle" cx="50" cy="50" fill="transparent" r="40" stroke-linecap="round" stroke-width="10" style="stroke-dasharray: 251.2; stroke-dashoffset: 50.24;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-headline-lg font-headline-lg">80%</span>
+<span class="text-label-sm font-label-sm text-outline uppercase">80/100</span>
+</div>
+</div>
+<div class="mt-6 text-center">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-4 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-label-md">PASS</span>
+<span class="px-4 py-1 bg-surface-container-high text-on-surface rounded-full font-label-md text-label-md">Grade: B</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-2 mb-stack-md overflow-x-auto pb-2 no-scrollbar">
+<button class="px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md whitespace-nowrap">All (30)</button>
+<button class="px-6 py-2 rounded-full hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap transition-colors border border-outline-variant">Correct (24)</button>
+<button class="px-6 py-2 rounded-full hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap transition-colors border border-outline-variant">Incorrect (6)</button>
+</div>
+<!-- Question List -->
+<div class="flex flex-col gap-stack-md">
+<!-- Question 1: Correct -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="p-6">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md text-outline">Q1</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-lg font-label-sm text-label-sm">Medium</span>
+</div>
+<div class="flex items-center gap-2 text-secondary font-label-md text-label-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Correct
+                        </div>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-background mb-4">"What is the primary function of mitochondria?"</h3>
+<div class="p-4 bg-secondary-fixed/10 rounded-lg border-l-4 border-secondary mb-4">
+<span class="block text-label-sm font-label-sm text-on-secondary-fixed-variant mb-1">Alex's Answer</span>
+<p class="font-body-md text-body-md text-on-background">Energy production (ATP)</p>
+</div>
+<div class="flex items-start gap-3 mt-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-outline shrink-0">info</span>
+<p class="font-label-sm text-label-sm leading-relaxed">Mitochondria are known as the powerhouse of the cell, converting oxygen and nutrients into ATP.</p>
+</div>
+</div>
+</div>
+<!-- Question 2: Incorrect -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="p-6">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md text-outline">Q2</span>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-lg font-label-sm text-label-sm">Hard</span>
+</div>
+<div class="flex items-center gap-2 text-error font-label-md text-label-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cancel</span>
+                            Incorrect
+                        </div>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-background mb-4">"Identify the stage of mitosis where chromosomes align at the cell equator."</h3>
+<div class="grid md:grid-cols-2 gap-4 mb-4">
+<div class="p-4 bg-error-container/30 rounded-lg border-l-4 border-error">
+<span class="block text-label-sm font-label-sm text-on-error-container mb-1">Alex's Answer</span>
+<p class="font-body-md text-body-md text-on-background">Prophase</p>
+</div>
+<div class="p-4 bg-secondary-fixed/10 rounded-lg border-l-4 border-secondary">
+<span class="block text-label-sm font-label-sm text-on-secondary-fixed-variant mb-1">Correct Answer</span>
+<p class="font-body-md text-body-md text-on-background">Metaphase</p>
+</div>
+</div>
+<div class="flex items-start gap-3 mt-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-outline shrink-0">info</span>
+<p class="font-label-sm text-label-sm leading-relaxed">During metaphase, spindle fibers align the chromosomes along the middle of the cell nucleus.</p>
+</div>
+</div>
+</div>
+<!-- Visual Decorative Element (Asymmetric Bento-ish Card) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="bg-primary text-on-primary p-6 rounded-xl relative overflow-hidden group">
+
+<div class="relative z-10">
+<h4 class="font-headline-md text-headline-md mb-2">Teacher's Insight</h4>
+<p class="text-label-md font-label-md opacity-90 leading-relaxed mb-4">Alex shows strong proficiency in basic cell structures but struggles with specific mitotic phases. Consider assigning the "Cell Division" refresher module.</p>
+<button class="bg-white text-primary px-4 py-2 rounded-lg font-label-md text-label-md active:scale-95 transition-transform">Assign Refresher</button>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl flex items-center justify-between">
+<div class="max-w-[60%]">
+<h4 class="font-headline-md text-headline-md mb-1">Class Average</h4>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Alex is performing 12% above the average of Group A students in this quiz.</p>
+</div>
+<div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-inner">
+<span class="text-headline-md font-headline-md text-primary">68%</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest shadow-[0_-4px_12px_rgba(15,23,42,0.05)] flex justify-around items-center px-4 py-3 pb-safe border-t border-outline-variant md:px-margin-desktop">
+<div class="max-w-[1280px] w-full flex justify-between items-center">
+<button class="flex items-center gap-3 px-6 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined">chevron_left</span>
+<span class="hidden md:inline font-label-md text-label-md">Previous Student</span>
+<span class="md:hidden font-label-sm text-label-sm">Previous</span>
+</button>
+<div class="flex items-center gap-2">
+<div class="flex items-center -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover" data-alt="A portrait of a young student with a friendly expression, professional education photography style, soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXadAsgb4pNmoC570BxBsjMqHQ6uOnyIy5jO161ZAV1TsemzaKYb802hnX_FvfZYEBPK0lBMVcdrDfnaRCEovIMHIjH7vsBMJLL_fmvRVVjj2dyY34VBA_oOYthgsHqg6mAzQAG4qZHh5aIPrSst6lUZ0QYBEJU4fYM451EVvt2Ji48wFKiDk1fUrk0SLaStYTu0MGPyFGBf8FuT3inhJU8I-J3Du9yh5OB048yj5mlaXv9K61JMb2jaZECCLWu9i9oSwoNnnDaUw"/>
+<img class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover" data-alt="A portrait of a male student with short dark hair, focused academic look, minimalist classroom background, soft focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXt2-qUtnuyopdziJNkWiRRdKm2aGtpRV9QgJFSHAvaKL23XeWwJ3OZSNwAMTyGr8A66SU3BaXmYahlu8k8qzTkaOnflhVTU5_pMi4b_2PBDTlsPb7o0EZbYGMSMYUMp1BpM3ub3iBpMzh8jF9BpBQXAO4WtRbuAxiUobghENEq6i6bu9JKnZ2FD7TznACyKkBKfyjbLuI8AEdugTrT5WUMEeAVgnHZoqchYIbHDSYj-jvSxZrErK_fesMPnz3jCLOntA0uhCZn1c"/>
+</div>
+<span class="text-label-sm font-label-sm text-outline hidden sm:inline">14 / 28 Students</span>
+</div>
+<button class="flex items-center gap-3 px-6 py-2 rounded-full bg-primary text-on-primary hover:bg-primary-container active:scale-95 transition-all duration-200">
+<span class="hidden md:inline font-label-md text-label-md">Next Student</span>
+<span class="md:hidden font-label-sm text-label-sm">Next</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for progress ring
+        window.addEventListener('load', () => {
+            const circle = document.querySelector('.progress-ring__circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = circumference;
+
+            const setProgress = (percent) => {
+                const offset = circumference - (percent / 100 * circumference);
+                circle.style.strokeDashoffset = offset;
+            }
+
+            // Trigger animation after a small delay
+            setTimeout(() => setProgress(80), 300);
+        });
+    </script>
+</body></html>

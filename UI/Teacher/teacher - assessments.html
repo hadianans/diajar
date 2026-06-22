@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar - Teacher Assessments</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .assessment-accent {
+      color: #784b00; /* Tertiary color from config */
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "error-container": "#ffdad6",
+                  "on-surface-variant": "#434655",
+                  "on-error-container": "#93000a",
+                  "on-secondary": "#ffffff",
+                  "tertiary": "#784b00",
+                  "on-primary-container": "#eeefff",
+                  "on-secondary-fixed": "#002113",
+                  "error": "#ba1a1a",
+                  "surface-container-highest": "#d3e4fe",
+                  "surface-bright": "#f8f9ff",
+                  "surface": "#f8f9ff",
+                  "primary-container": "#2563eb",
+                  "surface-variant": "#d3e4fe",
+                  "on-secondary-fixed-variant": "#005236",
+                  "tertiary-fixed-dim": "#ffb95f",
+                  "primary-fixed": "#dbe1ff",
+                  "on-primary-fixed-variant": "#003ea8",
+                  "on-tertiary": "#ffffff",
+                  "inverse-surface": "#213145",
+                  "secondary-fixed": "#6ffbbe",
+                  "tertiary-fixed": "#ffddb8",
+                  "surface-container-low": "#eff4ff",
+                  "outline-variant": "#c3c6d7",
+                  "surface-tint": "#0053db",
+                  "on-secondary-container": "#00714d",
+                  "background": "#f8f9ff",
+                  "on-surface": "#0b1c30",
+                  "secondary-fixed-dim": "#4edea3",
+                  "on-background": "#0b1c30",
+                  "surface-container-high": "#dce9ff",
+                  "secondary-container": "#6cf8bb",
+                  "primary": "#004ac6",
+                  "inverse-on-surface": "#eaf1ff",
+                  "surface-container-lowest": "#ffffff",
+                  "on-tertiary-container": "#ffeedd",
+                  "inverse-primary": "#b4c5ff",
+                  "surface-container": "#e5eeff",
+                  "outline": "#737686",
+                  "on-tertiary-fixed": "#2a1700",
+                  "on-tertiary-fixed-variant": "#653e00",
+                  "on-primary-fixed": "#00174b",
+                  "on-primary": "#ffffff",
+                  "secondary": "#006c49",
+                  "tertiary-container": "#996100"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "stack-sm": "0.5rem",
+                  "gutter": "1rem",
+                  "margin-mobile": "1.25rem",
+                  "margin-desktop": "2.5rem",
+                  "stack-lg": "2rem",
+                  "stack-md": "1rem"
+          },
+          "fontFamily": {
+                  "label-sm": ["Inter"],
+                  "body-lg": ["Inter"],
+                  "label-md": ["Inter"],
+                  "headline-lg": ["Inter"],
+                  "headline-lg-mobile": ["Inter"],
+                  "body-md": ["Inter"],
+                  "headline-md": ["Inter"]
+          },
+          "fontSize": {
+                  "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                  "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                  "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                  "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline shadow-sm flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="school">school</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Diajar</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full" data-icon="notifications">notifications</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female teacher in her late 30s with a warm, encouraging smile. She is wearing a modern mustard-colored blazer against a soft-focus classroom background. The lighting is bright and natural, aligning with the clean, minimalist light-mode aesthetic of the Diajar educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpJwi0GTspQqNpDOmOG-vzKeAkZZaJQmQQ5JPcijX37jdHw4E8-wA6bXPYBqeuh5ZFJ8zM8gwKMxOM1jW1d-NGBzF-dTMh80xp7ss61gXm3Elb1r08XxW2j3eMlghIE_iHfbIkpPpZELz_hHJCY4THGPczbw5Z-j5X2PlugcBH1XUz1ZEd8L8QWUK74BwkAQr_iGBu9Xtfe9KbDUKGOAJyKhQLWtqt7VmYeAxLTqiU8yCoJ1WENuE3sgdWepbRQd_-8iIg4NaWmPI"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop mt-stack-lg">
+<!-- Title & Action Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-stack-md">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Assessments</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Design and track student performance evaluations.</p>
+</div>
+<button class="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+        Create Assessment
+      </button>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center gap-6 border-b border-outline-variant/30 mb-stack-md overflow-x-auto custom-scrollbar">
+<button class="pb-3 px-1 border-b-2 border-transparent text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors whitespace-nowrap">All</button>
+<button class="pb-3 px-1 border-b-2 border-transparent text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors whitespace-nowrap">Scheduled</button>
+<button class="pb-3 px-1 border-b-2 border-primary text-primary font-label-md text-label-md whitespace-nowrap flex items-center gap-2">
+        Active
+        <span class="bg-primary-container text-white text-[10px] px-1.5 py-0.5 rounded-full">2</span>
+</button>
+<button class="pb-3 px-1 border-b-2 border-transparent text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors whitespace-nowrap">Completed</button>
+</div>
+<!-- Secondary Filters -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-stack-lg">
+<div class="flex items-center gap-2 overflow-x-auto custom-scrollbar py-1">
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap">All Chapters</button>
+<button class="bg-surface-container-low border border-outline-variant text-on-surface-variant px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors">Cell Structure</button>
+<button class="bg-surface-container-low border border-outline-variant text-on-surface-variant px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors">Genetics</button>
+<button class="bg-surface-container-low border border-outline-variant text-on-surface-variant px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors">Metabolism</button>
+</div>
+<div class="flex items-center gap-2 self-end">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sort by:</span>
+<div class="relative group">
+<button class="flex items-center gap-2 bg-white border border-outline-variant px-3 py-1.5 rounded-lg font-label-sm text-label-sm text-on-surface hover:border-primary transition-colors">
+            Newest
+            <span class="material-symbols-outlined text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Assessment Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1: Completed -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-[0_2px_10px_rgba(15,23,42,0.05)] overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 group">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-tertiary/10 p-2 rounded-lg">
+<span class="material-symbols-outlined assessment-accent" data-icon="assignment_turned_in">assignment_turned_in</span>
+</div>
+<span class="bg-surface-container-highest text-on-surface-variant px-2 py-1 rounded font-label-sm text-[10px] uppercase tracking-wider">Completed</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">Biology Midterm Quiz</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-6">Chapter 3: Genetics</p>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Class Avg</span>
+<span class="font-headline-md text-headline-md text-tertiary font-bold">78%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Participation</span>
+<span class="font-headline-md text-headline-md text-on-surface font-semibold">28/32</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-3 border-t border-outline-variant/30">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm">45 min</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="quiz">quiz</span>
+<span class="font-label-sm text-label-sm">30 questions</span>
+</div>
+</div>
+</div>
+<div class="h-1.5 w-full bg-surface-container">
+<div class="h-full bg-tertiary w-full"></div>
+</div>
+</div>
+<!-- Card 2: Pending Review -->
+<div class="bg-white rounded-xl border-2 border-tertiary/20 shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 relative group">
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-error text-on-error px-2 py-1 rounded font-label-sm text-[10px] uppercase tracking-wider animate-pulse">Pending Review</span>
+</div>
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-tertiary/10 p-2 rounded-lg">
+<span class="material-symbols-outlined assessment-accent" data-icon="rate_review">rate_review</span>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">Cell Structure Final</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-6">Chapter 2: Cell Structure</p>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Class Avg</span>
+<span class="font-headline-md text-headline-md text-tertiary font-bold">84%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Participation</span>
+<span class="font-headline-md text-headline-md text-on-surface font-semibold">32/32</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-3 border-t border-outline-variant/30">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm">60 min</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="quiz">quiz</span>
+<span class="font-label-sm text-label-sm">50 questions</span>
+</div>
+</div>
+</div>
+<div class="h-1.5 w-full bg-surface-container">
+<div class="h-full bg-tertiary-fixed-dim w-full"></div>
+</div>
+<button class="w-full py-3 bg-tertiary text-on-tertiary font-label-md text-label-md hover:bg-tertiary/90 transition-colors">Grade Now</button>
+</div>
+<!-- Card 3: Active -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-[0_2px_10px_rgba(15,23,42,0.05)] overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 group">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-secondary-container/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded font-label-sm text-[10px] uppercase tracking-wider">Active</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">Photosynthesis Pop Quiz</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-6">Chapter 4: Metabolism</p>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Time Remaining</span>
+<span class="font-headline-md text-headline-md text-on-surface font-semibold">12m 45s</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Participation</span>
+<span class="font-headline-md text-headline-md text-on-surface font-semibold">12/32</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-3 border-t border-outline-variant/30">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm">15 min</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="quiz">quiz</span>
+<span class="font-label-sm text-label-sm">10 questions</span>
+</div>
+</div>
+</div>
+<div class="h-1.5 w-full bg-surface-container">
+<div class="h-full bg-secondary-fixed-dim transition-all duration-1000" style="width: 37.5%"></div>
+</div>
+</div>
+</div>
+<!-- Empty State Placeholder (Visual Variety) -->
+<div class="mt-stack-lg p-8 rounded-2xl border-2 border-dashed border-outline-variant/50 flex flex-col items-center justify-center text-center">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-outline text-3xl" data-icon="library_add">library_add</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Plan your next Assessment</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mt-2">Scheduled assessments will appear here. Start creating one for Chapter 5: Ecology.</p>
+<button class="mt-6 font-label-md text-label-md text-primary hover:underline">View Assessment Calendar</button>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-gutter bg-surface dark:bg-surface-dim border-t border-outline-variant/30 shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="book">book</span>
+<span class="font-label-sm text-label-sm">Classes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold bg-primary-container/10 rounded-xl px-3 py-1 active:scale-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-label-sm text-label-sm">Grading</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+    // Micro-interactions and effects
+    document.querySelectorAll('.active\\:scale-90').forEach(btn => {
+      btn.addEventListener('touchstart', () => btn.classList.add('scale-95'));
+      btn.addEventListener('touchend', () => btn.classList.remove('scale-95'));
+    });
+
+    // Animation for progress bar on the active card to simulate real-time
+    const progressBar = document.querySelector('.bg-secondary-fixed-dim');
+    if(progressBar) {
+      setInterval(() => {
+        const currentWidth = parseFloat(progressBar.style.width);
+        if(currentWidth < 100) {
+          progressBar.style.width = (currentWidth + 0.05) + '%';
+        }
+      }, 3000);
+    }
+  </script>
+</body></html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Assessment View - Diajar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#996100",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-container": "#e5eeff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary": "#006c49",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "surface-tint": "#0053db",
+                        "surface-container-low": "#eff4ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "secondary-container": "#6cf8bb",
+                        "on-primary-fixed": "#00174b",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#2a1700",
+                        "outline": "#737686",
+                        "on-surface-variant": "#434655",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-primary": "#b4c5ff",
+                        "background": "#f8f9ff",
+                        "on-primary-container": "#eeefff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "primary": "#004ac6",
+                        "tertiary": "#784b00",
+                        "on-surface": "#0b1c30",
+                        "primary-container": "#2563eb",
+                        "inverse-surface": "#213145",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-tertiary-container": "#ffeedd",
+                        "outline-variant": "#c3c6d7",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-background": "#0b1c30"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "margin-mobile": "1.25rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1rem",
+                        "stack-sm": "0.5rem",
+                        "margin-desktop": "2.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="w-full sticky top-0 z-50 bg-surface dark:bg-surface-dim shadow-sm h-16 flex items-center justify-between px-margin-mobile max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Diajar</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container-low rounded-full transition-colors">notifications</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Student Profile" data-alt="A professional and clean profile avatar of a young university student with a friendly expression. The style is minimalist and modern, matching a corporate SaaS aesthetic with soft studio lighting and a neutral light blue background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUzJAITL5v986AnL4iwJdwdlNIHLHpkGZ4vtN2d2OL3PwMmoITAZT06ua_7UU4OwWsoydhNHZybcIy8w4u7U0BkNtOtIU0y02Tz781-UboUmYMongdXGK1cSr86Y6PvVRnyZnIiyDpCKN3ur7CzLsD80l2vUlVm4XVGmVpKHvVctwRqtPVYGAQZ6nqL9EEtP60-jPchT3kWIy6OQgkVrSyRrvnxj8nI6vUP_gLCIEy2fbh-FKkKniRl2m1NpcN1gSOn5-yJ3vuzNE"/>
+</div>
+</div>
+</header>
+<main class="px-margin-mobile mt-6 max-w-3xl mx-auto space-y-stack-lg">
+<!-- Header Section -->
+<section class="space-y-stack-sm">
+<div class="flex items-center gap-2">
+<span class="px-3 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">Upcoming</span>
+<span class="font-label-md text-label-md text-outline">Biology</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Biology Midterm Quiz</h2>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">event</span>
+<p class="font-body-md text-body-md">Deadline: <span class="font-semibold text-primary">Oct 28, 10:00 AM</span></p>
+</div>
+</section>
+<!-- Visual Anchor (Atmospheric Banner) -->
+<div class="relative w-full h-40 rounded-xl overflow-hidden shadow-sm">
+
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
+<div class="absolute inset-0 flex items-center p-6">
+<div class="p-3 bg-white/90 backdrop-blur rounded-lg shadow-sm border border-white/40">
+<span class="material-symbols-outlined text-primary scale-125" style="font-variation-settings: 'FILL' 1;">science</span>
+</div>
+</div>
+</div>
+<!-- Description Section -->
+<section class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/30">
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                This comprehensive midterm covers Chapters 1-4, focusing on Cell Theory, Organelle Functions, and Principles of Growth. Ensure you have a stable connection before starting.
+            </p>
+</section>
+<!-- Assessment Details Grid -->
+<section class="grid grid-cols-2 gap-gutter">
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+<span class="material-symbols-outlined text-primary">timer</span>
+<span class="font-label-md text-label-md text-on-surface">45 mins</span>
+<span class="font-label-sm text-label-sm text-outline">Time Limit</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+<span class="material-symbols-outlined text-primary">quiz</span>
+<span class="font-label-md text-label-md text-on-surface">30 Questions</span>
+<span class="font-label-sm text-label-sm text-outline">Total Count</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-label-md text-label-md text-on-surface">1 of 2</span>
+<span class="font-label-sm text-label-sm text-outline">Attempts Left</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-1 shadow-sm">
+<span class="material-symbols-outlined text-primary">stars</span>
+<span class="font-label-md text-label-md text-on-surface">--</span>
+<span class="font-label-sm text-label-sm text-outline">Best Score</span>
+</div>
+</section>
+<!-- Pre-Assessment Reflection Card -->
+<section class="bg-surface-container p-6 rounded-xl space-y-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">psychology</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Pre-Assessment Reflection</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Take a moment to set your focus. What is your goal for this assessment?</p>
+<div class="space-y-3">
+<label class="flex items-center gap-3 bg-surface p-3 rounded-lg border border-outline-variant cursor-pointer active:scale-[0.98] transition-all">
+<input class="w-5 h-5 text-primary border-outline focus:ring-primary" name="goal" type="radio"/>
+<span class="font-label-md text-label-md">Refresh knowledge and identify gaps</span>
+</label>
+<label class="flex items-center gap-3 bg-surface p-3 rounded-lg border border-outline-variant cursor-pointer active:scale-[0.98] transition-all">
+<input class="w-5 h-5 text-primary border-outline focus:ring-primary" name="goal" type="radio"/>
+<span class="font-label-md text-label-md">Achieve a score of 90% or higher</span>
+</label>
+</div>
+</section>
+<!-- Sticky Bottom Actions -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/20 p-4 md:px-margin-desktop z-40">
+<div class="max-w-3xl mx-auto flex items-center gap-4">
+<button class="flex-1 bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all">
+<span>Start Assessment</span>
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+</button>
+<button class="w-14 h-14 border-2 border-outline-variant rounded-xl flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors active:scale-90">
+<span class="material-symbols-outlined">playlist_add</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Navigation Drawer / Bottom Nav (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-surface-container-lowest shadow-[0_-4px_10px_0_rgba(0,0,0,0.03)] flex justify-around items-center px-4 pb-2 z-50 md:hidden invisible">
+<!-- Hidden for Assessment Focused View as per Contextual Suppression rules -->
+</nav>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const ripple = document.createElement('div');
+                ripple.classList.add('absolute', 'bg-white/20', 'rounded-full', 'animate-ping');
+                ripple.style.width = '100%';
+                ripple.style.height = '100%';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Simple Goal selection effect
+        const radioLabels = document.querySelectorAll('label');
+        radioLabels.forEach(label => {
+            label.addEventListener('click', () => {
+                radioLabels.forEach(l => l.classList.remove('border-primary', 'bg-primary-fixed/20'));
+                label.classList.add('border-primary', 'bg-primary-fixed/20');
+            });
+        });
+    </script>
+</body></html>

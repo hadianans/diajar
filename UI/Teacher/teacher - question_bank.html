@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar LMS - Question Bank</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+            color: #0b1c30;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .difficulty-indicator {
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .glass-header {
+            background: rgba(248, 249, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-background": "#0b1c30",
+                        "on-secondary-fixed-variant": "#005236",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#002113",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-container": "#eeefff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f8f9ff",
+                        "surface-tint": "#0053db",
+                        "surface-bright": "#f8f9ff",
+                        "background": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c3c6d7",
+                        "on-surface-variant": "#434655",
+                        "tertiary": "#784b00",
+                        "outline": "#737686",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary": "#004ac6",
+                        "inverse-primary": "#b4c5ff",
+                        "on-secondary-container": "#00714d",
+                        "inverse-surface": "#213145",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "tertiary-container": "#996100",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006c49",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "primary-container": "#2563eb",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed": "#00174b",
+                        "surface-dim": "#cbdbf5",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "secondary-container": "#6cf8bb",
+                        "surface-variant": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "1.25rem",
+                        "stack-md": "1rem",
+                        "margin-desktop": "2.5rem",
+                        "gutter": "1rem",
+                        "stack-lg": "2rem",
+                        "stack-sm": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface flex flex-col md:flex-row min-h-screen">
+<!-- Desktop Navigation Drawer -->
+<aside class="fixed left-0 top-0 h-full z-40 hidden md:flex flex-col bg-surface-container-lowest dark:bg-surface-dim shadow-sm h-full w-72 rounded-r-xl">
+<div class="p-6 flex flex-col gap-6 h-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">school</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary">Diajar LMS</h1>
+</div>
+<!-- Profile Section -->
+<div class="flex items-center gap-3 p-4 bg-surface-container rounded-xl">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional headshot of a middle-aged female educator with a warm, confident expression. She is wearing modern glasses and professional attire, set against a soft-focus academic background with hints of blue and white tones to match the mindful growth design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ5ZO7-bDKn3ToklQW2SJptSVGmfHxF--nDoFBiBURJDoGsTay1WTtF6AePmIE-48z2fKvRI_N3L93BtPg_B8YQPXovzFi-2RN4ctWRi0SIekmvdz6jlLDkeoSG9LMVDTGnACoJVfbkRxuoQnQyQ9J3jMrEuvGeBoEjNzKsQ_9tRpD4WxAEAdYwNCR2nbCUSSV6DI9l3nnmlq9cQeJVB5Loto0T4FwASW4wRXhIFzLSI3nVhLD7c8XKUTOE17oBsmrCVq4caFmJMk"/>
+<div class="overflow-hidden">
+<p class="font-label-md text-label-md text-on-surface truncate">Prof. Anderson</p>
+<p class="text-xs text-on-surface-variant truncate">Lead Educator</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 mt-4">
+<a class="text-on-surface-variant dark:text-outline px-4 py-3 hover:bg-surface-container-high transition-all flex items-center gap-3 rounded-full" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="bg-primary-container text-on-primary-container font-bold rounded-full px-4 py-3 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-md text-label-md">Question Bank</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline px-4 py-3 hover:bg-surface-container-high transition-all flex items-center gap-3 rounded-full" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-label-md text-label-md">Assessments</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline px-4 py-3 hover:bg-surface-container-high transition-all flex items-center gap-3 rounded-full" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant">
+<a class="text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all flex items-center gap-3 rounded-full" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-72 flex flex-col min-h-screen pb-20 md:pb-0">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-30 glass-header flex items-center justify-between px-margin-mobile md:px-margin-desktop w-full h-16 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<div class="flex flex-col">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Question Bank</h2>
+<span class="text-xs text-on-surface-variant hidden md:block">48 questions available</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-primary-container text-on-primary-container hover:bg-primary transition-colors px-6 py-2 rounded-full font-label-md text-label-md shadow-sm active:scale-95 transition-transform flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Create Question
+                </button>
+</div>
+</header>
+<!-- Page Content -->
+<section class="p-margin-mobile md:p-margin-desktop flex flex-col gap-stack-lg max-w-6xl mx-auto w-full">
+<!-- Search and Filter Grid -->
+<div class="flex flex-col gap-6 bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant">
+<!-- Search Bar -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface rounded-2xl border-none focus:ring-2 focus:ring-primary text-body-md transition-all shadow-inner" placeholder="Search questions..." type="text"/>
+</div>
+<!-- Difficulty Filters -->
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-wider text-outline">Cognitive Level (Bloom's)</span>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full text-label-sm border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">Remember</button>
+<button class="px-4 py-2 rounded-full text-label-sm border-2 border-primary bg-primary-container text-on-primary-container font-bold">Understand</button>
+<button class="px-4 py-2 rounded-full text-label-sm border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">Apply</button>
+<button class="px-4 py-2 rounded-full text-label-sm border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">Analyze</button>
+<button class="px-4 py-2 rounded-full text-label-sm border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">Evaluate</button>
+<button class="px-4 py-2 rounded-full text-label-sm border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors">Create</button>
+</div>
+</div>
+<!-- Tag Chips -->
+<div class="flex flex-col gap-3">
+<span class="text-xs font-bold uppercase tracking-wider text-outline">Tags</span>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1.5 rounded-lg text-label-sm bg-surface-container-highest text-primary hover:bg-primary-container hover:text-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">label</span>
+                            Genetics
+                        </button>
+<button class="px-3 py-1.5 rounded-lg text-label-sm bg-surface-container-highest text-primary hover:bg-primary-container hover:text-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">label</span>
+                            Cell Biology
+                        </button>
+<button class="px-3 py-1.5 rounded-lg text-label-sm bg-surface-container-highest text-primary hover:bg-primary-container hover:text-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">label</span>
+                            Lab Skills
+                        </button>
+<button class="px-3 py-1.5 rounded-lg text-label-sm bg-surface-container-highest text-primary hover:bg-primary-container hover:text-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">label</span>
+                            Mitosis
+                        </button>
+<button class="px-3 py-1.5 rounded-lg text-label-sm bg-surface-container-highest text-primary hover:bg-primary-container hover:text-white transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">label</span>
+                            Evolution
+                        </button>
+</div>
+</div>
+</div>
+<!-- List Metadata & Sorting -->
+<div class="flex items-center justify-between">
+<p class="text-body-md text-on-surface-variant">Showing <span class="font-bold text-on-surface">48</span> of 48 questions</p>
+<div class="flex items-center gap-2">
+<span class="text-sm text-outline">Sort by:</span>
+<button class="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-outline-variant hover:bg-surface transition-colors font-label-md text-label-md">
+                        Newest First
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Question Cards Container -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Question Card 1 -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-all flex flex-col md:flex-row gap-6">
+<div class="difficulty-indicator bg-green-500"></div>
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex flex-wrap gap-2 items-center">
+<span class="px-2 py-0.5 rounded bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-widest">Level 1: Understand</span>
+<span class="text-xs text-outline">•</span>
+<span class="text-xs text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">stars</span>
+                                5 pts
+                            </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">What is the primary function of mitochondria?</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 rounded-md bg-surface-container text-xs text-on-surface-variant">#Cell Biology</span>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+<button class="p-2 rounded-full hover:bg-error-container hover:text-error transition-colors text-outline">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Question Card 2 -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-all flex flex-col md:flex-row gap-6">
+<div class="difficulty-indicator bg-orange-500"></div>
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex flex-wrap gap-2 items-center">
+<span class="px-2 py-0.5 rounded bg-orange-100 text-orange-700 text-[10px] font-bold uppercase tracking-widest">Level 3: Analyze</span>
+<span class="text-xs text-outline">•</span>
+<span class="text-xs text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">stars</span>
+                                15 pts
+                            </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Explain the process of DNA replication in prokaryotic cells.</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 rounded-md bg-surface-container text-xs text-on-surface-variant">#Genetics</span>
+<span class="px-2 py-1 rounded-md bg-surface-container text-xs text-on-surface-variant">#DNA</span>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+<button class="p-2 rounded-full hover:bg-error-container hover:text-error transition-colors text-outline">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Question Card 3 -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-all flex flex-col md:flex-row gap-6">
+<div class="difficulty-indicator bg-yellow-500"></div>
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex flex-wrap gap-2 items-center">
+<span class="px-2 py-0.5 rounded bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-widest">Level 2: Apply</span>
+<span class="text-xs text-outline">•</span>
+<span class="text-xs text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">stars</span>
+                                10 pts
+                            </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Identify the stage of mitosis where chromosomes align at the cell equator.</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 rounded-md bg-surface-container text-xs text-on-surface-variant">#Mitosis</span>
+<span class="px-2 py-1 rounded-md bg-surface-container text-xs text-on-surface-variant">#Cell Biology</span>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+<button class="p-2 rounded-full hover:bg-error-container hover:text-error transition-colors text-outline">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Question Card 4 -->
+<div class="group relative overflow-hidden bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-all flex flex-col md:flex-row gap-6">
+<div class="difficulty-indicator bg-purple-500"></div>
+<div class="flex-1 flex flex-col gap-3">
+<div class="flex flex-wrap gap-2 items-center">
+<span class="px-2 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-bold uppercase tracking-widest">Level 4: Evaluate</span>
+<span class="text-xs text-outline">•</span>
+<span class="text-xs text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">stars</span>
+                                20 pts
+                            </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Compare and contrast eukaryotic and prokaryotic cells.</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 rounded-md bg-surface-container text-xs text-on-surface-variant">#Cell Biology</span>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+<button class="p-2 rounded-full hover:bg-error-container hover:text-error transition-colors text-outline">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State Illustration Placeholder (Invisible if content exists) -->
+<div class="hidden flex-col items-center justify-center py-20 text-center gap-4">
+<div class="w-48 h-48 bg-surface-container rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-6xl text-outline">find_in_page</span>
+</div>
+<h3 class="font-headline-md text-headline-md">No questions found</h3>
+<p class="text-on-surface-variant max-w-xs">Try adjusting your filters or search terms to find what you're looking for.</p>
+<button class="mt-4 text-primary font-bold">Clear all filters</button>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom Nav -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 md:hidden bg-surface border-t border-outline-variant shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl p-2 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-sm text-label-sm">Bank</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-sm text-label-sm">Exams</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-label-sm text-label-sm">Reports</span>
+</a>
+</nav>
+<script>
+        // Simple filter button interaction
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.classList.contains('border-outline-variant')) {
+                    // Logic for toggling filters could go here
+                }
+            });
+        });
+
+        // Hover animation for cards
+        const cards = document.querySelectorAll('.group');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+    </script>
+</body></html>

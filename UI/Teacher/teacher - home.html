@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar Teacher Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#784b00",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-fixed": "#2a1700",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed": "#00174b",
+                    "tertiary-container": "#996100",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-high": "#dce9ff",
+                    "on-primary-container": "#eeefff",
+                    "secondary-fixed": "#6ffbbe",
+                    "inverse-primary": "#b4c5ff",
+                    "surface": "#f8f9ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "primary-container": "#2563eb",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "on-surface-variant": "#434655",
+                    "background": "#f8f9ff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "primary-fixed": "#dbe1ff",
+                    "on-background": "#0b1c30",
+                    "surface-container": "#e5eeff",
+                    "outline": "#737686",
+                    "on-tertiary-container": "#ffeedd",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "secondary": "#006c49",
+                    "surface-container-low": "#eff4ff",
+                    "on-secondary": "#ffffff",
+                    "on-surface": "#0b1c30",
+                    "outline-variant": "#c3c6d7",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-secondary-container": "#00714d",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "stack-lg": "2rem",
+                    "margin-mobile": "1.25rem",
+                    "gutter": "1rem",
+                    "margin-desktop": "2.5rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 1);
+        }
+        .circular-progress {
+            --percentage: 0;
+            background: conic-gradient(var(--tw-color-secondary) calc(var(--percentage) * 1%), #E2E8F0 0);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 w-full bg-surface sticky top-0 z-50 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a female teacher in a brightly lit, modern educational office environment. She has a warm, encouraging smile. The background is softly blurred with bookshelves and a minimalist desk setup. The color palette is clean with soft blues and whites to match the Diajar LMS aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRjX9NU_gEg0BhKFOJSMzwqP9l-GPAkdTKWA38Gx8AXmMy2C_VdgcNQbttxkxWyxnOIP9p_7Qw800BkcZqLxoNALdXn_FzCIHYaYHfKXDbjk-FUyORTShW0X7s5fJKoXdj81KLrajAbGK2cN8JzWJXggx_cGpuWRRUOfEh93Xkzyh7IUJfXoj_yqkHXxcLjWDLpDbRnpcYSYxBKcokm2GHWvByeUDb3xlHNVvjc3KK7Ei2gjWbVgyOPjz3uvJlpY3UDtreUa58kTU"/>
+</div>
+<div class="hidden md:block">
+<span class="font-headline-md text-headline-md font-bold text-primary">Diajar</span>
+</div>
+</div>
+<div class="flex-1 flex justify-center items-center px-4">
+<h1 class="font-headline-md text-headline-md text-primary truncate">Biology - Class 11A</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 rounded-full hover:bg-surface-container-high transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant p-2 rounded-full hover:bg-surface-container-high transition-colors">settings</button>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-8">
+<!-- Header Greeting -->
+<section class="mb-stack-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Good Morning, Sarah!</h2>
+<p class="text-on-surface-variant font-body-md">Academic Year: 2023/2024 • Academic Portal</p>
+</div>
+<div class="hidden md:flex bg-primary-container/10 px-4 py-2 rounded-xl border border-primary-container/20 items-center gap-2">
+<span class="material-symbols-outlined text-primary">event_note</span>
+<span class="text-primary font-label-md">Monday, Oct 23rd</span>
+</div>
+</div>
+</section>
+<!-- Main Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Pending Actions & Class Health -->
+<div class="md:col-span-8 flex flex-col gap-gutter">
+<!-- Pending Actions (Urgent) -->
+<div class="bg-primary-container text-on-primary-container p-6 rounded-xl shadow-sm relative overflow-hidden">
+<!-- Background Accent -->
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined fill-1">notification_important</span>
+<h3 class="font-headline-md text-headline-md">Needs Your Attention</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+<div class="text-4xl font-bold mb-1">12</div>
+<div class="text-on-primary-container/80 font-label-md mb-4 uppercase tracking-wider">Ungraded Assignments</div>
+<button class="w-full bg-white text-primary font-label-md py-3 rounded-lg hover:bg-surface-bright active:scale-95 transition-all">Grade Now</button>
+</div>
+<div class="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+<div class="text-4xl font-bold mb-1">5</div>
+<div class="text-on-primary-container/80 font-label-md mb-4 uppercase tracking-wider">Assessment Reviews</div>
+<button class="w-full bg-primary text-white font-label-md py-3 rounded-lg hover:opacity-90 active:scale-95 transition-all">Review</button>
+</div>
+</div>
+</div>
+<!-- Class Health Metrics -->
+<div class="glass-card p-6 rounded-xl">
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-secondary">analytics</span>
+                        Class Health Overview
+                    </h3>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<!-- Metric 1 -->
+<div class="flex flex-col items-center text-center p-4 rounded-xl bg-surface-container-low">
+<div class="relative w-20 h-20 flex items-center justify-center mb-3">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-outline-variant" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213.6" stroke-dashoffset="46.9" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-bold text-lg">78%</span>
+</div>
+<span class="font-label-md text-on-surface-variant">Material Completion</span>
+</div>
+<!-- Metric 2 -->
+<div class="flex flex-col items-center text-center p-4 rounded-xl bg-surface-container-low">
+<div class="relative w-20 h-20 flex items-center justify-center mb-3">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-outline-variant" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213.6" stroke-dashoffset="38.4" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-bold text-lg">82%</span>
+</div>
+<span class="font-label-md text-on-surface-variant">Avg Assignment Grade</span>
+</div>
+<!-- Metric 3 -->
+<div class="flex flex-col items-center text-center p-4 rounded-xl bg-surface-container-low">
+<div class="relative w-20 h-20 flex items-center justify-center mb-3">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-outline-variant" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213.6" stroke-dashoffset="53.4" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-bold text-lg">75%</span>
+</div>
+<span class="font-label-md text-on-surface-variant">Avg Assessment Score</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="glass-card p-6 rounded-xl">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                            Recent Activity
+                        </h3>
+<button class="text-primary font-label-md hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container">lab_profile</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-body-md"><span class="font-bold">Alex Johnson</span> submitted Genetics Lab Report</p>
+<p class="text-on-surface-variant text-sm">2h ago • Assignment</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-white">menu_book</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-body-md"><span class="font-bold">Maria Garcia</span> completed Photosynthesis Module</p>
+<p class="text-on-surface-variant text-sm">4h ago • Learning Path</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-white">quiz</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-body-md"><span class="font-bold">Liam Chen</span> submitted Biology Quiz</p>
+<p class="text-on-surface-variant text-sm">6h ago • Assessment</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: SRL, Progress, Deadlines -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<!-- SRL Engagement -->
+<div class="bg-secondary text-on-secondary p-6 rounded-xl shadow-sm">
+<h3 class="font-label-md uppercase tracking-wider mb-4 text-on-secondary/80">SRL Engagement</h3>
+<div class="space-y-6">
+<div class="flex justify-between items-center">
+<span class="font-body-md">Active Plans</span>
+<span class="text-2xl font-bold">24</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md">New Reflections</span>
+<span class="text-2xl font-bold">18</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md">Avg Comprehension</span>
+<div class="flex items-center gap-1">
+<span class="text-2xl font-bold">4.2</span>
+<span class="text-sm">/5</span>
+</div>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container font-label-md py-3 rounded-lg hover:brightness-110 transition-all">Engagement Report</button>
+</div>
+</div>
+<!-- Chapter Progress -->
+<div class="glass-card p-6 rounded-xl">
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">bookmark</span>
+                        Chapter Progress
+                    </h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-on-surface font-label-md">Chapter 3: Cell Structure</span>
+<span class="text-primary font-bold">85%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-on-surface font-label-md">Chapter 4: Metabolism</span>
+<span class="text-on-surface-variant font-bold">40%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="bg-primary/50 h-full rounded-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Upcoming Deadlines -->
+<div class="glass-card p-6 rounded-xl">
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-error">alarm</span>
+                        Deadlines
+                    </h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 border border-outline-variant rounded-xl border-l-4 border-l-error">
+<div class="flex-1">
+<p class="font-bold text-on-surface">Final Lab Report</p>
+<p class="text-sm text-on-surface-variant">Due Oct 30</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 p-3 border border-outline-variant rounded-xl border-l-4 border-l-primary">
+<div class="flex-1">
+<p class="font-bold text-on-surface">Evolution Quiz</p>
+<p class="text-sm text-on-surface-variant">Due Nov 2</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center py-2 px-margin-mobile bg-surface-container-lowest shadow-[0_-4px_6px_-1px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-[10px]">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-sm text-[10px]">Classes</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="font-label-sm text-[10px]">Grading</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-[10px]">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple interaction for cards
+        document.querySelectorAll('.glass-card, .bg-primary-container').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md');
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'all 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md');
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+    </script>
+</body></html>

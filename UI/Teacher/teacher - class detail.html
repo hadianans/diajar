@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Diajar - Class Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#6ffbbe",
+                    "on-background": "#0b1c30",
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary-fixed-dim": "#4edea3",
+                    "tertiary-container": "#996100",
+                    "on-surface": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed": "#00174b",
+                    "outline-variant": "#c3c6d7",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#00714d",
+                    "background": "#f8f9ff",
+                    "tertiary": "#784b00",
+                    "on-error": "#ffffff",
+                    "primary": "#004ac6",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#737686",
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#2563eb",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container-high": "#dce9ff",
+                    "secondary": "#006c49",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#002113",
+                    "on-surface-variant": "#434655",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-container": "#ffeedd",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-container": "#6cf8bb",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dbe1ff",
+                    "inverse-surface": "#213145",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#005236"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "1rem",
+                    "gutter": "1rem",
+                    "stack-sm": "0.5rem",
+                    "margin-mobile": "1.25rem",
+                    "margin-desktop": "2.5rem",
+                    "stack-lg": "2rem"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface pb-24">
+<!-- Top AppBar -->
+<header class="bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a female teacher with a warm, encouraging smile, wearing business-casual attire. The background is a soft-focus minimalist classroom with natural light and cool blue tones consistent with a modern Diajar educational platform aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYKOce0feJEyPpRdm-iV0wx4zfikSdZYKSThFOiKQQ7JO_F-FJuL-EgsVx80W3_RI3oji6gqKrmN8otEoykV4nnwvGoYMT0r55bnhB-n-FmsmtxIsrPVWTYX_zfwFGMS-SJNlGpVQifUhwe1aBolblbKg2EBuLT7vAAoOQ57S-wWzb71yPaIy22ZrjCrCf7oo6ZJD3Q2qXZhAgj3eileI3bkDq4pv_KE-0Uwjn3HXH4lNIkEm2UNZ7xZ4PibTMNs3eriwUupwazC0"/>
+</div>
+<span class="font-headline-md text-headline-md font-bold text-primary">Diajar</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<main class="mt-16 px-margin-mobile pt-stack-md max-w-2xl mx-auto">
+<!-- Hero Header -->
+<section class="mb-stack-lg">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Biology - Class 11A</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">AY 2023/2024 • Grade 11</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-primary bg-primary-container px-3 py-1 rounded-full">32 Students</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">4 Groups</span>
+</div>
+</div>
+</section>
+<!-- Attention Summary Strip -->
+<div class="bg-error-container text-on-error-container p-3 rounded-xl mb-stack-md flex items-center gap-3 shadow-sm">
+<span class="material-symbols-outlined text-error">warning</span>
+<p class="font-label-md text-label-md">5 students need attention (Low completion or missing tasks)</p>
+</div>
+<!-- Filter & Search Section -->
+<section class="sticky top-[64px] bg-surface pt-2 z-40 space-y-4 pb-4">
+<!-- Group Filter Tabs -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-label-md transition-all active:scale-95 flex-shrink-0">All</button>
+<button class="bg-surface-container text-on-surface-variant px-5 py-2 rounded-xl font-label-md transition-all hover:bg-surface-container-high flex-shrink-0">Group A</button>
+<button class="bg-surface-container text-on-surface-variant px-5 py-2 rounded-xl font-label-md transition-all hover:bg-surface-container-high flex-shrink-0">Group B</button>
+<button class="bg-surface-container text-on-surface-variant px-5 py-2 rounded-xl font-label-md transition-all hover:bg-surface-container-high flex-shrink-0">Group C</button>
+<button class="bg-surface-container text-on-surface-variant px-5 py-2 rounded-xl font-label-md transition-all hover:bg-surface-container-high flex-shrink-0">Group D</button>
+</div>
+<!-- Search & Sort -->
+<div class="flex gap-3">
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary font-body-md transition-all" placeholder="Search students..." type="text"/>
+</div>
+<button class="w-12 h-12 flex items-center justify-center bg-surface-container rounded-xl text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</section>
+<!-- Student List -->
+<section class="space-y-stack-sm pb-10">
+<!-- Student 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] border border-outline-variant flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A profile headshot of a teenage boy, Alex, with a friendly expression and short dark hair. Modern studio lighting with a soft blue background, high quality portraiture for an educational student profile dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjpP9dqbuOL5jGI8ujVK1i0ZnWvz8NUxe9O-zibW1hajSxj_vlPvZ2HWOizC3EDRohhyRYopoxrHVr0Fa1Hh7GrvleCANlhU-Eao53TFlOMWhWjfXmHak50jMhKVMGMa3I_MLp9h6fjK3H6rJWLKPHJ1J8Mjh0h2cQjVuWQYQbB7G2O6u4Gbx-PIZ3YUUBwCdqfIhrAXPjM5O_9EcVE6eYdzsnvzKdlCFh-ibuqSKzURpB4Vgh-F8Kf4i-6srTUle1DDcBN4LDtPQ"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">Alex Johnson</h3>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Group A</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-semibold">85% Completion</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 85%"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0">
+<div class="text-right">
+<div class="text-[10px] font-bold text-primary">A- Grade</div>
+<div class="text-[10px] text-on-surface-variant">92% Assm.</div>
+</div>
+<span class="material-symbols-outlined text-tertiary fill-1" style="font-variation-settings: 'FILL' 1;" title="SRL Badge Active">workspace_premium</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Student 2 (Warning) -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] border border-outline-variant flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A profile headshot of a teenage girl, Maria, with long brown hair, looking slightly thoughtful. Minimalist soft-focus background, clean student photography style for a learning management system profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWkCKGB6nKeGhCRg7V34OJIQxaF9QIMG5OMJ-qlOcOx9fcC_uHPRQYbyBISSBi11uA3hP3z5lg7S-KNcP9OBSa739Qz7wiu2E3sSR5jyOiyHQ3MGOg26-mZ9lK2wpPhxvpUtdLCP-Gw1FESnJC6THqs6xozBJxJ7TmxrwrFQ0Pi3o24niY7eg8N90D76h3aa771UA-Q_gM2SQ8aXBV0jk_oi7WZz2e0-idfBjn4Z4ypf8kR6NtORSH5jhj40Ka0NQTzOStLw9Ec2Q"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">Maria Garcia</h3>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Group B</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-semibold text-tertiary">40% Completion</span>
+<span class="material-symbols-outlined text-tertiary text-sm">warning</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 40%"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0">
+<div class="text-right">
+<div class="text-[10px] font-bold text-on-surface">B Grade</div>
+<div class="text-[10px] text-on-surface-variant">75% Assm.</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant opacity-20">workspace_premium</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Student 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] border border-outline-variant flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional profile headshot of an Asian teenage boy, Liam, with glasses and a bright smile. Bright, clean background with soft natural lighting, consistent with a high-end educational app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIT-d3DjI01J1GK6kaYYPlbcLeDEwmstL8d8OxnrIJLpoZ-xNtIGe5SJSopAYzKADDRUm6ediP_0eBnfWIGkU8FSIWRkpvpwib7d54tgaZ1CcMhBPombTB8d-AHiMyCJSv5iRiQog8B4PF6566SGMnlWbkvi4zU_ii-MTSyeRw2kZTqcjOlmGG5dv5yCjdyDG5L9r4TNr6g82AdoMutfeIU2UeFGyD0qsKCcnpKzRlmoJKliG65TNpWNPrW4dJEA8tIabiKo_UzSs"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">Liam Chen</h3>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Group A</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-semibold">95% Completion</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 95%"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0">
+<div class="text-right">
+<div class="text-[10px] font-bold text-primary">A Grade</div>
+<div class="text-[10px] text-on-surface-variant">98% Assm.</div>
+</div>
+<span class="material-symbols-outlined text-tertiary fill-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Student 4 (Urgent) -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] border border-outline-variant flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-error">
+<img class="w-full h-full object-cover" data-alt="A candid profile headshot of a teenage girl, Sarah, with blonde hair in a ponytail. Soft, neutral indoor lighting with a clean, modern aesthetic suitable for a high-density student management list." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIN6QGWlc7g1iK5-DtHwqXFxYnqPXVK5miIuvXAXKnWCN2wvyAUcYoyXxtCVEsiEGp15gO4bDaTnNpaPmpQY8aykmBsARyihC1BPlBOSuphDlN1me4MIsoK28s4laIs_u4GczqdZ74Vd9ux1F2Dh04ZXM-e8Wv8KRs8H5sgWwnCHrYhD1Qt2-u0W56dqQp2Jf4LzYuoBp1KqguS_A0YiiHRPxsscyTaxeFlaHXIUUP_DgmEPhTZpL5wTXlDwOle1ywUHT6MSqfZ24"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">Sarah Miller</h3>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Group C</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-bold text-error">12% Completion</span>
+<span class="material-symbols-outlined text-error text-sm">priority_high</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error" style="width: 12%"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0">
+<div class="text-right">
+<div class="text-[10px] font-bold text-error">Missing Subs</div>
+<div class="text-[10px] text-on-surface-variant">Low Activity</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant opacity-20">workspace_premium</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Student 5 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] border border-outline-variant flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a teenage boy, James, with curly hair and a friendly, confident expression. Studio lighting with a clean white and soft blue color palette, professional grade student headshot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMkaU_P70xL_9SFU_0ZCJ-QJM-D2j007O9ctgAnh8sAXPVXJ6tUjRoAA42TKLTU7ntjAhi-qdNhKfeF1Xm8-FecdlAfP2Ua92tq2H_XIle_Vvgk5Oj2or55_TM2ZDGLhtX7Qpt-KJOidIeSlyIwnvCqHXrcJ2pAFMGNuVJiDOay1x16s2ndauwHcJRSVvxRdxuJZ0OytfsvD7F6bP4C34UKxIBYUrpjGBmHsSmGX44Tdh7_1Vrz95HtmFk93b9vZyqSrwwKS7VEtY"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">James Wilson</h3>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Group D</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-semibold">78% Completion</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 78%"></div>
+</div>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0">
+<div class="text-right">
+<div class="text-[10px] font-bold text-on-surface">B+ Grade</div>
+<div class="text-[10px] text-on-surface-variant">80% Assm.</div>
+</div>
+<span class="material-symbols-outlined text-tertiary fill-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface-container shadow-lg rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-3 py-1 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-sm text-label-sm">Classes</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="font-label-sm text-label-sm">Grading</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('.active\\:scale-\\[0\\.98\\]').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.add('bg-surface-variant');
+                setTimeout(() => card.classList.remove('bg-surface-variant'), 150);
+            });
+        });
+
+        // Simple filter active state toggle
+        const filterButtons = document.querySelectorAll('.flex.gap-2.overflow-x-auto button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary');
+                    b.classList.add('bg-surface-container', 'text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary', 'text-on-primary');
+                btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

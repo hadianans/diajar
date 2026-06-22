@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Lesson Material</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#b4c5ff",
+                    "surface-dim": "#cbdbf5",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#006c49",
+                    "tertiary-container": "#996100",
+                    "surface-container": "#e5eeff",
+                    "outline": "#737686",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-container": "#00714d",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-container-low": "#eff4ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface-tint": "#0053db",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#ffeedd",
+                    "inverse-primary": "#b4c5ff",
+                    "background": "#f8f9ff",
+                    "on-surface": "#0b1c30",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-background": "#0b1c30",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-container": "#6cf8bb",
+                    "primary": "#004ac6",
+                    "inverse-on-surface": "#eaf1ff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "primary-fixed": "#dbe1ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary": "#784b00",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#434655",
+                    "on-error-container": "#93000a",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#2563eb",
+                    "surface-variant": "#d3e4fe",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed": "#002113",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "surface": "#f8f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "1rem",
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "stack-lg": "2rem",
+                    "margin-desktop": "2.5rem",
+                    "margin-mobile": "1.25rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid #E2E8F0; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .active-segment { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #004ac6 !important; ring: 2px; ring-color: #004ac6; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar (from JSON) -->
+<header class="bg-background fixed top-0 w-full h-16 z-50 flex items-center justify-between px-margin-mobile md:px-margin-desktop w-full h-16">
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200 p-2">
+<span class="material-symbols-outlined text-primary" data-icon="close">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">New Lesson</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="hidden md:block text-primary font-bold px-4 py-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200">
+                Save Draft
+            </button>
+<button class="bg-primary-container text-on-primary-container font-bold px-6 py-2 rounded-full shadow-lg active:scale-95 duration-200">
+                Publish
+            </button>
+</div>
+</header>
+<main class="pt-24 px-margin-mobile md:max-w-4xl md:mx-auto">
+<!-- Section 1: Metadata -->
+<section class="space-y-stack-lg mb-stack-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="md:col-span-2">
+<label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Material Title *</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-lg font-body-lg focus:ring-2 focus:ring-primary shadow-sm" placeholder="e.g. Introduction to Cellular Respiration" type="text"/>
+</div>
+<div class="md:col-span-2">
+<label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Description (Optional)</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm resize-none" placeholder="Brief overview of the material content..." rows="3"></textarea>
+</div>
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Chapter Selector</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md appearance-none focus:ring-2 focus:ring-primary shadow-sm">
+<option>Select a Chapter</option>
+<option>Biology 101: The Basics</option>
+<option>Advanced Molecular Genetics</option>
+<option>Ecological Balance</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Order Position</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm" type="number" value="1"/>
+</div>
+</div>
+</section>
+<!-- Section 2: Content Toggle (Segmented Control) -->
+<section class="mb-stack-lg">
+<div class="bg-surface-container-high p-1.5 rounded-full flex items-center max-w-sm mx-auto shadow-inner">
+<button class="flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 bg-white text-primary active-segment" id="btn-video" onclick="toggleContent('video')">
+<span class="material-symbols-outlined text-[20px]" data-icon="videocam">videocam</span>
+                    Video
+                </button>
+<button class="flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 text-on-surface-variant" id="btn-text" onclick="toggleContent('text')">
+<span class="material-symbols-outlined text-[20px]" data-icon="article">article</span>
+                    Text Content
+                </button>
+</div>
+</section>
+<!-- Section 3: Video Input (Active State Default) -->
+<section class="space-y-stack-md transition-opacity duration-300" id="section-video">
+<div class="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm">
+<label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Video URL Source</label>
+<div class="flex gap-2">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="link">link</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-3 pl-12 pr-5 text-body-md font-body-md focus:ring-2 focus:ring-primary" placeholder="https://youtube.com/..." type="text"/>
+</div>
+<button class="bg-surface-container-highest px-4 py-3 rounded-xl hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="sync">sync</span>
+</button>
+</div>
+<p class="mt-2 text-label-sm font-label-sm text-on-surface-variant">Supported: YouTube, Vimeo, Loom, or direct .mp4 links.</p>
+<!-- Thumbnail Preview -->
+<div class="mt-stack-lg group relative overflow-hidden rounded-2xl aspect-video bg-surface-container shadow-lg">
+<div class="absolute inset-0 z-0 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="A hyper-realistic 3D biological illustration of a eukaryotic cell with detailed mitochondria, ribosomes, and a nucleus glowing softly from within. The lighting is ethereal and clinical, with a deep blue and teal color palette reflecting a high-end educational science platform. Floating micro-particles and subtle lens flares enhance the sense of depth and scientific wonder." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZpUhVq2rqVa5N9EzDYR8-gpyPYG28wC98D6v_LiqgO1yYtgh21dI-N9X5owOzCjM2enMORECdB4fr-uc20ZwHs9ln4e6cGBGn7F-1wIXetLJm0BRS_MMwI9C74Hx106LAEssGyqMsjg4gVYnq-NDJCuCu_x1s4ko4aVek9KPTM8hJIW8cL7hW6lwltbPqO90RU3Djkm9Fg1_T8D_9BQcYuFRXX_k0GfVtTKRysw31JF9UYwD0CZLtdB687TyxEXGKfHoeoNCTF3o')"></div>
+</div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+<div class="bg-white/90 backdrop-blur-md p-4 rounded-full shadow-2xl active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-primary text-[40px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+<span class="bg-black/60 text-white px-3 py-1 rounded-md text-label-sm font-label-sm backdrop-blur-sm">Preview: 3D Cell Anatomy</span>
+<button class="bg-white/20 hover:bg-white/40 text-white p-2 rounded-full backdrop-blur-md transition-colors">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Text Input (Hidden State) -->
+<section class="hidden space-y-stack-md transition-opacity duration-300" id="section-text">
+<div class="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden flex flex-col min-h-[400px]">
+<!-- Toolbar -->
+<div class="bg-surface-container-low p-2 border-b border-outline-variant flex flex-wrap gap-1">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="format_bold">format_bold</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="format_italic">format_italic</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="format_list_bulleted">format_list_bulleted</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="format_list_numbered">format_list_numbered</span></button>
+<div class="w-px h-8 bg-outline-variant mx-1"></div>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="link">link</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="image">image</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="code">code</span></button>
+<div class="w-px h-8 bg-outline-variant mx-1"></div>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant ml-auto"><span class="material-symbols-outlined" data-icon="undo">undo</span></button>
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="redo">redo</span></button>
+</div>
+<!-- Editor Area -->
+<textarea class="flex-1 w-full border-none p-6 font-body-md text-body-md focus:ring-0 resize-none min-h-[300px]" placeholder="Start typing your educational content here... Use the toolbar for formatting."></textarea>
+</div>
+</section>
+<!-- Section 5: Attachments -->
+<section class="mt-stack-lg space-y-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Supporting Materials</h3>
+<div class="space-y-stack-sm">
+<!-- Attachment 1 Example -->
+<div class="flex items-center gap-4 p-4 bg-white border border-outline-variant rounded-2xl shadow-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-on-surface">Cell_Structure_Diagram.pdf</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">PDF • 2.4 MB</p>
+</div>
+<button class="p-2 text-error hover:bg-error-container/20 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Add Attachment Trigger -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-8 flex flex-col items-center justify-center gap-3 hover:bg-surface-container-low transition-all cursor-pointer group">
+<div class="bg-primary/10 p-3 rounded-full group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="upload_file">upload_file</span>
+</div>
+<div class="text-center">
+<p class="font-label-md text-label-md text-on-surface">Click to upload or drag and drop</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">PDF, PPTX, DOCX, or JPG (max 25MB each)</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (from JSON) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-gutter py-3 bg-surface shadow-[0_-4px_12px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+<div class="flex-1 flex justify-center">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors px-4 py-2">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+<span class="font-label-md text-label-md">Preview</span>
+</button>
+</div>
+<div class="flex-1 flex justify-center">
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-8 py-2 active:scale-98 transition-transform">
+<span class="material-symbols-outlined" data-icon="rocket_launch" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+<span class="font-label-md text-label-md">Publish</span>
+</button>
+</div>
+</nav>
+<!-- Floating UI for Desktop Only Status -->
+<div class="hidden md:flex fixed bottom-10 right-10 flex-col gap-3">
+<button class="bg-white border border-outline-variant text-primary shadow-lg p-4 rounded-full hover:shadow-xl transition-all flex items-center gap-3 group active:scale-95">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+<span class="font-label-md text-label-md pr-2">Preview Material</span>
+</button>
+</div>
+<script>
+        function toggleContent(type) {
+            const videoSection = document.getElementById('section-video');
+            const textSection = document.getElementById('section-text');
+            const btnVideo = document.getElementById('btn-video');
+            const btnText = document.getElementById('btn-text');
+
+            if (type === 'video') {
+                videoSection.classList.remove('hidden');
+                textSection.classList.add('hidden');
+                
+                btnVideo.classList.add('bg-white', 'text-primary', 'active-segment');
+                btnVideo.classList.remove('text-on-surface-variant');
+                
+                btnText.classList.remove('bg-white', 'text-primary', 'active-segment');
+                btnText.classList.add('text-on-surface-variant');
+            } else {
+                videoSection.classList.add('hidden');
+                textSection.classList.remove('hidden');
+                
+                btnText.classList.add('bg-white', 'text-primary', 'active-segment');
+                btnText.classList.remove('text-on-surface-variant');
+                
+                btnVideo.classList.remove('bg-white', 'text-primary', 'active-segment');
+                btnVideo.classList.add('text-on-surface-variant');
+            }
+        }
+
+        // Simple interaction for the attachment trigger
+        document.querySelector('.border-dashed').addEventListener('click', () => {
+            alert('Opening file picker...');
+        });
+    </script>
+</body></html>

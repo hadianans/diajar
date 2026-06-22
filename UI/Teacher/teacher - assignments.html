@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Diajar LMS - Assignments</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#f8f9ff",
+                    "surface-tint": "#0053db",
+                    "inverse-on-surface": "#eaf1ff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "background": "#f8f9ff",
+                    "inverse-surface": "#213145",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-dim": "#cbdbf5",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-container-low": "#eff4ff",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e5eeff",
+                    "on-tertiary-container": "#ffeedd",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#784b00",
+                    "on-primary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "secondary": "#006c49",
+                    "on-primary-container": "#eeefff",
+                    "tertiary-fixed": "#ffddb8",
+                    "secondary-fixed-dim": "#4edea3",
+                    "tertiary-container": "#996100",
+                    "surface-container-high": "#dce9ff",
+                    "surface": "#f8f9ff",
+                    "primary": "#004ac6",
+                    "outline": "#737686",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-container": "#2563eb",
+                    "outline-variant": "#c3c6d7",
+                    "on-surface-variant": "#434655",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-surface": "#0b1c30",
+                    "on-secondary-container": "#00714d",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#00174b",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-secondary-fixed": "#002113",
+                    "secondary-container": "#6cf8bb",
+                    "on-tertiary-fixed-variant": "#653e00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "stack-lg": "2rem",
+                    "gutter": "1rem",
+                    "stack-sm": "0.5rem",
+                    "margin-desktop": "2.5rem"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .soft-shadow {
+            shadow-color: #0F172A;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant fixed top-0 w-full z-40">
+<div class="flex justify-between items-center w-full px-margin-mobile py-4">
+<div class="flex items-center gap-3">
+<button class="hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Assignments</h1>
+</div>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-lg font-label-md text-label-md shadow-sm active:scale-95 transition-transform">
+                Create
+            </button>
+</div>
+</header>
+<main class="pt-20 px-margin-mobile flex flex-col gap-stack-md">
+<!-- Status Filter Tabs -->
+<nav class="flex w-full border-b border-outline-variant overflow-x-auto hide-scrollbar">
+<button class="px-4 py-3 text-on-surface-variant font-label-md text-label-md whitespace-nowrap">All</button>
+<button class="px-4 py-3 text-primary border-b-2 border-primary font-label-md text-label-md whitespace-nowrap flex items-center gap-1.5">
+                Needs Grading
+                <span class="bg-error text-on-error text-[10px] px-1.5 py-0.5 rounded-full font-bold">12</span>
+</button>
+<button class="px-4 py-3 text-on-surface-variant font-label-md text-label-md whitespace-nowrap">Graded</button>
+<button class="px-4 py-3 text-on-surface-variant font-label-md text-label-md whitespace-nowrap">Closed</button>
+</nav>
+<!-- Chapter Filter Chips -->
+<section class="flex gap-2 overflow-x-auto hide-scrollbar py-2">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full text-label-sm font-label-sm whitespace-nowrap transition-colors">All Chapters</button>
+<button class="bg-surface-container border border-outline-variant text-on-surface-variant px-4 py-2 rounded-full text-label-sm font-label-sm whitespace-nowrap transition-colors hover:bg-surface-container-high">Cell Structure</button>
+<button class="bg-surface-container border border-outline-variant text-on-surface-variant px-4 py-2 rounded-full text-label-sm font-label-sm whitespace-nowrap transition-colors hover:bg-surface-container-high">Molecular Basis</button>
+<button class="bg-surface-container border border-outline-variant text-on-surface-variant px-4 py-2 rounded-full text-label-sm font-label-sm whitespace-nowrap transition-colors hover:bg-surface-container-high">Evolution</button>
+</section>
+<!-- Sort Control -->
+<div class="flex justify-end items-center py-1">
+<button class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors">
+<span>Sort by: Pending</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<!-- Assignment Cards List -->
+<div class="flex flex-col gap-4">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant soft-shadow p-4 active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Genetics Lab Report</h3>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Chapter 3: Molecular Basis</p>
+</div>
+<span class="bg-error-container text-on-error-container px-2.5 py-1 rounded-lg text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="priority_high">priority_high</span>
+                        16 Pending
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 bg-surface-container-low rounded-lg p-3">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Submissions</span>
+<div class="flex items-end gap-1.5 mt-0.5">
+<span class="text-on-surface font-bold text-lg">28</span>
+<span class="text-on-surface-variant text-sm mb-0.5">/ 32</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Graded</span>
+<div class="flex items-end gap-1.5 mt-0.5">
+<span class="text-primary font-bold text-lg">12</span>
+<span class="text-on-surface-variant text-sm mb-0.5">done</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="analytics">analytics</span>
+<span class="text-on-surface-variant font-label-md text-label-md">Avg: <span class="text-on-surface font-bold">88/100</span></span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-surface bg-surface-variant flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-7 h-7 rounded-full border-2 border-surface bg-primary-container text-on-primary-container flex items-center justify-center text-[10px] font-bold">MK</div>
+<div class="w-7 h-7 rounded-full border-2 border-surface bg-secondary-container text-on-secondary-container flex items-center justify-center text-[10px] font-bold">+12</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant soft-shadow p-4 active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Cell Diagram Drawing</h3>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Chapter 2: Cell Structure</p>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2.5 py-1 rounded-lg text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span>
+                        2 Pending
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 bg-surface-container-low rounded-lg p-3">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Submissions</span>
+<div class="flex items-end gap-1.5 mt-0.5">
+<span class="text-on-surface font-bold text-lg">32</span>
+<span class="text-on-surface-variant text-sm mb-0.5">/ 32</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Graded</span>
+<div class="flex items-end gap-1.5 mt-0.5">
+<span class="text-primary font-bold text-lg">30</span>
+<span class="text-on-surface-variant text-sm mb-0.5">done</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="analytics">analytics</span>
+<span class="text-on-surface-variant font-label-md text-label-md">Avg: <span class="text-on-surface font-bold">92/100</span></span>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" data-icon="check">check</span>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant soft-shadow p-4 active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Photosynthesis Essay</h3>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Chapter 2: Cell Structure</p>
+</div>
+<span class="bg-error-container text-on-error-container px-2.5 py-1 rounded-lg text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="notification_important">notification_important</span>
+                        15 Pending
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 bg-surface-container-low rounded-lg p-3">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Submissions</span>
+<div class="flex items-end gap-1.5 mt-0.5">
+<span class="text-on-surface font-bold text-lg">15</span>
+<span class="text-on-surface-variant text-sm mb-0.5">/ 32</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Graded</span>
+<div class="flex items-end gap-1.5 mt-0.5">
+<span class="text-error font-bold text-lg">0</span>
+<span class="text-on-surface-variant text-sm mb-0.5">done</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[20px]" data-icon="grade">grade</span>
+<span class="text-on-surface-variant font-label-md text-label-md">Max: <span class="text-on-surface font-bold">50 pts</span></span>
+</div>
+<button class="text-primary font-bold text-label-md hover:underline">Start Grading</button>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container shadow-sm flex justify-around items-center h-16 pb-safe rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-sm text-label-sm">Classes</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="assignment" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-label-sm text-label-sm">Tasks</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for chip selection
+        document.querySelectorAll('section.overflow-x-auto button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Reset others
+                this.parentElement.querySelectorAll('button').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary');
+                    b.classList.add('bg-surface-container', 'text-on-surface-variant', 'border', 'border-outline-variant');
+                });
+                // Set active
+                this.classList.add('bg-primary', 'text-on-primary');
+                this.classList.remove('bg-surface-container', 'text-on-surface-variant', 'border', 'border-outline-variant');
+            });
+        });
+
+        // Tab selection logic
+        document.querySelectorAll('nav.overflow-x-auto button').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('button').forEach(t => {
+                    t.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                    t.classList.add('text-on-surface-variant');
+                });
+                this.classList.add('text-primary', 'border-b-2', 'border-primary');
+                this.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

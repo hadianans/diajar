@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar Admin - New Account</title>
+<!-- Tailwind & Google Fonts -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Design System Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary-fixed-dim": "#b4c5ff",
+                "inverse-primary": "#b4c5ff",
+                "on-tertiary": "#ffffff",
+                "surface-dim": "#cbdbf5",
+                "surface-container-high": "#dce9ff",
+                "primary-fixed": "#dbe1ff",
+                "tertiary-fixed-dim": "#ffb95f",
+                "on-secondary-fixed": "#002113",
+                "surface": "#f8f9ff",
+                "outline": "#737686",
+                "on-primary-container": "#eeefff",
+                "background": "#f8f9ff",
+                "on-error-container": "#93000a",
+                "on-primary-fixed-variant": "#003ea8",
+                "on-secondary-container": "#00714d",
+                "tertiary-container": "#996100",
+                "on-surface-variant": "#434655",
+                "on-surface": "#0b1c30",
+                "surface-variant": "#d3e4fe",
+                "surface-bright": "#f8f9ff",
+                "secondary-fixed": "#6ffbbe",
+                "on-secondary": "#ffffff",
+                "secondary-fixed-dim": "#4edea3",
+                "on-error": "#ffffff",
+                "on-secondary-fixed-variant": "#005236",
+                "outline-variant": "#c3c6d7",
+                "error": "#ba1a1a",
+                "primary": "#004ac6",
+                "surface-tint": "#0053db",
+                "surface-container": "#e5eeff",
+                "tertiary-fixed": "#ffddb8",
+                "secondary-container": "#6cf8bb",
+                "on-tertiary-fixed-variant": "#653e00",
+                "primary-container": "#2563eb",
+                "surface-container-low": "#eff4ff",
+                "surface-container-lowest": "#ffffff",
+                "on-primary-fixed": "#00174b",
+                "tertiary": "#784b00",
+                "surface-container-highest": "#d3e4fe",
+                "error-container": "#ffdad6",
+                "secondary": "#006c49",
+                "on-tertiary-container": "#ffeedd",
+                "on-tertiary-fixed": "#2a1700",
+                "on-primary": "#ffffff",
+                "on-background": "#0b1c30",
+                "inverse-surface": "#213145",
+                "inverse-on-surface": "#eaf1ff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-md": "1rem",
+                "gutter": "1rem",
+                "stack-sm": "0.5rem",
+                "margin-desktop": "2.5rem",
+                "margin-mobile": "1.25rem",
+                "stack-lg": "2rem"
+            },
+            "fontFamily": {
+                "label-sm": ["Inter"],
+                "headline-lg": ["Inter"],
+                "label-md": ["Inter"],
+                "headline-lg-mobile": ["Inter"],
+                "body-lg": ["Inter"],
+                "headline-md": ["Inter"],
+                "body-md": ["Inter"]
+            },
+            "fontSize": {
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+        body {
+            background-color: #f8f9ff;
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .active-role-card {
+            border-color: #004ac6;
+            background-color: #eff4ff;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- TopAppBar Shell (Fixed at Top) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-150">
+                close
+            </button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">New Account</h1>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all">
+            Save
+        </button>
+</header>
+<!-- Content Area (with padding for fixed TopAppBar) -->
+<main class="pt-16 pb-24 max-w-xl mx-auto px-margin-mobile">
+<!-- Role Selection -->
+<section class="mt-stack-lg">
+<h2 class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-wider">Account Role</h2>
+<div class="grid grid-cols-1 gap-3">
+<!-- Role Card: Admin -->
+<button class="role-btn text-left p-4 bg-surface-container-lowest border border-outline-variant rounded-xl transition-all duration-200 active:scale-[0.98] active-role-card" id="role-admin" onclick="selectRole('admin')">
+<div class="flex items-center justify-between">
+<div>
+<span class="block font-headline-md text-headline-md text-on-surface">Admin</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Full system control</span>
+</div>
+<span class="material-symbols-outlined text-primary" id="check-admin">check_circle</span>
+</div>
+</button>
+<!-- Role Card: Teacher -->
+<button class="role-btn text-left p-4 bg-surface-container-lowest border border-outline-variant rounded-xl transition-all duration-200 active:scale-[0.98]" id="role-teacher" onclick="selectRole('teacher')">
+<div class="flex items-center justify-between">
+<div>
+<span class="block font-headline-md text-headline-md text-on-surface">Teacher</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Manage content & grade</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant hidden" id="check-teacher">check_circle</span>
+</div>
+</button>
+<!-- Role Card: Student -->
+<button class="role-btn text-left p-4 bg-surface-container-lowest border border-outline-variant rounded-xl transition-all duration-200 active:scale-[0.98]" id="role-student" onclick="selectRole('student')">
+<div class="flex items-center justify-between">
+<div>
+<span class="block font-headline-md text-headline-md text-on-surface">Student</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Access courses & tasks</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant hidden" id="check-student">check_circle</span>
+</div>
+</button>
+</div>
+</section>
+<!-- Profile Picture Upload -->
+<section class="mt-stack-lg flex flex-col items-center">
+<div class="relative">
+<div class="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-2 border-primary-container/20">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant">person</span>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-on-primary p-2 rounded-full shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+</button>
+</div>
+<p class="mt-2 font-label-sm text-label-sm text-on-surface-variant">Upload Profile Picture</p>
+</section>
+<!-- Basic Info Form -->
+<form class="mt-stack-lg space-y-stack-md">
+<!-- Full Name -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Full Name *</label>
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md" placeholder="e.g. Aditiya Wijaya" type="text"/>
+</div>
+<!-- Username with Checking Logic -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Username *</label>
+<div class="relative">
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md" id="username-input" oninput="checkUsername(this.value)" placeholder="aditiya_w" type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center">
+<span class="material-symbols-outlined text-primary animate-spin hidden" id="checking-spinner">sync</span>
+<span class="material-symbols-outlined text-secondary hidden" id="success-check">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Email -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Email Address *</label>
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md" placeholder="name@diajar.edu" type="email"/>
+</div>
+<!-- Password Setup -->
+<div class="pt-4 border-t border-outline-variant/30 space-y-stack-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Security</h3>
+<!-- Password Field -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Password</label>
+<div class="relative">
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md" id="password-field" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant active:scale-90 transition-transform" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Confirm Password</label>
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md" placeholder="••••••••" type="password"/>
+</div>
+<!-- Generate Tool -->
+<button class="flex items-center gap-2 text-primary font-label-md text-label-md hover:bg-primary/5 px-4 py-2 rounded-lg transition-colors w-fit" onclick="generatePassword()" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+                    Generate Secure Password
+                </button>
+<!-- Info Note -->
+<div class="bg-surface-container p-4 rounded-xl flex gap-3 items-start border border-primary/10">
+<span class="material-symbols-outlined text-primary text-[20px]">info</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">
+                        Note: Credentials are not automatically sent. Please ensure you share the password securely with the user after saving.
+                    </p>
+</div>
+</div>
+</form>
+</main>
+<!-- Bottom Nav Bar Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-margin-mobile pb-4 pt-2 bg-surface-container-lowest shadow-lg rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-sm text-label-sm">Directory</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined">person_add</span>
+<span class="font-label-sm text-label-sm">Invite</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-sm text-label-sm">Logs</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</div>
+</nav>
+<script>
+        function selectRole(roleId) {
+            // Remove active classes from all
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active-role-card');
+            });
+            document.querySelectorAll('[id^="check-"]').forEach(icon => {
+                icon.classList.add('hidden');
+            });
+
+            // Add active class to selected
+            const activeBtn = document.getElementById(`role-${roleId}`);
+            const activeCheck = document.getElementById(`check-${roleId}`);
+            
+            activeBtn.classList.add('active-role-card');
+            activeCheck.classList.remove('hidden');
+        }
+
+        let timeout = null;
+        function checkUsername(val) {
+            const spinner = document.getElementById('checking-spinner');
+            const check = document.getElementById('success-check');
+            
+            if (val.length < 3) {
+                spinner.classList.add('hidden');
+                check.classList.add('hidden');
+                return;
+            }
+
+            spinner.classList.remove('hidden');
+            check.classList.add('hidden');
+
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                spinner.classList.add('hidden');
+                check.classList.remove('hidden');
+            }, 800);
+        }
+
+        function togglePassword() {
+            const field = document.getElementById('password-field');
+            const icon = document.getElementById('eye-icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.innerText = 'visibility_off';
+            } else {
+                field.type = 'password';
+                icon.innerText = 'visibility';
+            }
+        }
+
+        function generatePassword() {
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+            let pass = "";
+            for (let i = 0; i < 12; i++) {
+                pass += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('password-field').value = pass;
+            document.getElementById('password-field').type = 'text';
+            document.getElementById('eye-icon').innerText = 'visibility_off';
+        }
+    </script>
+</body></html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Class Configuration — Biology Grade 11A</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#2563eb",
+                    "inverse-primary": "#b4c5ff",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#784b00",
+                    "secondary-fixed": "#6ffbbe",
+                    "inverse-on-surface": "#eaf1ff",
+                    "tertiary-container": "#996100",
+                    "on-background": "#0b1c30",
+                    "surface": "#f8f9ff",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#6cf8bb",
+                    "on-primary-fixed": "#00174b",
+                    "background": "#f8f9ff",
+                    "surface-variant": "#d3e4fe",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "outline-variant": "#c3c6d7",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "inverse-surface": "#213145",
+                    "on-secondary-container": "#00714d",
+                    "secondary": "#006c49",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#cbdbf5",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary": "#004ac6",
+                    "on-error-container": "#93000a",
+                    "on-primary-container": "#eeefff",
+                    "primary-fixed": "#dbe1ff",
+                    "outline": "#737686",
+                    "on-tertiary-container": "#ffeedd",
+                    "on-surface-variant": "#434655",
+                    "surface-container-high": "#dce9ff",
+                    "surface-tint": "#0053db",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-surface": "#0b1c30"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "0.5rem",
+                    "margin-desktop": "2.5rem",
+                    "stack-lg": "2rem",
+                    "gutter": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "stack-md": "1rem"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid #E2E8F0;
+      }
+      .custom-shadow {
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="w-full sticky top-0 z-50 bg-surface border-b border-outline-variant flex items-center justify-between px-margin-mobile h-16 md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform duration-150 p-2 hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Class Configuration</h1>
+</div>
+<button class="active:scale-95 transition-transform duration-150 p-2 hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</header>
+<main class="max-w-screen-xl mx-auto px-margin-mobile md:px-margin-desktop py-stack-md">
+<!-- Hero Header Section -->
+<section class="mb-stack-lg">
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-background">Biology — Grade 11A</h2>
+<div class="flex flex-wrap gap-2 items-center">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-md text-label-md">2024/2025 Academic Year</span>
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Fully Configured
+                    </span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Summary & Group -->
+<div class="md:col-span-7 flex flex-col gap-gutter">
+<!-- Summary Card -->
+<article class="glass-card custom-shadow rounded-xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-headline-md text-on-surface">Class Summary</h3>
+<button class="text-primary hover:bg-primary-container/10 p-2 rounded-full transition-colors active:scale-90" title="Edit Schedule">
+<span class="material-symbols-outlined">edit_calendar</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">science</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Subject</p>
+<p class="font-label-md text-label-md">Biology</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Teacher</p>
+<p class="font-label-md text-label-md">Prof. Anderson</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Schedule</p>
+<p class="font-label-md text-label-md">Mon, Wed • 09:00 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm">Academic Year</p>
+<p class="font-label-md text-label-md">2024/2025</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Linked Group Card -->
+<article class="glass-card custom-shadow rounded-xl p-6 flex flex-col gap-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Linked Student Group</h3>
+<div class="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">group</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold">11A - Grade 11</h4>
+<p class="text-on-surface-variant font-label-sm text-label-sm">22 Active Students</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<button class="w-full py-3 rounded-lg border border-primary text-primary font-label-md text-label-md hover:bg-primary/5 transition-colors active:scale-95" onclick="confirm('Are you sure you want to change the linked group? Existing attendance data may be archived.')">
+                        Change Group
+                    </button>
+</article>
+</div>
+<!-- Right Column: Students Preview -->
+<div class="md:col-span-5">
+<article class="glass-card custom-shadow rounded-xl p-6 h-full flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Students with Access (22)</h3>
+<span class="material-symbols-outlined text-primary cursor-pointer">search</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Student List Items -->
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Close up portrait of a smiling teenage boy with glasses, modern school hallway background, soft natural lighting, high quality educational photography, mindful growth aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUcVRJDRmWT4STza-5TElW43iIbVaHxGi1nrqtXymFE9Trwov29yA85UW9kyHD4Ui5e2HJD1k2GEcVTQSYqeG38nGc1ByncQhlPRhuflF_rxRbScEtFqO2e-AR5A2_qRLdKKt_WZbIioAXZgOeAExyceIDkZRoWLWKsb5V_jyb6z0wPqW0Zoej737dmWeTrvwvYyZGg5tG0hf6RghvzxJIeLuPfCnaCeM6abYs-hfVSmnInEPDjU1nsKYvAPRuUCOPO70rCfes7jM"/>
+<span class="font-body-md text-body-md flex-grow">Alex Rivers</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Portrait of a focused young teenage girl with braided hair, bright minimalist classroom background, soft morning light, calm and academic mood, high quality photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDum2ERHBnbC0qCGCIMa2Ywayt8hRYVGmoHvzAl_pmyQbbcrCOMTUZLkErPfby8HSdgxB4jR6x_6_FJlBFEBlq0qgD6bLkZAfZ9ljxK1FrDCyY7fFr3GDP5kQNYH-wVv8wiRdJlF4rM078zxSytDBhgDY2pfsBbSn0Nl_k_ArtWSNcttxzzlN7r72rWCLKNbyXt3kqxgdCgaGHUXiaLoLDOs9CbvTlPr1znrQDONxKGT9Yd8y05GqnntLUag5KIvXxjoj_ioDwTZnQ"/>
+<span class="font-body-md text-body-md flex-grow">Sarah Miller</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Cheerful teenage boy with dark curly hair looking at camera, soft focus library background, modern clean style, vibrant primary blue accents, high quality photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWnjqjNSkrIoup0DrtN2k-5V3cj2da0mDmimBJE05W4Xf4CImYpcimvD9-at8wrVp0GL_GGFoxHaZS-8h_MD9YzrTlvvHUtohwn-ehX9AyAnhp0OJPi0lEFTbDRj4Tu0NuTneDlzGej5LcW17iuEAtx4vx0QeBvWL-CCDcAuFBSf7B33uIdx3ohB2V-MIjs_n2twvcwKB8Z2_Kt0ef1M8p1U2uoYP1xc4K4zktLk2kno2Pb8nH8NEhEMDMWznA-9KiW-IihTNu-us"/>
+<span class="font-body-md text-body-md flex-grow">Julian Chen</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Profile of a young girl with a ponytail looking thoughtful, clean architectural background, soft blue-tinted shadows, professional school yearbook style, serene lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLkUUDwRMn-lKB4Ws4MA4TbWSeS32yz8fSvuqARdNDJAiNiCdCutlCsj9DOfUl0Y2sGK_F_Bnh-z7lVRAOlXvROJtEpjHoRueMGZW42L_xn5URosXcZwqBztRQve_PBcHumeloe8U-18XxA-NGXYNgF9PkExIKFWfZDPBgRi4fpVDZmWoAFO-oHYaFnlyuMBLNunIHDAumK2yLsPwunaf6tSLNTzkV8Gb7dyneLcMPFMMwHcZcb0JB6s24ih-PC7ZhruY_P4rxNtU"/>
+<span class="font-body-md text-body-md flex-grow">Elena Rodriguez</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Studio portrait of a young male student with short blond hair, soft diffused white lighting, minimalist corporate school aesthetic, calm blue and grey tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPzpaHb7flOEattXzyAv2d0cJc7jxhiaCFTeDL1LJjOw3r1z572WsfMsZa3jmr9UyY0X1-UbKuDQVthPBpc4SufaI8zDdasQgikqPI7KNFq6DUs1QCZ2Fb99yl59P6sz0J0k8Kw7L6LZm43WoCBxVzI8e5E4iNmqgDW_HLmWdjEYVasFsAGBAHmvfrB7O2WKSD4AdDNLuvwKP8DW1pDbmrUEIYFCN6_UlVqrrRBCCcF4LVx0tvS-fa0p8v2wZTqX-T8Zg0gIqlBe8"/>
+<span class="font-body-md text-body-md flex-grow">Mark Thompson</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="High quality headshot of a young girl with glasses, soft bokeh background with educational posters, modern clean lighting, mindful growth color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk2bGft0myk1il4JjMUjt375LuHlK_oewDKj1WzW2ijmWCmxE28r79ei3tQ9mZa8TmHbUOWhsWAc9j6NQuTNNKsZnhI5or2SylsqjFK0IPfoacpLdWBYNzxm8epRUFjarCauryGFE-NIPCyH8PC1tUGLMuTChQGMgV69xO-Q0AEjEyP6GMSiaxAS09PUER7LVTRCfruI3zUR5QtAjEazOBEC2l3i_Ioz5KcV_CsinEGIn-2KcGOd1XtM-84XVt8eguzFeqrleW6js"/>
+<span class="font-body-md text-body-md flex-grow">Lily Watson</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Candid portrait of a teenage boy writing in a notebook, focused expression, bright airy workspace, modern academic feel, high resolution photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiyrgca4IrVEAqogj9qoiB-zuTUOGGafWK73aBZC5iX_SMleJvf1bQt_K0tLLzSEWkWBACDrq3Hnzmn4V4ULA6ZBGlUbOgwbrjZkadNHcpVcmJYLqJniHK7SABWXa_H0Z7UNCdeWCuYDwZHZJ2IZos1Jtc82-jpZbiePout2Zn13dhs4Wv0tdzMbSW-G3FjEUmQyZAsiffy-rAe-G8pteo5gl3dFWiWBU5OLaWAY2bn5uI6_vI6qXlBaf6ttxvXb2Sux_NhouWo6w"/>
+<span class="font-body-md text-body-md flex-grow">David Kim</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer group">
+<img class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary" data-alt="Portrait of a young woman with hijab smiling, clean modern campus setting, high-key lighting, soft teal and blue color accents, professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqz-1gvUkKKoUcGWaIqS1C4ZqxYzxZXxrjZSRpNIr_UZKnY69HPJpWd9zMeywdJA1UNOYXO3B9t6Ex04kL2QnWzjKeBy_uaJnyhv5t6d840zPuK-JRRCM3Nnk_E9xWcLGxPXih6C5q7qwgMfzWnsX_jFeE3X9ae1DKyo17I08v4eAqlSyqj12bT5ROEOLzwJ-qjKupAne1RJZQAmogJRrFL_YkXT5iKFkkCH25opUl8mMGDLv9P9Hm34SkhnrdjZ7DLtaVRHRQa4E"/>
+<span class="font-body-md text-body-md flex-grow">Aisha Khan</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">info</span>
+</div>
+</div>
+<a class="mt-auto pt-4 text-center text-primary font-label-md text-label-md hover:underline" href="#">View All Students</a>
+</article>
+</div>
+</div>
+<!-- Danger Zone -->
+<footer class="mt-stack-lg pt-stack-lg border-t border-outline-variant flex justify-center">
+<button class="px-8 py-3 rounded-xl border border-error text-error font-headline-md text-headline-md hover:bg-error-container/10 transition-all active:scale-95 flex items-center gap-2" onclick="confirm('DANGER: This action cannot be undone. All class data, logs, and configurations for Biology Grade 11A will be permanently deleted. Are you absolutely sure?')">
+<span class="material-symbols-outlined">delete_forever</span>
+                Delete Class
+            </button>
+</footer>
+</main>
+<!-- Bottom Nav Bar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-lowest border-t border-outline-variant shadow-md z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Overview</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-sm text-label-sm">Schedule</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm">Students</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('translate-y-[-2px]');
+                card.classList.replace('custom-shadow', 'shadow-xl');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('translate-y-[-2px]');
+                card.classList.replace('shadow-xl', 'custom-shadow');
+            });
+        });
+    </script>
+</body></html>

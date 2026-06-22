@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Diajar LMS - Create Assignment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#434655",
+                        "primary-container": "#2563eb",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container-highest": "#d3e4fe",
+                        "inverse-primary": "#b4c5ff",
+                        "outline": "#737686",
+                        "tertiary-container": "#996100",
+                        "surface-container-high": "#dce9ff",
+                        "surface": "#f8f9ff",
+                        "primary": "#004ac6",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-secondary-fixed": "#002113",
+                        "secondary-container": "#6cf8bb",
+                        "on-primary-fixed": "#00174b",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-container": "#00714d",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-dim": "#cbdbf5",
+                        "on-secondary-fixed-variant": "#005236",
+                        "primary-fixed": "#dbe1ff",
+                        "background": "#f8f9ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-surface": "#213145",
+                        "surface-bright": "#f8f9ff",
+                        "surface-tint": "#0053db",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-primary-container": "#eeefff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-primary": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#784b00",
+                        "secondary": "#006c49",
+                        "surface-variant": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container": "#e5eeff",
+                        "on-tertiary-container": "#ffeedd",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "margin-desktop": "2.5rem",
+                        "gutter": "1rem",
+                        "stack-lg": "2rem",
+                        "stack-md": "1rem",
+                        "margin-mobile": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .rich-text-editor { min-height: 120px; border: 1px solid #E2E8F0; border-radius: 16px; background-color: #F1F5F9; }
+        .shimmer { background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full px-margin-mobile h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform duration-150 text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary truncate max-w-[200px]">Create Assignment</h1>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md active:scale-95 transition-all shadow-sm hover:brightness-110">
+            Publish
+        </button>
+</header>
+<main class="max-w-screen-md mx-auto px-margin-mobile pt-stack-md space-y-stack-lg">
+<!-- Basic Info Section -->
+<section class="space-y-stack-md">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">description</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Assignment Details</h2>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-5">
+<!-- Title Input -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Assignment Title *</label>
+<input class="w-full h-12 px-4 bg-[#F1F5F9] border-none focus:ring-2 focus:ring-primary rounded-xl text-body-md placeholder:text-outline" placeholder="e.g. Creative Writing: The Hero's Journey" type="text"/>
+</div>
+<!-- Description (Rich Text Simulation) -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Instructions</label>
+<div class="rich-text-editor p-4 focus-within:ring-2 focus-within:ring-primary transition-all">
+<div class="flex gap-4 border-b border-outline-variant pb-2 mb-3">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">format_bold</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">format_italic</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">format_list_bulleted</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">link</span>
+</div>
+<div class="outline-none text-body-md text-on-surface min-h-[80px]" contenteditable="true" data-placeholder="Describe the assignment expectations..."></div>
+</div>
+</div>
+<!-- Chapter & Material Selectors -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Chapter</label>
+<select class="w-full h-12 px-4 bg-[#F1F5F9] border-none focus:ring-2 focus:ring-primary rounded-xl text-body-md appearance-none">
+<option>Select Chapter</option>
+<option>Chapter 1: Introduction</option>
+<option>Chapter 2: Narrative Arc</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Reference Material</label>
+<select class="w-full h-12 px-4 bg-[#F1F5F9] border-none focus:ring-2 focus:ring-primary rounded-xl text-body-md appearance-none">
+<option>Optional Material</option>
+<option>The Odyssey PDF</option>
+<option>Archetypes Video</option>
+</select>
+</div>
+</div>
+<!-- Max Grade -->
+<div class="space-y-2 w-full md:w-1/3">
+<label class="font-label-md text-label-md text-on-surface-variant block">Maximum Grade</label>
+<div class="relative">
+<input class="w-full h-12 px-4 bg-[#F1F5F9] border-none focus:ring-2 focus:ring-primary rounded-xl text-body-md" type="number" value="100"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-outline font-label-sm">points</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Rubric Builder Section -->
+<section class="space-y-stack-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">grading</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Grading Rubric</h2>
+</div>
+<!-- Weight Tracker -->
+<div class="flex items-center gap-2 px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full animate-pulse-subtle" id="weight-badge">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm">Total Weight: 100%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Rubric Title</label>
+<input class="w-full h-12 px-4 bg-[#F1F5F9] border-none focus:ring-2 focus:ring-primary rounded-xl text-body-md" placeholder="Standard Composition Rubric" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Rubric Description</label>
+<input class="w-full h-12 px-4 bg-[#F1F5F9] border-none focus:ring-2 focus:ring-primary rounded-xl text-body-md" placeholder="General criteria for grading essays" type="text"/>
+</div>
+</div>
+<!-- Criterion Cards List -->
+<div class="space-y-4" id="criterion-list">
+<!-- Criterion Card 1 -->
+<div class="group border border-outline-variant rounded-2xl overflow-hidden transition-all hover:shadow-md">
+<div class="p-4 bg-surface-container-low flex items-center justify-between cursor-pointer" onclick="this.parentElement.classList.toggle('is-expanded')">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">drag_indicator</span>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Clarity of Argument</h3>
+<p class="text-label-sm text-outline">40% Weight • 4 Levels</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline transition-transform group-[.is-expanded]:rotate-180">expand_more</span>
+</div>
+<div class="p-5 space-y-6 bg-white hidden group-[.is-expanded]:block border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-3 space-y-2">
+<label class="font-label-sm text-label-sm text-outline">Criterion Title</label>
+<input class="w-full h-10 px-3 bg-surface-container rounded-lg border-none text-body-md" type="text" value="Clarity of Argument"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline">Weight %</label>
+<input class="w-full h-10 px-3 bg-surface-container rounded-lg border-none text-body-md" type="number" value="40"/>
+</div>
+</div>
+<!-- Performance Levels -->
+<div class="space-y-4">
+<label class="font-label-md text-label-md text-on-surface">Performance Levels</label>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+<!-- Level: Excellent -->
+<div class="p-3 rounded-xl bg-surface-container-high border border-outline-variant space-y-2">
+<div class="flex justify-between items-center">
+<input class="bg-transparent border-none p-0 font-label-md text-primary w-24 focus:ring-0" type="text" value="Excellent"/>
+<input class="bg-white rounded px-1 w-8 text-center text-label-sm font-bold" type="number" value="10"/>
+</div>
+<textarea class="w-full text-label-sm bg-transparent border-none resize-none p-0 h-16 focus:ring-0 text-on-surface-variant">Exceptional clarity and depth of insight.</textarea>
+</div>
+<!-- Level: Good -->
+<div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant space-y-2">
+<div class="flex justify-between items-center">
+<input class="bg-transparent border-none p-0 font-label-md text-on-surface w-24 focus:ring-0" type="text" value="Good"/>
+<input class="bg-white rounded px-1 w-8 text-center text-label-sm" type="number" value="8"/>
+</div>
+<textarea class="w-full text-label-sm bg-transparent border-none resize-none p-0 h-16 focus:ring-0 text-on-surface-variant">Argument is clear and mostly supported.</textarea>
+</div>
+<!-- Level: Satisfactory -->
+<div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant space-y-2 opacity-60">
+<div class="flex justify-between items-center">
+<input class="bg-transparent border-none p-0 font-label-md text-on-surface w-24 focus:ring-0" type="text" value="Fair"/>
+<input class="bg-white rounded px-1 w-8 text-center text-label-sm" type="number" value="5"/>
+</div>
+<textarea class="w-full text-label-sm bg-transparent border-none resize-none p-0 h-16 focus:ring-0 text-on-surface-variant">Argument is evident but lacks evidence.</textarea>
+</div>
+<!-- Add Level Placeholder -->
+<button class="h-full border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center text-outline hover:text-primary hover:border-primary transition-colors py-4">
+<span class="material-symbols-outlined">add</span>
+<span class="text-label-sm">Add Level</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Criterion Card 2 (Collapsible) -->
+<div class="group border border-outline-variant rounded-2xl overflow-hidden transition-all hover:shadow-md is-expanded">
+<div class="p-4 bg-surface-container-low flex items-center justify-between cursor-pointer" onclick="this.parentElement.classList.toggle('is-expanded')">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">drag_indicator</span>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Grammar &amp; Style</h3>
+<p class="text-label-sm text-outline">60% Weight • 3 Levels</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline transition-transform group-[.is-expanded]:rotate-180">expand_more</span>
+</div>
+<div class="p-5 space-y-6 bg-white hidden group-[.is-expanded]:block border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-3 space-y-2">
+<label class="font-label-sm text-label-sm text-outline">Criterion Title</label>
+<input class="w-full h-10 px-3 bg-surface-container rounded-lg border-none text-body-md" type="text" value="Grammar &amp; Style"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline">Weight %</label>
+<input class="w-full h-10 px-3 bg-surface-container rounded-lg border-none text-body-md" type="number" value="60"/>
+</div>
+</div>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-[18px]">add_circle</span> Add Performance Levels
+                            </button>
+</div>
+</div>
+</div>
+<button class="w-full py-4 border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center gap-2 text-primary font-label-md hover:bg-primary-container/10 transition-colors">
+<span class="material-symbols-outlined">playlist_add</span>
+                    Add Criterion
+                </button>
+</div>
+</section>
+<!-- Preview Actions -->
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="flex-1 h-14 rounded-2xl border border-primary text-primary font-label-md flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors" onclick="alert('Rubric Preview Mockup Launched')">
+<span class="material-symbols-outlined">visibility</span>
+                Preview Rubric
+            </button>
+<button class="flex-1 h-14 rounded-2xl bg-surface-container-high text-on-surface font-label-md flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">content_paste</span>
+                Copy from Template
+            </button>
+</div>
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest border-t border-outline-variant px-margin-mobile py-4 flex items-center justify-between gap-4 md:px-margin-desktop">
+<div class="hidden md:flex items-center gap-2 text-outline">
+<span class="material-symbols-outlined text-[18px]">cloud_done</span>
+<span class="text-label-sm">Draft saved at 10:45 AM</span>
+</div>
+<div class="flex-1 md:flex-none flex items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:w-40 h-12 rounded-full border border-outline text-on-surface-variant font-label-md hover:bg-surface transition-colors active:scale-95">
+                Save Draft
+            </button>
+<button class="flex-1 md:w-40 h-12 rounded-full bg-primary text-on-primary font-label-md shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
+                Publish Now
+            </button>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple weight tracker logic simulation
+        const weightInputs = document.querySelectorAll('input[value="40"], input[value="60"]');
+        const badge = document.getElementById('weight-badge');
+
+        function updateWeight() {
+            let total = 0;
+            // In a real app we would iterate all weight inputs
+            total = 100; 
+            
+            if(total === 100) {
+                badge.classList.remove('bg-error-container', 'text-on-error-container');
+                badge.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                badge.querySelector('span:first-child').innerText = 'check_circle';
+            } else {
+                badge.classList.add('bg-error-container', 'text-on-error-container');
+                badge.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+                badge.querySelector('span:first-child').innerText = 'warning';
+            }
+        }
+
+        // Expanded state styling
+        document.querySelectorAll('.group').forEach(card => {
+            if(card.classList.contains('is-expanded')) {
+                card.style.borderColor = '#004ac6';
+            }
+        });
+
+        // Sticky header shadow on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 0) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+<style>
+        /* Accordion custom styling */
+        .is-expanded {
+            border-color: #004ac6 !important;
+            box-shadow: 0 4px 12px rgba(0, 74, 198, 0.08);
+        }
+        
+        /* Placeholder for rich text */
+        [contenteditable=true]:empty:before {
+            content: attr(data-placeholder);
+            color: #737686;
+            cursor: text;
+        }
+
+        @keyframes pulse-subtle {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s ease-in-out infinite;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar LMS - Gradebook Group Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-container-low": "#eff4ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-surface-variant": "#434655",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "primary": "#004ac6",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#0053db",
+                        "surface-dim": "#cbdbf5",
+                        "inverse-primary": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary-container": "#00714d",
+                        "surface": "#f8f9ff",
+                        "outline": "#737686",
+                        "on-background": "#0b1c30",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#006c49",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container": "#e5eeff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#eeefff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#002113",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-high": "#dce9ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "tertiary-container": "#996100",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-container": "#ffeedd",
+                        "tertiary": "#784b00",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "gutter": "1rem",
+                        "margin-desktop": "2.5rem",
+                        "stack-lg": "2rem",
+                        "stack-md": "1rem",
+                        "margin-mobile": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FAFAFA;
+            font-family: 'Inter', sans-serif;
+            color: #0b1c30;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .tonal-elevation-1 {
+            background-color: white;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            background-color: inherit;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24">
+<!-- Top App Bar (Shared Component Anchor) -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-margin-mobile h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-low transition-colors active:scale-95 duration-100 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Class Gradebook</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="hover:bg-surface-container-low transition-colors active:scale-95 duration-100 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">more_vert</span>
+</button>
+</div>
+</header>
+<main class="mt-20 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+<!-- Hero Section -->
+<div class="mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-background">Biology 11A - Group A</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Grade 10 | 2024 Academic Year | 24 Students</p>
+</div>
+<!-- Grading Scheme & Overview Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
+<div class="tonal-elevation-1 p-6 rounded-xl md:col-span-1">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<h3 class="font-label-md text-label-md text-on-surface">Grading Scheme</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Assignments</span>
+<span class="font-label-md text-label-md text-primary bg-primary-fixed px-2 py-0.5 rounded">40%</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[40%]"></div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<span class="font-body-md text-body-md text-on-surface-variant">Assessments</span>
+<span class="font-label-md text-label-md text-secondary bg-secondary-container px-2 py-0.5 rounded">60%</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[60%]"></div>
+</div>
+</div>
+</div>
+<!-- Decorative Visual Token -->
+<div class="tonal-elevation-1 p-6 rounded-xl md:col-span-2 relative overflow-hidden flex items-center justify-between">
+<div class="z-10">
+<h3 class="font-headline-md text-headline-md text-on-background">Performance Insight</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-md">Group A is performing 4% above the class average this term. Most students are excelling in lab assessments.</p>
+</div>
+<div class="hidden sm:block">
+
+</div>
+</div>
+</div>
+<!-- Controls Row -->
+<div class="flex flex-wrap items-center justify-between gap-gutter mb-stack-md">
+<div class="flex gap-stack-sm">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+<span>Filter: All Columns</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">sort_by_alpha</span>
+<span>Sort: Name A-Z</span>
+</button>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">print</span>
+</button>
+</div>
+</div>
+<!-- Gradebook Table Container -->
+<div class="tonal-elevation-1 rounded-xl overflow-hidden">
+<div class="custom-scrollbar overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant border-b border-outline-variant">
+<th class="sticky-col px-6 py-4 font-label-md text-label-md bg-surface-container">Student Name</th>
+<th class="px-6 py-4 font-label-md text-label-md">Genetics Lab (40%)</th>
+<th class="px-6 py-4 font-label-md text-label-md">Cell Quiz (20%)</th>
+<th class="px-6 py-4 font-label-md text-label-md">Midterm (40%)</th>
+<th class="px-6 py-4 font-label-md text-label-md bg-primary-fixed text-primary font-bold">Final Grade</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant bg-surface-container-lowest">
+<!-- Class Average Pinned -->
+<tr class="bg-surface-container-low font-bold">
+<td class="sticky-col px-6 py-4 font-label-md text-label-md bg-surface-container-low">Class Average</td>
+<td class="px-6 py-4 font-label-md text-label-md">82%</td>
+<td class="px-6 py-4 font-label-md text-label-md">78%</td>
+<td class="px-6 py-4 font-label-md text-label-md text-error">Missing</td>
+<td class="px-6 py-4 font-label-md text-label-md bg-surface-container-high">B+</td>
+</tr>
+<!-- Row: Alex Johnson -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="sticky-col px-6 py-4 flex items-center gap-3 bg-surface-container-lowest">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young male student with glasses and a friendly expression, soft natural classroom lighting, minimalist academic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBm7PPgNgpoI5jUeRM8ijsidSv4r6vIbekcnJSARSM-YfS-dNJwB5S0RCAXD0rtZVhMu3gW8UEjRuFDwmaSr-nKMSH3c3zPbidQAAXsx-uYnwH0DcM3zUdL2vJMLQtMit_rO5DRCXCzoSI6nQ2x3fcEZj8ozfdkMxtGbGKxff4_Eh4HEhRkGeF-qY0kg02CDbZn5AUY-Y-X5T_BQfRClZ9VM5hzyoUu49rnuhRvgwcSMaGwKLo4qXFr4Z3W6Mk4QccK3hYJqa_8-Q"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Alex Johnson</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">85%</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-label-sm font-label-sm">Pending</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">80%</td>
+<td class="px-6 py-4 font-label-md text-label-md bg-surface-container-low font-bold">B</td>
+</tr>
+<!-- Row: Maria Garcia -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="sticky-col px-6 py-4 flex items-center gap-3 bg-surface-container-lowest">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a teenage girl with long dark hair, wearing a navy blue school uniform, brightly lit educational setting, modern SaaS interface style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOOqezyeH4gNObVt6zs6TJcvQ9h4C-KM7MsA_qEtopkLO6di6_YT2A-3gYhl1R4tNz6cjqrJ1JsQj-dEhHAbjDDHbb5xonfyNZMLGC6LKGtsa7UkGNtvZRNWx3XI9XP-ZB_nlOH523uzyIsSEsf-eO2sWNzIGLqAeGAtwmHHDCJSs6w33HBTb3ddVXa5RduRsfUzcZbBD2sfo_1PqAaw7qOwmfK3C80DfAuN2VZo_IZ41oTJS_YlGH7dTdbVy9S7VS44EKMXjnUOQ"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Maria Garcia</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">92%</td>
+<td class="px-6 py-4 font-body-md text-body-md">88%</td>
+<td class="px-6 py-4 font-body-md text-body-md">95%</td>
+<td class="px-6 py-4 font-label-md text-label-md bg-surface-container-low font-bold">A</td>
+</tr>
+<!-- Row: Liam Chen -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="sticky-col px-6 py-4 flex items-center gap-3 bg-surface-container-lowest">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male Asian student with short black hair, wearing a grey hoodie, neutral background, soft professional lighting, clear and high-resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHt2AG2p9wX6-ZP6F5G7np37ye3Wql8t37auLSNePZfs-2KyYEvoVIrMCaJgr5Z8JNQyAlMcHKuGYa1ZGpvjUbe76_kY14rtzr_9atEVAgwoDUUll1upA14fu-U2MpmXFAYP7ldpwAvOxwIWRys_FHEwKWU3gqsZCrPPhp3UULciBwZ-LP0EWn16mHMt8Zct_BoEVCCS28DwzOWdJVKNpPP6sfSxDjEK5TD3ak-c_2v8pPyxQzsvbBR6qtq3YWU-E2JHU4Tg-lwN4"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Liam Chen</span>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-tertiary-fixed-dim text-on-tertiary-fixed-variant rounded-full text-label-sm font-label-sm">Missing</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">70%</td>
+<td class="px-6 py-4 font-body-md text-body-md">65%</td>
+<td class="px-6 py-4 font-label-md text-label-md bg-surface-container-low font-bold">C-</td>
+</tr>
+<!-- Row: Sarah Miller -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="sticky-col px-6 py-4 flex items-center gap-3 bg-surface-container-lowest">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a girl with blonde hair and a cheerful smile, light blue background, clean minimalist studio lighting, academic professional vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeSbwTObjelwHzeIA39HIg5zmMy8wVYaspv08zjg4EBTOoGm4mx09N2lHrdEOag5gyFP7luvbbtDBT_l6NArE9KE9c3kKTDh256_IeLjYYeEFl5lHDTpemNlx4gEdao8sH6ydUDZ_0AD--aLvyhuH3JVQZX_WDYru_5OeSKKVmsFLfEu8cCcEVh2ybeY7hyiCFMXRrWWGSBVuBsfL7AbB2B644zn55wCFa7VIoGo7GNK0oFogaJDZe871xdWVxuxbMp-3HdfOzq6I"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Sarah Miller</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md">88%</td>
+<td class="px-6 py-4 font-body-md text-body-md">84%</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-label-sm font-label-sm">Pending</span>
+</td>
+<td class="px-6 py-4 font-label-md text-label-md bg-surface-container-low font-bold">B+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Pagination/Status -->
+<div class="px-6 py-4 bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Showing 4 of 24 students</p>
+<div class="flex items-center gap-4">
+<button class="p-1 rounded-full hover:bg-surface-container-low disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<span class="font-label-sm text-label-sm font-bold">1</span>
+<button class="p-1 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Anchor) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container-lowest shadow-lg border-t border-outline-variant rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm mt-1">Overview</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm mt-1">Students</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grade</span>
+<span class="font-label-sm text-label-sm mt-1">Grades</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Reports</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for table row highlight
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // Future: open student detail view or edit modal
+                console.log('Clicked student row');
+            });
+        });
+    </script>
+</body></html>

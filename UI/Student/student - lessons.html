@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar - Principles of Growth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary-container": "#6cf8bb",
+                    "primary": "#004ac6",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary-container": "#00714d",
+                    "background": "#f8f9ff",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "surface-dim": "#cbdbf5",
+                    "outline": "#737686",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "surface-container": "#e5eeff",
+                    "on-surface-variant": "#434655",
+                    "tertiary-container": "#996100",
+                    "tertiary": "#784b00",
+                    "on-primary": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "inverse-surface": "#213145",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-container": "#eeefff",
+                    "secondary": "#006c49",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary-container": "#ffeedd",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-error": "#ffffff",
+                    "primary-container": "#2563eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "margin-desktop": "2.5rem",
+                    "stack-lg": "2rem",
+                    "margin-mobile": "1.25rem",
+                    "gutter": "1rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface shadow-sm h-16 flex items-center justify-between px-margin-mobile w-full">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors active:scale-95 transition-all">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile text-primary">Chapter 1: Principles of Growth</h1>
+</div>
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors active:scale-95 transition-all">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</button>
+</header>
+<main class="pt-20 px-margin-mobile max-w-2xl mx-auto">
+<!-- Chapter Context -->
+<section class="mt-stack-md">
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 rounded-md bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider">Biology</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Understanding the fundamental building blocks of life and how organisms interact with their environment.
+            </p>
+</section>
+<!-- Search & Controls -->
+<section class="mt-stack-lg space-y-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-outline" data-icon="search">search</span>
+<input class="w-full h-12 pl-12 pr-4 bg-surface-container-low border-none rounded-xl font-body-md text-body-md focus:ring-2 focus:ring-primary focus:bg-surface transition-all" placeholder="Search materials..." type="text"/>
+</div>
+<div class="flex items-center gap-3 overflow-x-auto hide-scrollbar py-1">
+<button class="flex items-center gap-1.5 px-4 py-2 bg-surface border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors whitespace-nowrap">
+                    Status <span class="material-symbols-outlined text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 py-2 bg-surface border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors whitespace-nowrap">
+                    Type <span class="material-symbols-outlined text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 py-2 bg-surface border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors whitespace-nowrap">
+                    Tags <span class="material-symbols-outlined text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+<div class="ml-auto flex items-center gap-1.5 px-4 py-2 font-label-md text-label-md text-primary font-bold whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]" data-icon="sort">sort</span> Sort
+                </div>
+</div>
+</section>
+<!-- Material List -->
+<div class="mt-stack-lg space-y-10">
+<!-- Subchapter 1.1 -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">1.1 Cell Theory</h2>
+<div class="space-y-stack-sm">
+<!-- Material Item 1 -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-sm">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-label-md text-label-md text-on-surface truncate">Introduction to Cell Theory</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Video • 12 mins</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Foundation</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation(); this.querySelector('span').innerText = 'bookmark'">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_circle">add_circle</span>
+</button>
+</div>
+</div>
+<!-- Material Item 2 -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-sm">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-label-md text-label-md text-on-surface truncate">Microscopy History</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Reading • 8 mins</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Core</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark_border" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_circle">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Subchapter 1.2 -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">1.2 Organelle Functions</h2>
+<div class="space-y-stack-sm">
+<!-- Material Item 3 -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-sm">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-label-md text-label-md text-on-surface truncate">The Nucleus: Control Center</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Interactive • 15 mins</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Essential</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_circle">add_circle</span>
+</button>
+</div>
+</div>
+<!-- Material Item 4 -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-sm">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-label-md text-label-md text-on-surface truncate">Mitochondria &amp; Energy</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Video • 10 mins</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Complex</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors" onclick="event.stopPropagation()">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_circle">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest border-t border-outline-variant shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-110 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-sm text-label-sm">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span class="font-label-sm text-label-sm">Plan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="local_library">local_library</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for filter chips
+        document.querySelectorAll('button.border-outline-variant').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('bg-primary-container');
+                this.classList.toggle('text-on-primary-container');
+                this.classList.toggle('border-primary');
+            });
+        });
+
+        // Click ripple effect emulation for material items
+        document.querySelectorAll('.group.bg-surface-container-lowest').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.background = 'rgba(0, 74, 198, 0.05)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.transition = 'width 0.6s ease, height 0.6s ease, opacity 0.6s ease';
+                ripple.style.pointerEvents = 'none';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.style.width = '400px';
+                    ripple.style.height = '400px';
+                    ripple.style.opacity = '0';
+                }, 0);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+</body></html>

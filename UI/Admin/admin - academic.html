@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Academic Management Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#996100",
+                    "on-surface": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-background": "#0b1c30",
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#00174b",
+                    "outline-variant": "#c3c6d7",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "inverse-primary": "#b4c5ff",
+                    "tertiary": "#784b00",
+                    "on-error": "#ffffff",
+                    "primary": "#004ac6",
+                    "background": "#f8f9ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#00714d",
+                    "on-secondary-fixed": "#002113",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container-high": "#dce9ff",
+                    "secondary": "#006c49",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#2563eb",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#737686",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-container": "#ffeedd",
+                    "on-surface-variant": "#434655",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-container": "#6cf8bb",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-surface": "#213145",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#dbe1ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "1.25rem",
+                    "margin-desktop": "2.5rem",
+                    "stack-lg": "2rem",
+                    "stack-md": "1rem",
+                    "gutter": "1rem",
+                    "stack-sm": "0.5rem"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FAFAFA;
+            color: #0b1c30;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        @media (min-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
+            .bento-item-full { grid-column: span 12; }
+            .bento-item-large { grid-column: span 8; }
+            .bento-item-small { grid-column: span 4; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background pb-24 md:pb-8">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-margin-mobile h-16 bg-surface shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="school">school</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Academic Management</h1>
+</div>
+<div class="hidden md:flex items-center">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-label-md font-label-md">2023/24</span>
+</div>
+</header>
+<main class="mt-20 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto space-y-stack-lg">
+<!-- Header & Progress Strip -->
+<section class="space-y-stack-md">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Academic Hub</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">Manage institutional structures and learning cohorts.</p>
+</div>
+<div class="inline-flex items-center bg-surface-container-low px-4 py-2 rounded-xl border border-outline-variant">
+<span class="text-label-md font-label-md text-on-surface-variant mr-2">Active Year:</span>
+<span class="text-label-md font-label-md text-primary font-bold">2024/2025</span>
+</div>
+</div>
+<!-- Progress Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-white p-4 rounded-xl border border-outline-variant card-shadow flex items-center gap-4">
+<div class="p-3 bg-primary-container/10 rounded-full text-primary">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Subjects with teachers</p>
+<p class="font-headline-md text-headline-md text-on-surface">22/24</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant card-shadow flex items-center gap-4">
+<div class="p-3 bg-secondary-container/20 rounded-full text-secondary">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Groups with students</p>
+<p class="font-headline-md text-headline-md text-on-surface">10/12</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline-variant card-shadow flex items-center gap-4">
+<div class="p-3 bg-tertiary-container/10 rounded-full text-tertiary">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Classes generated</p>
+<p class="font-headline-md text-headline-md text-on-surface">48</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Layout for Sections -->
+<div class="bento-grid">
+<!-- Section 1: Academic Years -->
+<section class="bento-item-small bg-white p-6 rounded-2xl border border-outline-variant card-shadow flex flex-col">
+<div class="flex items-center justify-between mb-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Academic Years</h3>
+</div>
+<button class="text-primary hover:bg-primary-container/10 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<div class="space-y-stack-sm flex-grow">
+<!-- 2024/2025 Active -->
+<div class="p-4 rounded-xl bg-primary-container/5 border-2 border-primary transition-all">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-md text-label-md text-primary">2024/2025</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Sep 1, 2024 - Jun 30, 2025</p>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-secondary-container text-on-secondary-container">Active</span>
+</div>
+</div>
+<!-- 2023/2024 Archived -->
+<div class="p-4 rounded-xl border border-outline-variant hover:bg-surface-container-low transition-all cursor-pointer">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-md text-label-md text-on-surface">2023/2024</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Sep 1, 2023 - Jun 30, 2024</p>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-surface-variant text-on-surface-variant">Archived</span>
+</div>
+</div>
+<!-- 2022/2023 Archived -->
+<div class="p-4 rounded-xl border border-outline-variant hover:bg-surface-container-low transition-all cursor-pointer">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-md text-label-md text-on-surface">2022/2023</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Sep 1, 2022 - Jun 30, 2023</p>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-surface-variant text-on-surface-variant">Archived</span>
+</div>
+</div>
+</div>
+<button class="mt-stack-md w-full py-3 bg-primary text-on-primary rounded-xl font-label-md text-label-md shadow-sm hover:opacity-90 transition-opacity">
+                    New Academic Year
+                </button>
+</section>
+<!-- Section 2: Subjects -->
+<section class="bento-item-small bg-white p-6 rounded-2xl border border-outline-variant card-shadow flex flex-col">
+<div class="flex items-center justify-between mb-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="book_5">book_5</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Subjects</h3>
+</div>
+</div>
+<div class="space-y-stack-sm flex-grow">
+<!-- Biology -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Biology</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">3 teachers</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Mathematics -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="calculate">calculate</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Mathematics</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">4 teachers</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Physics (WARNING) -->
+<div class="flex flex-col p-3 rounded-lg bg-error-container/20 border border-error/10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-error-container/30 flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="precision_manufacturing">precision_manufacturing</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Physics</p>
+<p class="text-label-sm font-label-sm text-error">0 teachers</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<div class="mt-2 text-[11px] font-bold text-error uppercase tracking-wider">No teachers linked</div>
+</div>
+<!-- Chemistry -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="science">science</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Chemistry</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">2 teachers</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="mt-stack-md flex flex-col gap-2">
+<a class="text-center font-label-md text-label-md text-primary hover:underline py-2" href="#">View all subjects</a>
+<button class="w-full py-3 bg-surface-container-highest text-on-surface rounded-xl font-label-md text-label-md hover:bg-surface-variant transition-colors border border-outline-variant">
+                        New Subject
+                    </button>
+</div>
+</section>
+<!-- Section 3: Student Groups -->
+<section class="bento-item-small bg-white p-6 rounded-2xl border border-outline-variant card-shadow flex flex-col">
+<div class="flex items-center justify-between mb-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="group_work">group_work</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Student Groups</h3>
+</div>
+</div>
+<div class="space-y-stack-sm flex-grow">
+<!-- Group 10A -->
+<div class="flex items-center justify-between p-3 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">10A</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Grade 10</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">24 students</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="more_vert">more_vert</span>
+</div>
+<!-- Group 10B (WARNING) -->
+<div class="flex flex-col p-3 bg-error-container/10 rounded-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center font-bold text-error">10B</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Grade 10</p>
+<p class="text-label-sm font-label-sm text-error">0 students</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error" data-icon="error">error</span>
+</div>
+<div class="mt-2 text-[10px] bg-error text-white px-2 py-0.5 rounded-full w-fit self-end font-bold">No students linked</div>
+</div>
+<!-- Group 11A -->
+<div class="flex items-center justify-between p-3 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">11A</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Grade 11</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">22 students</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="more_vert">more_vert</span>
+</div>
+<!-- Group 12C -->
+<div class="flex items-center justify-between p-3 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">12C</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Grade 12</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">18 students</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="more_vert">more_vert</span>
+</div>
+</div>
+<div class="mt-stack-md flex flex-col gap-2">
+<a class="text-center font-label-md text-label-md text-primary hover:underline py-2" href="#">View all groups</a>
+<button class="w-full py-3 bg-surface-container-highest text-on-surface rounded-xl font-label-md text-label-md hover:bg-surface-variant transition-colors border border-outline-variant">
+                        New Group
+                    </button>
+</div>
+</section>
+<!-- Decorative Visual Card (Premium feel) -->
+<section class="bento-item-large hidden lg:block relative overflow-hidden rounded-2xl bg-primary h-[400px] shadow-xl">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center opacity-60 mix-blend-overlay" data-alt="A sophisticated, high-end digital illustration of a futuristic educational hub with interconnected nodes representing subjects and students. The aesthetic is clean and minimalist with a palette of deep blues and vibrant greens, illuminated by soft cinematic lighting. The atmosphere is calm and focused, reflecting a state-of-the-art academic management environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAugxZOwpAEuPgRLfjnGSAvR4IKQLMzp3eBMEm4HH4hq979R4Kh8MtPYPwxVlg0HR2J_WJlO8bAEjnHg3HO-xefEH69SQj2YB3W4HTkjBsbxZoySpXJzJTeavwhX6WVxRHm-k_RzcyiHZjhVwI6G46BWZIOd6z2oMtLfthV8WJYEW0kECUGZ3amsK2NFipU3IJlnWnLfWICI4nSXn44z40pddEmNxP-xWPBaMxhQHi1KumvRzE7lO94u4dH2rGGum4bQ1f8ylS-6fE')"></div>
+</div>
+<div class="relative z-10 p-12 h-full flex flex-col justify-end">
+<h3 class="text-white font-headline-lg text-headline-lg max-w-md">Streamline your academic ecosystem</h3>
+<p class="text-primary-fixed-dim font-body-lg text-body-lg max-w-md mt-4">Unified management for years, subjects, and student cohorts designed for administrative clarity.</p>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-2 pb-safe bg-surface border-t border-outline-variant md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined" data-icon="menu_book" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="font-label-sm text-label-sm">Academic</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm">Users</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interactions for the cards
+        document.querySelectorAll('.card-shadow').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('translate-y-[-2px]');
+                card.style.transition = 'transform 0.2s ease-out';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('translate-y-[-2px]');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Assessment | Mindful Growth Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#213145",
+                    "on-tertiary-fixed": "#2a1700",
+                    "primary": "#004ac6",
+                    "outline": "#737686",
+                    "tertiary-container": "#996100",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-dim": "#cbdbf5",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed": "#dbe1ff",
+                    "background": "#f8f9ff",
+                    "outline-variant": "#c3c6d7",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-primary-fixed": "#00174b",
+                    "inverse-primary": "#b4c5ff",
+                    "on-background": "#0b1c30",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "primary-container": "#2563eb",
+                    "secondary": "#006c49",
+                    "on-secondary-fixed": "#002113",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-surface": "#0b1c30",
+                    "on-surface-variant": "#434655",
+                    "surface-container": "#e5eeff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-container": "#eeefff",
+                    "surface-tint": "#0053db",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#dce9ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "secondary-container": "#6cf8bb",
+                    "on-secondary-container": "#00714d",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface": "#f8f9ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "tertiary": "#784b00",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-tertiary-container": "#ffeedd",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-variant": "#d3e4fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "2rem",
+                    "stack-sm": "0.5rem",
+                    "stack-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "margin-desktop": "2.5rem",
+                    "gutter": "1rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .step-inactive { opacity: 0; pointer-events: none; position: absolute; }
+        .step-active { opacity: 1; pointer-events: auto; position: relative; transition: opacity 0.4s ease; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #004ac6 !important; ring: 2px; ring-color: rgba(0, 74, 198, 0.2); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c3c6d7; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Top Navigation Anchor -->
+<nav class="sticky top-0 z-50 bg-surface-container-low shadow-sm px-margin-mobile md:px-margin-desktop py-stack-md flex justify-between items-center w-full">
+<div class="flex items-center gap-stack-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors Active:scale-95">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Create Assessment</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="hidden md:flex items-center gap-stack-sm">
+<span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md">1</span>
+<span class="w-8 h-px bg-outline-variant"></span>
+<span class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-label-md">2</span>
+<span class="w-8 h-px bg-outline-variant"></span>
+<span class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-label-md">3</span>
+</div>
+<button class="font-label-md text-label-md text-primary hover:bg-surface-container-high px-4 py-2 rounded-lg transition-colors">Preview</button>
+</div>
+</nav>
+<main class="max-w-4xl mx-auto px-margin-mobile py-stack-lg pb-40">
+<!-- Step 1: Basic Info -->
+<section class="step-active space-y-stack-lg" id="step1">
+<header>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Step 1: Basic Information</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Establish the core framework of your assessment.</p>
+</header>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm space-y-stack-md">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Assessment Title</label>
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl py-3 px-4 text-body-md" placeholder="e.g. Biology Midterm" type="text" value="Biology Midterm"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Description (Optional)</label>
+<textarea class="w-full bg-[#F1F5F9] border-none rounded-xl py-3 px-4 text-body-md h-24 resize-none" placeholder="Outline the learning objectives...">Comprehensive evaluation of Unit 1: Foundations of Life, focusing on eukaryotic and prokaryotic cell structures.</textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Duration (Minutes)</label>
+<div class="relative">
+<input class="w-full bg-[#F1F5F9] border-none rounded-xl py-3 px-4 text-body-md" type="number" value="45"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-label-sm text-outline">mins</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Chapter Selector</label>
+<select class="w-full bg-[#F1F5F9] border-none rounded-xl py-3 px-4 text-body-md appearance-none">
+<option>Cell Structure</option>
+<option>Photosynthesis</option>
+<option>Genetic Engineering</option>
+</select>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Material Selector</label>
+<div class="flex flex-wrap gap-2">
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">article</span> Textbook Ch. 4
+                        </button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-sm flex items-center gap-1 hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[18px]">link</span> Reference Lab PDF
+                        </button>
+<button class="border border-dashed border-outline-variant px-4 py-2 rounded-full font-label-sm text-primary flex items-center gap-1 hover:bg-primary/5">
+<span class="material-symbols-outlined text-[18px]">add</span> Add Material
+                        </button>
+</div>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-md shadow-md hover:opacity-90 transition-all Active:scale-95 flex items-center gap-2" onclick="navigate(2)">
+                    Continue to Questions <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Step 2: Question Selection -->
+<section class="step-inactive space-y-stack-lg" id="step2">
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Step 2: Question Bank</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Filter and select questions for your assessment.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-lowest border border-outline-variant p-2 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">tune</span>
+</button>
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-[#F1F5F9] border-none rounded-lg py-2 pl-10 pr-4 text-label-md" placeholder="Search questions..." type="text"/>
+</div>
+</div>
+</header>
+<!-- Filters -->
+<div class="flex gap-stack-sm overflow-x-auto pb-2 no-scrollbar">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-on-background text-white font-label-sm">All Levels</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm hover:bg-surface-container-high transition-colors">Remember</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm hover:bg-surface-container-high transition-colors">Understand</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm hover:bg-surface-container-high transition-colors">Apply</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm hover:bg-surface-container-high transition-colors">Analyze</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm hover:bg-surface-container-high transition-colors">Evaluate</button>
+</div>
+<!-- Question List -->
+<div class="space-y-stack-md">
+<!-- Question Card 1 -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md hover:border-primary transition-all cursor-pointer flex gap-stack-md">
+<div class="flex-1 space-y-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-tertiary-container/10 text-tertiary-container font-label-sm text-[10px] uppercase tracking-wider">Analyze</span>
+<span class="text-outline font-label-sm text-[12px]">ID: #9902</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                            Compare and contrast the structural differences between plant and animal cells during the process of cytokinesis.
+                        </p>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">grade</span> 20 Pts
+                            </span>
+<span class="flex items-center gap-1 font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">label</span> Biology
+                            </span>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 px-2">
+<button class="w-10 h-10 rounded-full border-2 border-outline-variant flex items-center justify-center transition-all" onclick="toggleSelect(this)">
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+</div>
+</div>
+<!-- Question Card 2 -->
+<div class="group bg-surface-container-lowest border-2 border-primary rounded-xl p-stack-md transition-all flex gap-stack-md">
+<div class="flex-1 space-y-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-[10px] uppercase tracking-wider">Remember</span>
+<span class="text-outline font-label-sm text-[12px]">ID: #8421</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                            Which organelle is primarily responsible for protein synthesis within the cell?
+                        </p>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">grade</span> 10 Pts
+                            </span>
+<span class="flex items-center gap-1 font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">label</span> Cytology
+                            </span>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 px-2">
+<button class="w-10 h-10 rounded-full bg-primary flex items-center justify-center transition-all" onclick="toggleSelect(this)">
+<span class="material-symbols-outlined text-on-primary">check</span>
+</button>
+</div>
+</div>
+<!-- Question Card 3 -->
+<div class="group bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md hover:border-primary transition-all cursor-pointer flex gap-stack-md">
+<div class="flex-1 space-y-3">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-orange-100 text-orange-800 font-label-sm text-[10px] uppercase tracking-wider">Understand</span>
+<span class="text-outline font-label-sm text-[12px]">ID: #7712</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                            Explain how the phospholipid bilayer's structure contributes to the cell membrane's selective permeability.
+                        </p>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">grade</span> 25 Pts
+                            </span>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 px-2">
+<button class="w-10 h-10 rounded-full border-2 border-outline-variant flex items-center justify-center transition-all" onclick="toggleSelect(this)">
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center py-stack-md">
+<button class="text-primary font-label-md flex items-center gap-2 px-4 py-2 hover:bg-primary/5 rounded-lg transition-colors" onclick="navigate(1)">
+<span class="material-symbols-outlined">arrow_back</span> Back
+                </button>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-md shadow-md hover:opacity-90 transition-all flex items-center gap-2" onclick="navigate(3)">
+                    Review Selection <span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</section>
+<!-- Step 3: Review -->
+<section class="step-inactive space-y-stack-lg" id="step3">
+<header>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Step 3: Final Review</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Check details before publishing to students.</p>
+</header>
+<!-- Final Summary Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-md">
+<div class="md:col-span-2 space-y-stack-md">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-4">Assessment Content</h3>
+<div class="space-y-4">
+<div class="flex gap-4 p-3 rounded-lg bg-surface-container-low group">
+<div class="flex flex-col items-center text-outline">
+<span class="material-symbols-outlined cursor-grab">drag_indicator</span>
+<span class="text-label-sm font-bold mt-1">1</span>
+</div>
+<p class="text-body-md flex-1">Which organelle is primarily responsible for protein synthesis within the cell?</p>
+<span class="font-label-md text-primary">10 pts</span>
+</div>
+<div class="flex gap-4 p-3 rounded-lg bg-surface-container-low group">
+<div class="flex flex-col items-center text-outline">
+<span class="material-symbols-outlined cursor-grab">drag_indicator</span>
+<span class="text-label-sm font-bold mt-1">2</span>
+</div>
+<p class="text-body-md flex-1">Explain how the phospholipid bilayer's structure contributes to the cell membrane's selective permeability.</p>
+<span class="font-label-md text-primary">25 pts</span>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-stack-md">
+<div class="bg-primary text-on-primary rounded-xl p-stack-md shadow-lg space-y-stack-sm">
+<div class="flex justify-between items-center opacity-80">
+<span class="font-label-sm">Total Questions</span>
+<span class="font-headline-md">05</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm opacity-80">Total Score</span>
+<span class="font-headline-md">100 Pts</span>
+</div>
+<div class="pt-2 border-t border-white/20">
+<p class="font-label-sm opacity-80">Est. Time</p>
+<p class="font-body-md font-bold">45 Minutes</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md space-y-stack-sm">
+<h4 class="font-label-md text-on-surface">Configuration</h4>
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+<span class="text-label-sm">Shuffle Questions</span>
+<span class="ml-auto text-primary font-bold">ON</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+<span class="text-label-sm">Hide results until end</span>
+<span class="ml-auto text-primary font-bold">ON</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 py-stack-md">
+<button class="w-full md:w-auto text-primary font-label-md flex items-center justify-center gap-2 px-6 py-3 hover:bg-primary/5 rounded-lg transition-colors" onclick="navigate(2)">
+<span class="material-symbols-outlined">arrow_back</span> Edit Selection
+                </button>
+<div class="flex gap-4 w-full md:w-auto">
+<button class="flex-1 md:flex-none border border-outline-variant text-on-surface-variant px-8 py-3 rounded-lg font-label-md hover:bg-surface-container transition-all">Save Draft</button>
+<button class="flex-1 md:flex-none bg-primary text-on-primary px-10 py-3 rounded-lg font-label-md shadow-lg hover:opacity-90 transition-all Active:scale-95">Publish Assessment</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Persistent Bottom Panel (Mobile Focused) -->
+<div class="fixed bottom-0 inset-x-0 glass-panel border-t border-outline-variant p-4 z-40 transform translate-y-0 transition-transform duration-500 shadow-[0_-10px_30px_rgba(15,23,42,0.08)]" id="selection-panel">
+<div class="max-w-4xl mx-auto flex items-center justify-between">
+<div class="flex flex-col cursor-pointer" onclick="toggleSelectionDrawer()">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-on-surface">5 Questions Selected</span>
+<span class="material-symbols-outlined text-outline transition-transform" id="drawer-chevron">keyboard_arrow_up</span>
+</div>
+<p class="font-label-sm text-primary font-bold">100 Pts Total</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md shadow-sm Active:scale-95" onclick="navigate(3)">
+                Review <span class="hidden md:inline">Selection</span>
+</button>
+</div>
+<!-- Expandable Drawer Content -->
+<div class="max-h-0 overflow-hidden transition-all duration-300" id="selection-drawer">
+<div class="py-4 space-y-3 mt-4 custom-scrollbar max-h-60 overflow-y-auto">
+<div class="flex items-center justify-between p-2 bg-surface-container rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-[20px]">drag_indicator</span>
+<span class="font-label-sm text-on-surface-variant truncate max-w-[200px]">Compare and contrast plant...</span>
+</div>
+<button class="text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-[20px]">drag_indicator</span>
+<span class="font-label-sm text-on-surface-variant truncate max-w-[200px]">Organelle responsible for protein...</span>
+</div>
+<button class="text-error"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<!-- ... more items ... -->
+</div>
+</div>
+</div>
+<script>
+        function navigate(step) {
+            document.querySelectorAll('section').forEach(s => {
+                s.classList.remove('step-active');
+                s.classList.add('step-inactive');
+            });
+            const target = document.getElementById('step' + step);
+            target.classList.remove('step-inactive');
+            target.classList.add('step-active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Hide/Show Selection Panel
+            const panel = document.getElementById('selection-panel');
+            if (step === 1) {
+                panel.classList.add('translate-y-full');
+            } else {
+                panel.classList.remove('translate-y-full');
+            }
+
+            // Update Progress Indicator (Mock)
+            // Logic to update top nav circles would go here
+        }
+
+        let drawerOpen = false;
+        function toggleSelectionDrawer() {
+            const drawer = document.getElementById('selection-drawer');
+            const chevron = document.getElementById('drawer-chevron');
+            drawerOpen = !drawerOpen;
+            
+            if (drawerOpen) {
+                drawer.style.maxHeight = '300px';
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                drawer.style.maxHeight = '0';
+                chevron.style.transform = 'rotate(0)';
+            }
+        }
+
+        function toggleSelect(btn) {
+            const isSelected = btn.classList.contains('bg-primary');
+            if (isSelected) {
+                btn.classList.remove('bg-primary');
+                btn.classList.add('border-2', 'border-outline-variant');
+                btn.innerHTML = '<span class="material-symbols-outlined text-outline">add</span>';
+                btn.closest('.group').classList.remove('border-primary');
+                btn.closest('.group').classList.add('border-outline-variant');
+            } else {
+                btn.classList.add('bg-primary');
+                btn.classList.remove('border-2', 'border-outline-variant');
+                btn.innerHTML = '<span class="material-symbols-outlined text-on-primary">check</span>';
+                btn.closest('.group').classList.add('border-2', 'border-primary');
+                btn.closest('.group').classList.remove('border-outline-variant');
+            }
+        }
+
+        // Initialize view
+        document.addEventListener('DOMContentLoaded', () => {
+            navigate(1);
+        });
+    </script>
+</body></html>

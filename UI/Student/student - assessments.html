@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diajar - Assessments</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#d3e4fe",
+                    "tertiary-container": "#996100",
+                    "on-error-container": "#93000a",
+                    "surface": "#f8f9ff",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#eeefff",
+                    "primary": "#004ac6",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#006c49",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-primary": "#b4c5ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#737686",
+                    "secondary-fixed-dim": "#4edea3",
+                    "outline-variant": "#c3c6d7",
+                    "on-surface": "#0b1c30",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#6cf8bb",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#e5eeff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-background": "#0b1c30",
+                    "surface-tint": "#0053db",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary-container": "#00714d",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-fixed": "#002113",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-surface-variant": "#434655",
+                    "on-tertiary-container": "#ffeedd",
+                    "secondary-fixed": "#6ffbbe",
+                    "inverse-surface": "#213145",
+                    "tertiary-fixed": "#ffddb8",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-primary": "#ffffff",
+                    "background": "#f8f9ff",
+                    "tertiary": "#784b00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "stack-lg": "2rem",
+                    "stack-sm": "0.5rem",
+                    "margin-desktop": "2.5rem",
+                    "gutter": "1rem"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="bg-surface shadow-sm sticky top-0 z-40 flex justify-between items-center w-full px-margin-mobile h-16">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container overflow-hidden ring-2 ring-primary/10">
+<img alt="Student profile" class="w-full h-full object-cover" data-alt="A focused university student in a bright, modern learning environment. The photography is clean, high-key, and minimalist, emphasizing a sense of calm productivity. Soft daylight illuminates the scene with a professional and scholarly aesthetic, using a palette of whites, soft blues, and natural skin tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCchVJtOIBIgoPt36zg4vkQoFYzaw0o901vDVm5zoPuk3TC7-RDTdH3FedkyH3SsWTk-d4Ha3Gr9yxsFpn8_GUS_F3ufGdFHRFJxJ4Z3OmxFsXaQ5OawQm47s3UUzuoakVyWSPJ8UzTdfGLZWCZqhPWxlYi1u71uJkkxHOemaHbmqHjLkHzexUUjoMwuaUjR3QjNlEI8yuFxg6AN-Z_wv1ShGc6Rfhhko09JaNPhza3ddJfUpaCL2Ytg1kQgJ5TgExwUVrkqVOO5fE"/>
+</div>
+<span class="text-headline-md font-headline-md font-bold text-primary">Diajar</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="px-margin-mobile max-w-3xl mx-auto pt-stack-md">
+<!-- Header Section -->
+<section class="mb-stack-lg">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Assessments</h1>
+<p class="text-on-surface-variant text-body-md mt-1">Track and manage your quizzes and exams across all subjects.</p>
+</section>
+<!-- Search & Filters -->
+<section class="space-y-stack-md mb-stack-lg">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border-none rounded-xl shadow-sm focus:ring-2 focus:ring-primary/20 placeholder:text-outline transition-all" placeholder="Search assessments or subjects..." type="text"/>
+</div>
+<div class="flex overflow-x-auto gap-2 pb-1 no-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary text-on-primary text-label-md transition-all active:scale-95">All Subjects</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-label-md hover:bg-surface-variant transition-all active:scale-95">In Progress</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-label-md hover:bg-surface-variant transition-all active:scale-95">Upcoming</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-label-md hover:bg-surface-variant transition-all active:scale-95">Graded</button>
+</div>
+</section>
+<!-- Assessment Cards List -->
+<div class="space-y-gutter">
+<!-- Card 1: Biology Midterm Quiz -->
+<article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant hover:shadow-lg hover:border-transparent transition-all group">
+<div class="flex items-start justify-between gap-4 mb-4">
+<div class="flex items-start gap-4">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-outline text-primary focus:ring-primary/30 cursor-pointer" type="checkbox"/>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider">Biology</span>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Biology Midterm Quiz</h3>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-outline hover:bg-surface-container hover:text-primary transition-all active:scale-90" title="Add to Plan">
+<span class="material-symbols-outlined" data-icon="bookmark_add">bookmark_add</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-y-3 gap-x-2 mb-4 px-9">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="event">event</span>
+<span class="text-label-sm">Oct 28, 10:00 AM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="text-label-sm">45 mins</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="quiz">quiz</span>
+<span class="text-label-sm">30 Questions</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-label-sm text-tertiary font-semibold">Upcoming</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6 px-9">
+<span class="px-3 py-1 rounded-full bg-surface-variant text-primary text-label-sm font-medium">Exam</span>
+<span class="px-3 py-1 rounded-full bg-error-container text-on-error-container text-label-sm font-medium">High Priority</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-on-primary py-3 px-4 rounded-lg font-label-md hover:bg-primary-container transition-all active:scale-[0.98] shadow-md">View Details</button>
+</div>
+</article>
+<!-- Card 2: Calculus Unit 1 Test -->
+<article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant hover:shadow-lg hover:border-transparent transition-all group">
+<div class="flex items-start justify-between gap-4 mb-4">
+<div class="flex items-start gap-4">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-outline text-primary focus:ring-primary/30 cursor-pointer" type="checkbox"/>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider">Mathematics</span>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Calculus Unit 1 Test</h3>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-outline hover:bg-surface-container hover:text-primary transition-all active:scale-90" title="Add to Plan">
+<span class="material-symbols-outlined" data-icon="bookmark_add">bookmark_add</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-y-3 gap-x-2 mb-4 px-9">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="event">event</span>
+<span class="text-label-sm">Oct 30, 2:00 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="text-label-sm">60 mins</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="quiz">quiz</span>
+<span class="text-label-sm">20 Questions</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-label-sm text-secondary font-semibold">In Progress</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6 px-9">
+<span class="px-3 py-1 rounded-full bg-surface-variant text-primary text-label-sm font-medium">Quiz</span>
+</div>
+<!-- Progress indicator for in-progress tests -->
+<div class="mb-6 px-9">
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 45%;"></div>
+</div>
+<p class="text-label-sm text-on-surface-variant mt-2">45% Completed • 9 questions left</p>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-on-primary py-3 px-4 rounded-lg font-label-md hover:bg-primary-container transition-all active:scale-[0.98] shadow-md">Continue</button>
+</div>
+</article>
+<!-- Card 3: History Renaissance Quiz -->
+<article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant hover:shadow-lg hover:border-transparent transition-all group">
+<div class="flex items-start justify-between gap-4 mb-4">
+<div class="flex items-start gap-4">
+<div class="mt-1">
+<input class="w-5 h-5 rounded border-outline text-primary focus:ring-primary/30 cursor-pointer" type="checkbox"/>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider">History</span>
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">History: Renaissance Quiz</h3>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-outline hover:bg-surface-container hover:text-primary transition-all active:scale-90" title="Add to Plan">
+<span class="material-symbols-outlined" data-icon="bookmark_add">bookmark_add</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-y-3 gap-x-2 mb-4 px-9">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="event">event</span>
+<span class="text-label-sm">Nov 5, 11:59 PM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="text-label-sm">30 mins</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="quiz">quiz</span>
+<span class="text-label-sm">15 Questions</span>
+</div>
+<div class="flex items-center gap-2 text-outline">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="text-label-sm font-semibold">Not Started</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6 px-9">
+<span class="px-3 py-1 rounded-full bg-surface-variant text-primary text-label-sm font-medium">Practice</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-on-primary py-3 px-4 rounded-lg font-label-md hover:bg-primary-container transition-all active:scale-[0.98] shadow-md">View Details</button>
+</div>
+</article>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center py-3 px-2 bg-surface-container-lowest shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined filled-icon" data-icon="assignment" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-label-sm text-label-sm mt-1">Tasks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-label-sm text-label-sm mt-1">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high rounded-full transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('article').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Prevent trigger if button or checkbox is clicked
+                if(e.target.closest('button') || e.target.closest('input')) return;
+                
+                card.classList.add('scale-[0.98]');
+                setTimeout(() => card.classList.remove('scale-[0.98]'), 150);
+            });
+        });
+
+        // Filter active state toggle
+        const filterBtns = document.querySelectorAll('.flex.overflow-x-auto button');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary');
+                    b.classList.add('bg-surface-container-highest', 'text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary', 'text-on-primary');
+                btn.classList.remove('bg-surface-container-highest', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>
