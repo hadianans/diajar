@@ -80,7 +80,7 @@ const students = [
 export default function Show({ classId }) {
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredStudents = students.filter(student => 
+    const filteredStudents = students.filter(student =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -92,7 +92,7 @@ export default function Show({ classId }) {
                     <p className="font-body-md text-body-md text-on-surface-variant">{classDetails.year} • {classDetails.grade}</p>
                 </div>
                 <div className="flex flex-col items-end">
-                    <span className="font-label-md text-label-md text-primary bg-primary-container px-3 py-1 rounded-full">{classDetails.studentsCount} Students</span>
+                    <span className="font-label-md text-label-md text-white bg-primary-container px-3 py-1 rounded-full">{classDetails.studentsCount} Students</span>
                     <span className="font-label-sm text-label-sm text-on-surface-variant mt-1">{classDetails.groupsCount} Groups</span>
                 </div>
             </div>
@@ -118,11 +118,11 @@ export default function Show({ classId }) {
                 <section className="space-y-stack-sm pb-10 mt-4">
                     {filteredStudents.length > 0 ? (
                         filteredStudents.map(student => (
-                            <StudentListCard 
-                                key={student.id} 
+                            <StudentListCard
+                                key={student.id}
                                 classId={classDetails.id}
                                 studentId={student.id}
-                                {...student} 
+                                {...student}
                             />
                         ))
                     ) : (

@@ -48,14 +48,14 @@
 21. /teacher/assessments/[assessmentId]/edit ✅
 22. /teacher/assessments/[assessmentId] ✅
 23. /teacher/assessments/[assessmentId]/[studentId] ✅
-24. /teacher/assessments/questions
-25. /teacher/assessments/questions/[questionId]
-26. /teacher/assessments/questions/create
-27. /teacher/assessments/questions/[questionId]/edit
+24. /teacher/assessments/questions ✅
+25. /teacher/assessments/questions/[questionId] ✅
+26. /teacher/assessments/questions/create ✅
+27. /teacher/assessments/questions/[questionId]/edit ✅
 28. /teacher/resources/assessments
 29. /teacher/resources/assessments/[assessmentId]
 <!-- 30. /teacher/gradebook -->
-31. /teacher/gradebook/[groupId]
+31. /teacher/gradebook/[groupId] ✅
 
 ---
 
