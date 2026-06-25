@@ -1,96 +1,78 @@
-import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import React from 'react';
+import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import AccountForm from '@/Components/features/accounts/AccountForm';
-
-const mockAccountData = {
-    name: 'Aditiya Wijaya',
-    username: 'aditiya_w',
-    email: 'aditiya.w@diajar.edu',
-    role: 'admin',
-    avatarUrl: 'https://lh3.googleusercontent.com/a/default-user=s120'
-};
+import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 
 export default function Edit({ accountId }) {
-    // Interactive demo presentation roles
-    const [selectedRole, setSelectedRole] = useState('admin');
-    const [activeTab, setActiveTab] = useState('Account');
+    const { data: user, loading } = useApiGet(`/users/${accountId}`);
 
-    const handleRoleChange = (role) => {
-        setSelectedRole(role);
-        if (role === 'admin') {
-            setActiveTab('Account');
-        } else if (role === 'teacher') {
-            setActiveTab('Class');
-        } else {
-            setActiveTab('Dashboard');
+    const handleBack = () => {
+        router.visit(`/admin/accounts/${accountId}`);
+    };
+
+    const handleFormSubmit = async (formData, forceConfirm = false) => {
+        try {
+            const payload = { ...formData };
+            if (forceConfirm) {
+                payload.role_change_confirmed = true;
+            }
+            
+            await api.put(`/users/${accountId}`, payload);
+            alert('Account updated successfully!');
+            router.visit(`/admin/accounts/${accountId}`);
+        } catch (err) {
+            if (err.response?.status === 422 && err.response.data.message === 'Role change requires role_change_confirmed: true') {
+                if (confirm('You are changing the role of this user. This might affect their permissions and linked data. Continue?')) {
+                    return handleFormSubmit(formData, true);
+                }
+            } else {
+                throw err; // Re-throw to be caught by AccountForm error handler
+            }
         }
     };
 
-    const viewLabelMap = {
-        admin: 'Admin View',
-        teacher: 'Teacher View',
-        student: 'Student View',
-    };
+    if (loading) {
+        return (
+            <DashboardTemplate activeTab="Account" title="Loading..." viewLabel="Admin View" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading account details...</div>
+            </DashboardTemplate>
+        );
+    }
 
-    const handleBack = () => {
-        window.history.back();
-    };
+    if (!user) {
+        return (
+            <DashboardTemplate activeTab="Account" title="Not Found" viewLabel="Admin View" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-error">User not found.</div>
+            </DashboardTemplate>
+        );
+    }
 
-    const handleFormSubmit = (formData) => {
-        alert(`Account updated successfully!\nID: ${accountId || 'N/A'}\nName: ${formData.name}\nUsername: ${formData.username}\nRole: ${formData.role}`);
-        window.history.back();
+    const accountData = {
+        id: user.id,
+        name: user.full_name,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        avatarUrl: user.picture
     };
-
-    // Header info with role switcher
-    const headerSection = (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-xl mx-auto">
-            {/* Interactive demo role nav switcher */}
-            <div className="p-4 bg-surface-container-low border border-outline-variant rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">
-                        Interactive Demo Mode (Switch Navbars)
-                    </span>
-                    <p className="text-sm text-on-surface">Toggle role menus layout to check customized views:</p>
-                </div>
-                <div className="flex gap-2">
-                    {['admin', 'teacher', 'student'].map((r) => (
-                        <button
-                            key={r}
-                            onClick={() => handleRoleChange(r)}
-                            className={`px-4 py-2 rounded-lg font-label-sm text-xs capitalize transition-all border ${
-                                selectedRole === r
-                                    ? 'bg-primary text-on-primary border-primary shadow-sm'
-                                    : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
-                             }`}
-                            type="button"
-                        >
-                            {r} Navbar
-                        </button>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <>
-            <Head title={`Edit Account ${accountId || ''} - Diajar LMS`} />
+            <Head title={`Edit Account ${user.full_name} - Diajar LMS`} />
 
             <DashboardTemplate
-                role={selectedRole}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
+                activeTab="Account"
                 title="Edit Account"
-                viewLabel={viewLabelMap[selectedRole]}
+                viewLabel="Admin View"
                 showBack={true}
                 onBack={handleBack}
-                headerSection={headerSection}
             >
                 <div className="w-full pb-12">
                     <AccountForm
                         isEdit={true}
-                        initialData={mockAccountData}
+                        initialData={accountData}
                         onSubmit={handleFormSubmit}
                         onCancel={handleBack}
                     />

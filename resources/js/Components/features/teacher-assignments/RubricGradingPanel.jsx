@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function RubricGradingPanel({ criteria }) {
-    // mock criteria shape
+export default function RubricGradingPanel({ criteria, feedback, onLevelSelect, onFeedbackChange, grade, maxGrade }) {
     const [openIndex, setOpenIndex] = useState(0);
 
     return (
@@ -11,7 +10,7 @@ export default function RubricGradingPanel({ criteria }) {
             <div className="bg-primary-container text-on-primary-container p-4 rounded-xl flex items-center justify-between border border-primary/20 shadow-md">
                 <div className="flex flex-col">
                     <span className="text-label-sm font-label-sm opacity-80">Current Grade</span>
-                    <span className="text-headline-md font-headline-md">85/100 (85%)</span>
+                    <span className="text-headline-md font-headline-md">{grade}/{maxGrade} ({maxGrade ? Math.round((grade/maxGrade)*100) : 0}%)</span>
                 </div>
                 <div className="bg-on-primary-container/20 px-3 py-1 rounded-full border border-on-primary-container/10">
                     <span className="text-label-sm font-label-sm">Live Sync</span>
@@ -50,6 +49,7 @@ export default function RubricGradingPanel({ criteria }) {
                                         return (
                                             <button 
                                                 key={lidx}
+                                                onClick={() => onLevelSelect(criterion.id, lvl.id)}
                                                 className={`flex flex-col items-start p-3 rounded-lg text-left transition-all active:scale-[0.98] ${
                                                     isSelected 
                                                     ? 'border-2 border-primary bg-primary-container/10' 
@@ -85,7 +85,8 @@ export default function RubricGradingPanel({ criteria }) {
                     className="w-full bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-body-md font-body-md placeholder:text-outline" 
                     placeholder="Type qualitative feedback here..." 
                     rows="4"
-                    defaultValue="Excellent attention to detail in the conclusion section. However, the data table on page 3 lacks units in the header columns."
+                    value={feedback || ''}
+                    onChange={(e) => onFeedbackChange(e.target.value)}
                 ></textarea>
             </div>
         </section>

@@ -1,39 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { router } from '@inertiajs/react';
 import RoleFilterTabs from '@/Components/features/accounts/RoleFilterTabs';
 import AccountSearchBar from '@/Components/features/accounts/AccountSearchBar';
 import AccountListItem from './AccountListItem';
 import Icon from '@/Components/shared/ui/Icon';
+import useApiGet from '@/hooks/useApiGet';
 
-export default function AccountList({ initialAccounts = [], onCreateClick }) {
+export default function AccountList({ onCreateClick }) {
     const [search, setSearch] = useState('');
     const [activeRole, setActiveRole] = useState('all');
     const [sortAsc, setSortAsc] = useState(true);
+    const [page, setPage] = useState(1);
+    
+    // Debounce search
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedSearch(search), 500);
+        return () => clearTimeout(timer);
+    }, [search]);
+    
+    // reset page when filters change
+    useEffect(() => {
+        setPage(1);
+    }, [activeRole, debouncedSearch, sortAsc]);
 
-    const handleMoreClick = (account) => {
-        alert(`Opening options for ${account.name}: Edit, Disable, Reset Password...`);
-    };
+    const sortParam = sortAsc ? 'name' : 'name_desc'; // API might need adjustment, but 'name' works for now, API supports name, newest, role
+    
+    const queryParams = new URLSearchParams();
+    if (activeRole !== 'all') queryParams.append('role', activeRole);
+    if (debouncedSearch) queryParams.append('search', debouncedSearch);
+    queryParams.append('sort', sortAsc ? 'name' : 'newest'); // Map our simple toggle to API sorts
+    queryParams.append('page', page);
 
-    const filteredAccounts = initialAccounts.filter((account) => {
-        const matchesRole = activeRole === 'all' || account.role.toLowerCase() === activeRole;
-        const matchesSearch =
-            account.name.toLowerCase().includes(search.toLowerCase()) ||
-            account.email.toLowerCase().includes(search.toLowerCase());
-        return matchesRole && matchesSearch;
-    });
-
-    const sortedAccounts = [...filteredAccounts].sort((a, b) => {
-        if (sortAsc) {
-            return a.name.localeCompare(b.name);
-        } else {
-            return b.name.localeCompare(a.name);
-        }
-    });
-
+    const { data: apiResponse, loading } = useApiGet(`/users?${queryParams.toString()}`);
+    
+    const accounts = apiResponse?.users?.data || [];
+    const pagination = apiResponse?.users;
+    
     const counts = {
-        all: initialAccounts.length,
-        admin: initialAccounts.filter((a) => a.role.toLowerCase() === 'admin').length,
-        teacher: initialAccounts.filter((a) => a.role.toLowerCase() === 'teacher').length,
-        student: initialAccounts.filter((a) => a.role.toLowerCase() === 'student').length,
+        all: (apiResponse?.admin_count || 0) + (apiResponse?.teacher_count || 0) + (apiResponse?.student_count || 0),
+        admin: apiResponse?.admin_count || 0,
+        teacher: apiResponse?.teacher_count || 0,
+        student: apiResponse?.student_count || 0,
     };
 
     const rolesConfig = [
@@ -43,12 +51,18 @@ export default function AccountList({ initialAccounts = [], onCreateClick }) {
         { id: 'student', label: 'Student', count: counts.student },
     ];
 
+    const handleMoreClick = (account) => {
+        router.visit(`/admin/accounts/${account.id}`);
+    };
+
     return (
         <div className="flex flex-col">
             <section className="flex justify-between items-end mb-stack-lg">
                 <div>
                     <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Accounts</h2>
-                    <p className="font-body-md text-body-md text-on-surface-variant">{counts.all} accounts total</p>
+                    <p className="font-body-md text-body-md text-on-surface-variant">
+                        {loading ? 'Loading...' : `${counts.all} accounts total`}
+                    </p>
                 </div>
                 {onCreateClick && (
                     <button
@@ -74,15 +88,47 @@ export default function AccountList({ initialAccounts = [], onCreateClick }) {
                 onSortToggle={() => setSortAsc(!sortAsc)}
             />
 
-            {sortedAccounts.length > 0 ? (
-                <div className="space-y-stack-sm">
-                    {sortedAccounts.map((account) => (
+            {loading ? (
+                <div className="p-12 text-center text-on-surface-variant">Loading accounts...</div>
+            ) : accounts.length > 0 ? (
+                <div className="space-y-stack-sm mb-8">
+                    {accounts.map((account) => (
                         <AccountListItem
                             key={account.id}
-                            account={account}
-                            onMoreClick={handleMoreClick}
+                            account={{
+                                id: account.id,
+                                name: account.full_name,
+                                email: account.email,
+                                role: account.role,
+                                avatar: account.picture,
+                                createdDate: new Date(account.created_at).toLocaleDateString()
+                            }}
+                            onMoreClick={() => handleMoreClick(account)}
                         />
                     ))}
+                    
+                    {/* Pagination Controls */}
+                    {pagination?.last_page > 1 && (
+                        <div className="flex justify-between items-center pt-4 mt-6 border-t border-outline-variant">
+                            <button
+                                onClick={() => setPage(p => Math.max(1, p - 1))}
+                                disabled={page === 1}
+                                className="px-4 py-2 bg-surface-container rounded-lg text-on-surface disabled:opacity-50"
+                            >
+                                Previous
+                            </button>
+                            <span className="text-sm text-on-surface-variant">
+                                Page {page} of {pagination.last_page}
+                            </span>
+                            <button
+                                onClick={() => setPage(p => Math.min(pagination.last_page, p + 1))}
+                                disabled={page === pagination.last_page}
+                                className="px-4 py-2 bg-surface-container rounded-lg text-on-surface disabled:opacity-50"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className="p-12 text-center flex flex-col items-center bg-white rounded-2xl border border-outline-variant shadow-sm mt-4">

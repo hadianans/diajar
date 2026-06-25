@@ -1,34 +1,66 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import AssessmentStatsGrid from '@/Components/features/student-assessments/AssessmentStatsGrid';
 import AssessmentReflection from '@/Components/features/student-assessments/AssessmentReflection';
+import useApiGet from '@/hooks/useApiGet';
 
-// Mock Data
-const assessmentData = {
-    id: 1,
-    subject: 'Biology',
-    title: 'Biology Midterm Quiz',
-    status: 'Upcoming',
-    deadline: 'Oct 28, 10:00 AM',
-    description: 'This comprehensive midterm covers Chapters 1-4, focusing on Cell Theory, Organelle Functions, and Principles of Growth. Ensure you have a stable connection before starting.',
-    stats: [
-        { icon: 'timer', value: '45 mins', label: 'Time Limit' },
-        { icon: 'quiz', value: '30 Questions', label: 'Total Count' },
-        { icon: 'history', value: '1 of 2', label: 'Attempts Left' },
-        { icon: 'stars', value: '--', label: 'Best Score' }
-    ],
-    reflectionGoals: [
-        { label: 'Refresh knowledge and identify gaps' },
-        { label: 'Achieve a score of 90% or higher' }
-    ]
-};
+export default function Show({ assessmentId }) {
+    const { data: responseData, loading } = useApiGet(`/assessments/${assessmentId}`);
 
-export default function Show({ assessmentId = assessmentData.id }) {
+    const assessmentData = useMemo(() => {
+        if (!responseData || !responseData.assessment) return null;
+        
+        const { assessment, attempts_used, latest_attempt } = responseData;
+        
+        let status = 'Upcoming';
+        if (latest_attempt) {
+            status = latest_attempt.status === 'progress' ? 'In Progress' : 'Completed';
+        } else if (assessment.due_date && new Date(assessment.due_date) < new Date()) {
+            status = 'Overdue';
+        } else if (assessment.start_date && new Date(assessment.start_date) > new Date()) {
+            status = 'Locked';
+        }
+
+        return {
+            id: assessment.id,
+            subject: assessment.chapter?.name || 'Assessment',
+            title: assessment.title,
+            status: status,
+            deadline: assessment.due_date ? new Date(assessment.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'No deadline',
+            description: assessment.description || 'No description provided.',
+            stats: [
+                { icon: 'timer', value: assessment.duration_minutes ? `${assessment.duration_minutes} mins` : 'Untimed', label: 'Time Limit' },
+                { icon: 'history', value: `${attempts_used} of ${assessment.max_attempts || '∞'}`, label: 'Attempts Used' },
+                { icon: 'stars', value: latest_attempt?.grade !== undefined && latest_attempt?.grade !== null ? latest_attempt.grade : '--', label: 'Latest Score' }
+            ],
+            reflectionGoals: [
+                { label: 'Refresh knowledge and identify gaps' },
+                { label: 'Achieve a high score' }
+            ],
+            canStart: (attempts_used < (assessment.max_attempts || 999)) && (!assessment.start_date || new Date(assessment.start_date) <= new Date()) && (!assessment.due_date || new Date(assessment.due_date) >= new Date())
+        };
+    }, [responseData]);
+
+    if (loading) {
+        return (
+            <DashboardTemplate activeTab="tasks" title="Loading..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12">Loading assessment details...</div>
+            </DashboardTemplate>
+        );
+    }
+
+    if (!assessmentData) {
+        return (
+            <DashboardTemplate activeTab="tasks" title="Not Found" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12">Assessment not found.</div>
+            </DashboardTemplate>
+        );
+    }
+
     return (
         <DashboardTemplate 
-            role="student"
             activeTab="tasks"
             title="Diajar"
             showBack={true}
@@ -66,33 +98,36 @@ export default function Show({ assessmentId = assessmentData.id }) {
 
                 {/* Description Section */}
                 <section className="bg-surface-container-low p-5 rounded-xl border border-outline-variant/30">
-                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                        {assessmentData.description}
-                    </p>
+                    <div className="font-body-md text-body-md text-on-surface-variant leading-relaxed" dangerouslySetInnerHTML={{ __html: assessmentData.description }} />
                 </section>
 
                 {/* Assessment Details Grid */}
                 <AssessmentStatsGrid stats={assessmentData.stats} />
 
                 {/* Pre-Assessment Reflection Card */}
-                <AssessmentReflection 
-                    goals={assessmentData.reflectionGoals} 
-                    onSelect={(goal) => console.log('Goal selected:', goal)} 
-                />
+                {assessmentData.canStart && (
+                    <AssessmentReflection 
+                        goals={assessmentData.reflectionGoals} 
+                        onSelect={(goal) => console.log('Goal selected:', goal)} 
+                    />
+                )}
 
                 {/* Sticky Bottom Actions */}
                 <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/20 p-4 md:px-margin-desktop z-40">
                     <div className="max-w-3xl mx-auto flex items-center gap-4">
-                        <Link 
-                            href={route('student.assessments.attempt', { assessmentId })}
-                            className="flex-1 bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
-                        >
-                            <span>Start Assessment</span>
-                            <Icon name="play_arrow" className="text-[20px]" />
-                        </Link>
-                        <button className="w-14 h-14 border-2 border-outline-variant rounded-xl flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors active:scale-90">
-                            <Icon name="playlist_add" />
-                        </button>
+                        {assessmentData.canStart ? (
+                            <Link 
+                                href={route('student.assessments.attempt', { assessmentId })}
+                                className="flex-1 bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                            >
+                                <span>Start Assessment</span>
+                                <Icon name="play_arrow" className="text-[20px]" />
+                            </Link>
+                        ) : (
+                            <div className="flex-1 bg-surface-container text-on-surface-variant py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 text-center opacity-70">
+                                <span>Assessment Unavailable</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

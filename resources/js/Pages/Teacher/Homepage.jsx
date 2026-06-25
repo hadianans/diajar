@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Head } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
+import useApiGet from '@/hooks/useApiGet';
+import moment from 'moment';
 
 // Feature Components
 import ActionRequiredCard from '@/Components/features/teacher-dashboard/ActionRequiredCard';
@@ -11,44 +13,71 @@ import SRLEngagementCard from '@/Components/features/teacher-dashboard/SRLEngage
 import ChapterProgressList from '@/Components/features/teacher-dashboard/ChapterProgressList';
 import UpcomingDeadlines from '@/Components/features/teacher-dashboard/UpcomingDeadlines';
 
-// Mock Data
-const mockActivities = [
-    { studentName: 'Alex Johnson', action: 'submitted Genetics Lab Report', time: '2h ago', type: 'Assignment', icon: 'lab_profile', iconBg: 'bg-secondary-container', iconColor: 'text-on-secondary-container' },
-    { studentName: 'Maria Garcia', action: 'completed Photosynthesis Module', time: '4h ago', type: 'Learning Path', icon: 'menu_book', iconBg: 'bg-primary-container', iconColor: 'text-white' },
-    { studentName: 'Liam Chen', action: 'submitted Biology Quiz', time: '6h ago', type: 'Assessment', icon: 'quiz', iconBg: 'bg-tertiary-container', iconColor: 'text-white' }
-];
-
-const mockChapters = [
-    { title: 'Chapter 3: Cell Structure', progress: 85 },
-    { title: 'Chapter 4: Metabolism', progress: 40 }
-];
-
-const mockDeadlines = [
-    { title: 'Final Lab Report', date: 'Due Oct 30', isUrgent: true },
-    { title: 'Evolution Quiz', date: 'Due Nov 2', isUrgent: false }
-];
-
 export default function Homepage() {
+    const { data: dashboardData, loading } = useApiGet('/dashboard');
+
+    const summary = dashboardData || {};
+    
+    // Parse the data
+    const ungradedCount = summary.pending_actions?.ungraded_submissions || 0;
+    const reviewCount = summary.pending_actions?.pending_attempts || 0;
+    
+    const avgAssignment = summary.class_health?.avg_assignment_grade || 0;
+    const avgAssessment = summary.class_health?.avg_assessment_score || 0;
+    const avgOverall = (avgAssignment + avgAssessment) / (avgAssignment > 0 && avgAssessment > 0 ? 2 : 1);
+
+    const activePlans = summary.srl_snapshot?.active_plans || 0;
+    const newReflections = summary.srl_snapshot?.new_reflections || 0;
+
+    const chapters = (summary.chapter_progress || []).map(ch => ({
+        title: ch.name,
+        progress: ch.completion
+    }));
+
+    const deadlines = [];
+    if (summary.upcoming_deadlines?.assignment) {
+        deadlines.push({
+            title: summary.upcoming_deadlines.assignment.title,
+            date: `Due ${moment(summary.upcoming_deadlines.assignment.due_date).format('MMM D')}`,
+            isUrgent: moment(summary.upcoming_deadlines.assignment.due_date).isSameOrBefore(moment().add(2, 'days'))
+        });
+    }
+    if (summary.upcoming_deadlines?.assessment) {
+        deadlines.push({
+            title: summary.upcoming_deadlines.assessment.title,
+            date: `Due ${moment(summary.upcoming_deadlines.assessment.due_date).format('MMM D')}`,
+            isUrgent: moment(summary.upcoming_deadlines.assessment.due_date).isSameOrBefore(moment().add(2, 'days'))
+        });
+    }
+
     const headerSection = (
         <section className="mb-stack-lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-2">
                 <div>
-                    <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Good Morning, Sarah!</h2>
-                    <p className="text-on-surface-variant font-body-md">Academic Year: 2023/2024 • Academic Portal</p>
+                    <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Teacher Dashboard</h2>
+                    <p className="text-on-surface-variant font-body-md">Overview of your classes and tasks</p>
                 </div>
                 <div className="hidden md:flex bg-primary-container/10 px-4 py-2 rounded-xl border border-primary-container/20 items-center gap-2">
                     <Icon name="event_note" className="text-primary" />
-                    <span className="text-primary font-label-md">Monday, Oct 23rd</span>
+                    <span className="text-primary font-label-md">{moment().format('dddd, MMM Do')}</span>
                 </div>
             </div>
         </section>
     );
 
+    if (loading) {
+        return (
+            <DashboardTemplate role="teacher" activeTab="home" title="Dashboard">
+                <div className="flex justify-center p-12 text-on-surface-variant">Loading dashboard data...</div>
+            </DashboardTemplate>
+        );
+    }
+
     return (
         <DashboardTemplate
             role="teacher"
             activeTab="home"
-            title="Biology - Class 11A"
+            title="Dashboard"
             headerSection={headerSection}
         >
             <Head title="Teacher Dashboard | Diajar LMS" />
@@ -57,16 +86,19 @@ export default function Homepage() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
                     {/* Left Column: Pending Actions & Class Health */}
                     <div className="md:col-span-8 flex flex-col gap-gutter">
-                        <ActionRequiredCard ungradedCount={12} reviewCount={5} />
-                        <ClassHealthMetrics completion={78} avgGrade={82} avgScore={75} />
-                        <RecentActivityList activities={mockActivities} />
+                        <ActionRequiredCard ungradedCount={ungradedCount} reviewCount={reviewCount} />
+                        <ClassHealthMetrics completion={Math.round(avgOverall)} avgGrade={avgAssignment} avgScore={avgAssessment} />
+                        {/* Mock Recent Activity since it's not in the API yet */}
+                        <RecentActivityList activities={[
+                            { studentName: 'System', action: 'Dashboard loaded', time: 'Just now', type: 'Info', icon: 'info', iconBg: 'bg-surface-container', iconColor: 'text-on-surface-variant' }
+                        ]} />
                     </div>
 
                     {/* Right Column: SRL, Progress, Deadlines */}
                     <div className="md:col-span-4 flex flex-col gap-gutter">
-                        <SRLEngagementCard activePlans={24} newReflections={18} avgComprehension={4.2} />
-                        <ChapterProgressList chapters={mockChapters} />
-                        <UpcomingDeadlines deadlines={mockDeadlines} />
+                        <SRLEngagementCard activePlans={activePlans} newReflections={newReflections} avgComprehension={0} />
+                        <ChapterProgressList chapters={chapters} />
+                        <UpcomingDeadlines deadlines={deadlines} />
                     </div>
                 </div>
             </div>

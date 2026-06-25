@@ -287,6 +287,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         return Inertia::render('Admin/Classes/Index');
     })->name('classes.index');
 
+    Route::get('/classes/create', function () {
+        return Inertia::render('Admin/Classes/Create');
+    })->name('classes.create');
+
     Route::get('/classes/{classId}', function ($classId) {
         return Inertia::render('Admin/Classes/Show', ['classId' => $classId]);
     })->name('classes.show');

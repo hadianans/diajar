@@ -1,89 +1,63 @@
-import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import React, { useMemo } from 'react';
+import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import ProgressMetricCard from '@/Components/features/academic/ProgressMetricCard';
 import AcademicYearsBox from '@/Components/features/academic/AcademicYearsBox';
 import SubjectsBox from '@/Components/features/academic/SubjectsBox';
 import GroupsBox from '@/Components/features/academic/GroupsBox';
 import EcosystemBanner from '@/Components/features/academic/EcosystemBanner';
-
-const mockYears = [
-    { year: '2024/2025', range: 'Sep 1, 2024 - Jun 30, 2025', status: 'Active' },
-    { year: '2023/2024', range: 'Sep 1, 2023 - Jun 30, 2024', status: 'Archived' },
-    { year: '2022/2023', range: 'Sep 1, 2022 - Jun 30, 2023', status: 'Archived' }
-];
-
-const mockSubjects = [
-    { name: 'Biology', teachersCount: 3, icon: 'biotech' },
-    { name: 'Mathematics', teachersCount: 4, icon: 'calculate' },
-    { name: 'Physics', teachersCount: 0, icon: 'precision_manufacturing', warning: true },
-    { name: 'Chemistry', teachersCount: 2, icon: 'science' }
-];
-
-const mockGroups = [
-    { groupName: '10A', grade: 'Grade 10', studentsCount: 24 },
-    { groupName: '10B', grade: 'Grade 10', studentsCount: 0, warning: true },
-    { groupName: '11A', grade: 'Grade 11', studentsCount: 22 },
-    { groupName: '12C', grade: 'Grade 12', studentsCount: 18 }
-];
+import useApiGet from '@/hooks/useApiGet';
 
 const bannerImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAugxZOwpAEuPgRLfjnGSAvR4IKQLMzp3eBMEm4HH4hq979R4Kh8MtPYPwxVlg0HR2J_WJlO8bAEjnHg3HO-xefEH69SQj2YB3W4HTkjBsbxZoySpXJzJTeavwhX6WVxRHm-k_RzcyiHZjhVwI6G46BWZIOd6z2oMtLfthV8WJYEW0kECUGZ3amsK2NFipU3IJlnWnLfWICI4nSXn44z40pddEmNxP-xWPBaMxhQHi1KumvRzE7lO94u4dH2rGGum4bQ1f8ylS-6fE';
 
 export default function Index() {
-    const [selectedRole, setSelectedRole] = useState('admin');
-    const [activeNavbarRole, setActiveNavbarRole] = useState('admin');
-    const [activeTab, setActiveTab] = useState('Academic');
-
-    const handleNavbarRoleChange = (role) => {
-        setActiveNavbarRole(role);
-        if (role === 'admin') {
-            setActiveTab('Academic');
-        } else if (role === 'teacher') {
-            setActiveTab('Class');
-        } else {
-            setActiveTab('Dashboard');
-        }
-    };
+    const { data: yearsData, loading: yearsLoading } = useApiGet('/school-years');
+    const { data: subjectsData, loading: subjectsLoading } = useApiGet('/subjects');
+    const { data: groupsData, loading: groupsLoading } = useApiGet('/groups');
 
     const handleActionClick = (actionName) => {
         alert(`Initiated action: ${actionName} setup flow...`);
     };
 
-    const viewLabelMap = {
-        admin: 'Admin View',
-        teacher: 'Teacher View',
-        student: 'Student View',
-    };
+    // Format data for the UI components
+    const years = useMemo(() => {
+        if (!yearsData) return [];
+        return yearsData.map(y => ({
+            id: y.id,
+            year: y.name,
+            range: `${new Date(y.date_start).toLocaleDateString()} - ${new Date(y.date_end).toLocaleDateString()}`,
+            status: y.status === 'active' ? 'Active' : 'Archived'
+        }));
+    }, [yearsData]);
+
+    const activeYear = years.find(y => y.status === 'Active');
+
+    const subjects = useMemo(() => {
+        if (!subjectsData) return [];
+        return subjectsData.map(s => ({
+            id: s.id,
+            name: s.name,
+            teachersCount: s.teacher_count || 0,
+            icon: 'menu_book', // Mock icon or can be mapped dynamically
+            warning: s.has_no_teacher
+        }));
+    }, [subjectsData]);
+
+    const groups = useMemo(() => {
+        if (!groupsData) return [];
+        return groupsData.map(gy => ({
+            id: gy.group_id,
+            groupYearId: gy.id,
+            groupName: gy.group.name,
+            grade: gy.grade,
+            studentsCount: gy.student_count || 0,
+            warning: gy.has_no_students
+        }));
+    }, [groupsData]);
 
     // Header switcher section
     const headerSection = (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            {/* Interactive demo layout switcher */}
-            <div className="p-4 bg-surface-container-low border border-outline-variant rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">
-                        Interactive Demo Mode (Switch Navbars)
-                    </span>
-                    <p className="text-sm text-on-surface">Toggle role menus layout to check customized views:</p>
-                </div>
-                <div className="flex gap-2">
-                    {['admin', 'teacher', 'student'].map((role) => (
-                        <button
-                            key={role}
-                            onClick={() => handleNavbarRoleChange(role)}
-                            className={`px-4 py-2 rounded-lg font-label-sm text-xs capitalize transition-all border ${
-                                activeNavbarRole === role
-                                    ? 'bg-primary text-on-primary border-primary shadow-sm'
-                                    : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
-                            }`}
-                            type="button"
-                        >
-                            {role} Navbar
-                        </button>
-                    ))}
-                </div>
-            </div>
-
             {/* Intro text */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
@@ -94,10 +68,12 @@ export default function Index() {
                         Manage institutional structures and learning cohorts.
                     </p>
                 </div>
-                <div className="inline-flex items-center bg-surface-container-low px-4 py-2 rounded-xl border border-outline-variant shadow-sm">
-                    <span className="text-label-sm font-label-sm text-on-surface-variant mr-2 font-medium">Active Year:</span>
-                    <span className="text-label-sm font-label-sm text-primary font-bold">2024/2025</span>
-                </div>
+                {activeYear && (
+                    <div className="inline-flex items-center bg-surface-container-low px-4 py-2 rounded-xl border border-outline-variant shadow-sm">
+                        <span className="text-label-sm font-label-sm text-on-surface-variant mr-2 font-medium">Active Year:</span>
+                        <span className="text-label-sm font-label-sm text-primary font-bold">{activeYear.year}</span>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -107,22 +83,22 @@ export default function Index() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
             <ProgressMetricCard
                 label="Subjects with teachers"
-                value="22/24"
+                value={subjectsLoading ? '...' : `${subjects.filter(s => !s.warning).length}/${subjects.length}`}
                 icon="badge"
                 bgClass="bg-primary-container/10"
                 textClass="text-primary"
             />
             <ProgressMetricCard
                 label="Groups with students"
-                value="10/12"
+                value={groupsLoading ? '...' : `${groups.filter(g => !g.warning).length}/${groups.length}`}
                 icon="groups"
                 bgClass="bg-secondary-container/20"
                 textClass="text-secondary"
             />
             <ProgressMetricCard
-                label="Classes generated"
-                value="48"
-                icon="auto_stories"
+                label="Active Academic Years"
+                value={yearsLoading ? '...' : (activeYear ? '1' : '0')}
+                icon="event"
                 bgClass="bg-tertiary-container/10"
                 textClass="text-tertiary"
             />
@@ -134,11 +110,9 @@ export default function Index() {
             <Head title="Academic Management Hub" />
 
             <DashboardTemplate
-                role={activeNavbarRole}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
+                activeTab="Academic"
                 title="Academic Management"
-                viewLabel={viewLabelMap[activeNavbarRole]}
+                viewLabel="Admin View"
                 showBack={false}
                 headerSection={headerSection}
                 statsSection={metricsSection}
@@ -147,26 +121,29 @@ export default function Index() {
                     {/* Academic Years Box */}
                     <div className="lg:col-span-4">
                         <AcademicYearsBox
-                            years={mockYears}
+                            years={years}
                             onAddYearClick={() => handleActionClick('New Academic Year')}
+                            onItemClick={(year) => router.visit(`/admin/academic/years/${year.id}`)}
                         />
                     </div>
 
                     {/* Subjects Box */}
                     <div className="lg:col-span-4">
                         <SubjectsBox
-                            subjects={mockSubjects}
+                            subjects={subjects}
                             onAddSubjectClick={() => handleActionClick('New Subject')}
                             onViewAllSubjects={() => handleActionClick('View All Subjects')}
+                            onItemClick={(sub) => router.visit(`/admin/academic/subjects/${sub.id}`)}
                         />
                     </div>
 
                     {/* Student Groups Box */}
                     <div className="lg:col-span-4">
                         <GroupsBox
-                            groups={mockGroups}
+                            groups={groups}
                             onAddGroupClick={() => handleActionClick('New Student Group')}
                             onViewAllGroups={() => handleActionClick('View All Student Groups')}
+                            onItemClick={(group) => router.visit(`/admin/academic/groups/${group.id}`)}
                         />
                     </div>
 

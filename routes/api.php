@@ -37,6 +37,7 @@ use App\Http\Controllers\Student\PlanController as StudentPlanController;
 use App\Http\Controllers\Student\ReflectionController as StudentReflectionController;
 use App\Http\Controllers\Student\BookmarkController as StudentBookmarkController;
 use App\Http\Controllers\Student\MaterialReviewController as StudentMaterialReviewController;
+use App\Http\Controllers\Student\GradebookController as StudentGradebookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -263,6 +264,9 @@ Route::prefix('student')->middleware(['auth:sanctum', 'role:student'])->group(fu
     Route::get('/reflections/{id}', [StudentReflectionController::class, 'show']);
     Route::put('/reflections/{id}', [StudentReflectionController::class, 'update']);
     Route::delete('/reflections/{id}', [StudentReflectionController::class, 'destroy']);
+
+    // Gradebook
+    Route::get('/gradebook', [StudentGradebookController::class, 'index']);
 
     // Bookmarks
     Route::get('/bookmarks', [StudentBookmarkController::class, 'index']);

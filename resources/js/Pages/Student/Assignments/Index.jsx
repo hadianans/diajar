@@ -1,53 +1,27 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import AssignmentFilters from '@/Components/features/student-assignments/AssignmentFilters';
 import AssignmentCard from '@/Components/features/student-assignments/AssignmentCard';
-
-// Mock Data
-const assignments = [
-    {
-        id: 1,
-        subject: 'Biology',
-        subjectIcon: 'biotech',
-        title: 'Genetics Lab Report',
-        status: 'Urgent',
-        dueDate: 'Due Oct 27, 4:00 PM',
-        typeTags: [
-            { label: 'Lab', type: 'primary' },
-            { label: 'To-do', type: 'default' }
-        ]
-    },
-    {
-        id: 2,
-        subject: 'Mathematics',
-        subjectIcon: 'calculate',
-        title: 'Calculus Problem Set',
-        status: 'In Progress',
-        dueDate: 'Due Oct 30, 11:59 PM',
-        progress: 33, // 1/3 completed
-        typeTags: [
-            { label: 'Homework', type: 'primary' },
-            { label: 'Practice', type: 'default' }
-        ]
-    },
-    {
-        id: 3,
-        subject: 'History',
-        subjectIcon: 'history_edu',
-        title: 'Renaissance Essay',
-        status: 'To-do',
-        dueDate: 'Due Nov 5, 2:00 PM',
-        typeTags: [
-            { label: 'Essay', type: 'primary' }
-        ]
-    }
-];
+import useApiGet from '@/hooks/useApiGet';
 
 export default function Index() {
+    const { data: assignmentsData, loading } = useApiGet('/assignments');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredAssignments = assignments.filter(assignment => 
+    const mappedAssignments = (assignmentsData || []).map(item => ({
+        id: item.id,
+        subject: item.classModel?.subject?.subject_name || item.classModel?.subject?.name || 'Subject',
+        subjectIcon: 'book', // Default icon, could map based on subject name
+        title: item.title,
+        status: item.display_status === 'not_submitted' ? 'To-do' : (item.display_status === 'graded' ? 'Graded' : 'Submitted'),
+        dueDate: item.due_date ? `Due ${new Date(item.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}` : 'No due date',
+        progress: item.display_status === 'graded' ? 100 : (item.display_status === 'submitted' ? 100 : 0),
+        typeTags: item.tags?.map(t => ({ label: t.name, type: 'primary' })) || [],
+        originalId: item.id
+    }));
+
+    const filteredAssignments = mappedAssignments.filter(assignment => 
         assignment.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
         assignment.subject.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -60,7 +34,6 @@ export default function Index() {
 
     return (
         <DashboardTemplate 
-            role="student"
             activeTab="tasks"
             title="Assignments"
             headerSection={headerSection}
@@ -68,20 +41,23 @@ export default function Index() {
         >
             <Head title="Assignments - Diajar LMS" />
 
-            <div className="max-w-2xl mx-auto flex flex-col pb-12">
+            <div className="max-w-2xl mx-auto flex flex-col pb-12 mt-4">
                 <AssignmentFilters onSearch={setSearchQuery} />
                 
-                <div className="flex flex-col gap-4">
-                    {filteredAssignments.length > 0 ? (
+                <div className="flex flex-col gap-4 mt-6">
+                    {loading ? (
+                        <div className="text-center py-8 text-on-surface-variant">Loading assignments...</div>
+                    ) : filteredAssignments.length > 0 ? (
                         filteredAssignments.map(assignment => (
-                            <AssignmentCard 
-                                key={assignment.id} 
-                                {...assignment} 
-                                onAddToList={() => console.log('Added to list', assignment.id)}
-                            />
+                            <div key={assignment.id} onClick={() => router.visit(`/student/assignments/${assignment.id}`)} className="cursor-pointer">
+                                <AssignmentCard 
+                                    {...assignment} 
+                                    onAddToList={() => console.log('Added to list', assignment.id)}
+                                />
+                            </div>
                         ))
                     ) : (
-                        <div className="text-center py-8 text-on-surface-variant">
+                        <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">
                             No assignments found.
                         </div>
                     )}

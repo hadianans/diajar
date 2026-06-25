@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import RoleSelectCard from '@/Components/features/accounts/RoleSelectCard';
 import AvatarUpload from '@/Components/features/accounts/AvatarUpload';
 import Icon from '@/Components/shared/ui/Icon';
+import api from '@/utils/api';
 
 export default function AccountForm({ initialData = {}, isEdit = false, onSubmit, onCancel }) {
     // Form fields state
@@ -16,11 +17,15 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
     // Username checking state
     const [isUsernameChecking, setIsUsernameChecking] = useState(false);
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
+    
+    // API State
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
     // Password visibility state
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    // Simulated username checker
+    // Real username checker
     useEffect(() => {
         if (username.length < 3) {
             setIsUsernameChecking(false);
@@ -28,16 +33,32 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
             return;
         }
 
+        // if editing and username hasn't changed, it's available
+        if (isEdit && username === initialData.username) {
+            setIsUsernameAvailable(true);
+            return;
+        }
+
         setIsUsernameChecking(true);
         setIsUsernameAvailable(false);
 
-        const timer = setTimeout(() => {
-            setIsUsernameChecking(false);
-            setIsUsernameAvailable(true);
-        }, 800);
+        const timer = setTimeout(async () => {
+            try {
+                let url = `/users/check-username?username=${encodeURIComponent(username)}`;
+                if (isEdit && initialData.id) {
+                    url += `&exclude_id=${initialData.id}`;
+                }
+                const result = await api.get(url);
+                setIsUsernameAvailable(result?.available);
+            } catch (err) {
+                console.error("Failed to check username", err);
+            } finally {
+                setIsUsernameChecking(false);
+            }
+        }, 500);
 
         return () => clearTimeout(timer);
-    }, [username]);
+    }, [username, isEdit, initialData]);
 
     const handleGeneratePassword = () => {
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
@@ -50,8 +71,9 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
         setIsPasswordVisible(true);
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setErrors({});
         
         if (!name || !username || !email) {
             alert('Please fill out all required fields marked with *');
@@ -59,19 +81,30 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
         }
 
         if (!isEdit && (password !== confirmPassword)) {
-            alert('Passwords do not match');
+            setErrors({ confirmPassword: ['Passwords do not match'] });
             return;
         }
 
         if (onSubmit) {
-            onSubmit({
-                role,
-                name,
-                username,
-                email,
-                password,
-                avatarUrl
-            });
+            setLoading(true);
+            try {
+                await onSubmit({
+                    role,
+                    full_name: name,
+                    username,
+                    email,
+                    password: password || undefined,
+                    picture: avatarUrl || undefined
+                });
+            } catch (err) {
+                if (err.response?.status === 422) {
+                    setErrors(err.response.data.errors || {});
+                } else {
+                    alert(err.response?.data?.message || 'An error occurred while saving the account.');
+                }
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -82,7 +115,8 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                 <div className="flex items-center gap-2">
                     <button
                         onClick={onCancel}
-                        className="p-1.5 hover:bg-surface-container-low rounded-full transition-colors active:scale-95 duration-100 flex items-center justify-center border border-outline-variant/20 shadow-sm"
+                        disabled={loading}
+                        className="p-1.5 hover:bg-surface-container-low rounded-full transition-colors active:scale-95 duration-100 flex items-center justify-center border border-outline-variant/20 shadow-sm disabled:opacity-50"
                         type="button"
                         title="Cancel"
                     >
@@ -94,9 +128,11 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                 </div>
                 <button
                     type="submit"
-                    className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-2 rounded-full font-label-md text-label-md active:scale-95 transition-all shadow-md font-bold"
+                    disabled={loading}
+                    className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-2 rounded-full font-label-md text-label-md active:scale-95 transition-all shadow-md font-bold disabled:opacity-50 flex items-center gap-2"
                 >
-                    Save
+                    {loading && <Icon name="sync" className="animate-spin text-[16px]" />}
+                    {loading ? 'Saving...' : 'Save'}
                 </button>
             </div>
 
@@ -125,6 +161,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                         onClick={() => setRole('student')}
                     />
                 </div>
+                {errors.role && <p className="text-error text-xs mt-2">{errors.role[0]}</p>}
             </section>
 
             {/* Profile Avatar Upload */}
@@ -134,7 +171,6 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     onUploadClick={() => {
                         const demoUrl = 'https://lh3.googleusercontent.com/a/default-user=s120';
                         setAvatarUrl(demoUrl);
-                        alert('Demo Profile picture selected!');
                     }}
                 />
             </section>
@@ -153,11 +189,12 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm"
+                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.full_name ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                         placeholder="e.g. Aditiya Wijaya"
                         type="text"
                         required
                     />
+                    {errors.full_name && <p className="text-error text-xs mt-1">{errors.full_name[0]}</p>}
                 </div>
 
                 {/* Username */}
@@ -169,7 +206,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                         <input
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm"
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.username ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                             placeholder="aditiya_w"
                             type="text"
                             required
@@ -183,6 +220,10 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                             )}
                         </div>
                     </div>
+                    {errors.username && <p className="text-error text-xs mt-1">{errors.username[0]}</p>}
+                    {!isUsernameChecking && !isUsernameAvailable && username.length >= 3 && !errors.username && (
+                        <p className="text-error text-xs mt-1">Username is not available.</p>
+                    )}
                 </div>
 
                 {/* Email */}
@@ -193,11 +234,12 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm"
+                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.email ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                         placeholder="name@diajar.edu"
                         type="email"
                         required
                     />
+                    {errors.email && <p className="text-error text-xs mt-1">{errors.email[0]}</p>}
                 </div>
             </section>
 
@@ -216,9 +258,10 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                         <input
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm"
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.password ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                             placeholder="••••••••"
                             type={isPasswordVisible ? 'text' : 'password'}
+                            required={!isEdit}
                         />
                         <button
                             onClick={(e) => {
@@ -231,6 +274,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                             <Icon name={isPasswordVisible ? 'visibility_off' : 'visibility'} className="text-[20px]" />
                         </button>
                     </div>
+                    {errors.password && <p className="text-error text-xs mt-1">{errors.password[0]}</p>}
                 </div>
 
                 {/* Confirm Password Field */}
@@ -241,10 +285,12 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <input
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm"
+                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.confirmPassword ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                         placeholder="••••••••"
                         type={isPasswordVisible ? 'text' : 'password'}
+                        required={!isEdit}
                     />
+                    {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword[0]}</p>}
                 </div>
 
                 {/* Password Generator Button */}

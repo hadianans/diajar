@@ -1,96 +1,165 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Head, router } from '@inertiajs/react';
 import AssessmentReviewLayout from '@/Components/shared/layout/AssessmentReviewLayout';
 import AssessmentHeroSummary from '@/Components/features/teacher-assessments/AssessmentHeroSummary';
 import AnswerReviewCard from '@/Components/features/teacher-assessments/AnswerReviewCard';
+import useApiGet from '@/hooks/useApiGet';
+import moment from 'moment';
 
 export default function StudentShow({ assessmentId, studentId }) {
-    const [currentStudentIndex, setCurrentStudentIndex] = useState(14);
-    
+    const { data, loading } = useApiGet(`/assessments/${assessmentId}/attempts/${studentId}`);
+    const [filter, setFilter] = useState('all'); // all, correct, incorrect
+
     const handleBack = () => {
         router.visit(route('teacher.assessments.show', { assessmentId: assessmentId || 1 }));
     };
 
-    const studentAvatars = [
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBXadAsgb4pNmoC570BxBsjMqHQ6uOnyIy5jO161ZAV1TsemzaKYb802hnX_FvfZYEBPK0lBMVcdrDfnaRCEovIMHIjH7vsBMJLL_fmvRVVjj2dyY34VBA_oOYthgsHqg6mAzQAG4qZHh5aIPrSst6lUZ0QYBEJU4fYM451EVvt2Ji48wFKiDk1fUrk0SLaStYTu0MGPyFGBf8FuT3inhJU8I-J3Du9yh5OB048yj5mlaXv9K61JMb2jaZECCLWu9i9oSwoNnnDaUw',
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuAXt2-qUtnuyopdziJNkWiRRdKm2aGtpRV9QgJFSHAvaKL23XeWwJ3OZSNwAMTyGr8A66SU3BaXmYahlu8k8qzTkaOnflhVTU5_pMi4b_2PBDTlsPb7o0EZbYGMSMYUMp1BpM3ub3iBpMzh8jF9BpBQXAO4WtRbuAxiUobghENEq6i6bu9JKnZ2FD7TznACyKkBKfyjbLuI8AEdugTrT5WUMEeAVgnHZoqchYIbHDSYj-jvSxZrErK_fesMPnz3jCLOntA0uhCZn1c'
-    ];
+    const handlePreviousStudent = () => {
+        if (data?.prev_student_id) {
+            router.visit(route('teacher.assessments.students.show', { assessmentId: assessmentId, studentId: data.prev_student_id }));
+        }
+    };
+
+    const handleNextStudent = () => {
+        if (data?.next_student_id) {
+            router.visit(route('teacher.assessments.students.show', { assessmentId: assessmentId, studentId: data.next_student_id }));
+        }
+    };
+
+    if (loading) {
+        return (
+            <AssessmentReviewLayout 
+                title="Loading Review..."
+                onBack={handleBack}
+                currentStudentIndex={1}
+                totalStudents={1}
+                studentAvatars={[]}
+            >
+                <div className="text-center py-12 text-on-surface-variant">Loading student attempt...</div>
+            </AssessmentReviewLayout>
+        );
+    }
+
+    if (!data || !data.attempt) {
+        return (
+            <AssessmentReviewLayout 
+                title="Not Found"
+                onBack={handleBack}
+                currentStudentIndex={1}
+                totalStudents={1}
+                studentAvatars={[]}
+            >
+                <div className="text-center py-12 text-on-surface-variant">Student attempt not found.</div>
+            </AssessmentReviewLayout>
+        );
+    }
+
+    const { attempt, answers, correct_count, incorrect_count, total_score, time_spent } = data;
+    const studentName = attempt.student?.full_name || attempt.student?.username || 'Unknown Student';
+
+    const formatTimeSpent = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}m ${s}s`;
+    };
+
+    const displayAnswers = answers.filter(a => {
+        if (filter === 'correct') return a.is_correct === 1;
+        if (filter === 'incorrect') return a.is_correct === 0;
+        return true;
+    });
+
+    const studentAvatars = attempt.student?.picture ? [attempt.student.picture] : [];
+    // We don't have exactly "current index out of total" from API natively, so we just pass simple mock values for those pagination dots
+    const currentIndex = data.prev_student_id ? 2 : 1; 
+    const totalCount = (data.prev_student_id ? 1 : 0) + 1 + (data.next_student_id ? 1 : 0);
 
     return (
         <AssessmentReviewLayout 
-            title="Assessment Review"
+            title={`Review: ${studentName}`}
             onBack={handleBack}
-            currentStudentIndex={currentStudentIndex}
-            totalStudents={28}
+            currentStudentIndex={currentIndex}
+            totalStudents={totalCount}
             studentAvatars={studentAvatars}
-            onPreviousStudent={() => setCurrentStudentIndex(Math.max(1, currentStudentIndex - 1))}
-            onNextStudent={() => setCurrentStudentIndex(Math.min(28, currentStudentIndex + 1))}
+            onPreviousStudent={handlePreviousStudent}
+            onNextStudent={handleNextStudent}
         >
             <AssessmentHeroSummary 
-                title="Biology Midterm Quiz"
-                studentName="Alex Johnson"
-                group="Group A"
-                submittedAt="Oct 25, 10:30 AM"
-                questionsCount={30}
-                correctCount={24}
-                incorrectCount={6}
-                timeSpent="42m 15s"
-                scorePercentage={80}
-                passStatus="PASS"
-                gradeLetter="B"
+                title={`Assessment Attempt`} // We don't fetch assessment details in this payload, rely on context
+                studentName={studentName}
+                group="Class"
+                submittedAt={attempt.completed_at ? moment(attempt.completed_at).format('MMM D, hh:mm A') : 'In Progress'}
+                questionsCount={answers.length}
+                correctCount={correct_count}
+                incorrectCount={incorrect_count}
+                timeSpent={time_spent ? formatTimeSpent(time_spent) : '-'}
+                scorePercentage={attempt.grade || 0}
+                passStatus={attempt.status === 'graded' ? "GRADED" : (attempt.status === 'submitted' ? "SUBMITTED" : attempt.status.toUpperCase())}
+                gradeLetter={null}
             />
 
             {/* Filters */}
             <div className="flex items-center gap-2 mb-stack-md overflow-x-auto pb-2 no-scrollbar">
-                <button className="px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md whitespace-nowrap">All (30)</button>
-                <button className="px-6 py-2 rounded-full hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap transition-colors border border-outline-variant">Correct (24)</button>
-                <button className="px-6 py-2 rounded-full hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap transition-colors border border-outline-variant">Incorrect (6)</button>
+                <button 
+                    onClick={() => setFilter('all')}
+                    className={`px-6 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors border ${filter === 'all' ? 'bg-primary-container text-on-primary-container border-transparent' : 'hover:bg-surface-container-high text-on-surface-variant border-outline-variant'}`}
+                >
+                    All ({answers.length})
+                </button>
+                <button 
+                    onClick={() => setFilter('correct')}
+                    className={`px-6 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors border ${filter === 'correct' ? 'bg-primary-container text-on-primary-container border-transparent' : 'hover:bg-surface-container-high text-on-surface-variant border-outline-variant'}`}
+                >
+                    Correct ({correct_count})
+                </button>
+                <button 
+                    onClick={() => setFilter('incorrect')}
+                    className={`px-6 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors border ${filter === 'incorrect' ? 'bg-primary-container text-on-primary-container border-transparent' : 'hover:bg-surface-container-high text-on-surface-variant border-outline-variant'}`}
+                >
+                    Incorrect ({incorrect_count})
+                </button>
             </div>
 
             {/* Question List */}
             <div className="flex flex-col gap-stack-md">
-                <AnswerReviewCard 
-                    questionNumber={1}
-                    difficulty="Medium"
-                    isCorrect={true}
-                    questionText="What is the primary function of mitochondria?"
-                    studentAnswer="Energy production (ATP)"
-                    explanation="Mitochondria are known as the powerhouse of the cell, converting oxygen and nutrients into ATP."
-                />
+                {displayAnswers.map((ans, idx) => {
+                    const q = ans.class_question;
+                    const correctOpt = q?.options?.find(o => o.is_correct);
+                    
+                    return (
+                        <AnswerReviewCard 
+                            key={ans.id}
+                            questionNumber={idx + 1}
+                            difficulty={`Level ${q?.levels || 1}`}
+                            isCorrect={Boolean(ans.is_correct)}
+                            questionText={q?.question?.replace(/(<([^>]+)>)/gi, "") || 'Unknown Question'}
+                            studentAnswer={ans.selected_option?.option || 'No answer'}
+                            correctAnswer={!ans.is_correct && correctOpt ? correctOpt.option : undefined}
+                            explanation={q?.explanation}
+                        />
+                    );
+                })}
 
-                <AnswerReviewCard 
-                    questionNumber={2}
-                    difficulty="Hard"
-                    isCorrect={false}
-                    questionText="Identify the stage of mitosis where chromosomes align at the cell equator."
-                    studentAnswer="Prophase"
-                    correctAnswer="Metaphase"
-                    explanation="During metaphase, spindle fibers align the chromosomes along the middle of the cell nucleus."
-                />
-
-                {/* Insight Panel */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                {/* Insight Panel (Mocked for now since not supported by backend) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter mt-4">
                     <div className="bg-primary text-on-primary p-6 rounded-xl relative overflow-hidden group">
                         <div className="relative z-10">
                             <h4 className="font-headline-md text-headline-md mb-2">Teacher's Insight</h4>
                             <p className="text-label-md font-label-md opacity-90 leading-relaxed mb-4">
-                                Alex shows strong proficiency in basic cell structures but struggles with specific mitotic phases. Consider assigning the "Cell Division" refresher module.
+                                {studentName} shows strong proficiency in general but missed a few questions. Reviewing the incorrect answers is recommended.
                             </p>
-                            <button className="bg-white text-primary px-4 py-2 rounded-lg font-label-md text-label-md active:scale-95 transition-transform">
-                                Assign Refresher
-                            </button>
                         </div>
                     </div>
                     
                     <div className="bg-surface-container-high p-6 rounded-xl flex items-center justify-between">
                         <div className="max-w-[60%]">
-                            <h4 className="font-headline-md text-headline-md mb-1">Class Average</h4>
+                            <h4 className="font-headline-md text-headline-md mb-1">Score</h4>
                             <p className="text-label-sm font-label-sm text-on-surface-variant">
-                                Alex is performing 12% above the average of Group A students in this quiz.
+                                Final recorded score for this attempt.
                             </p>
                         </div>
-                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-inner">
-                            <span className="text-headline-md font-headline-md text-primary">68%</span>
+                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-inner text-center">
+                            <span className="text-headline-md font-headline-md text-primary">{attempt.grade || 0}%</span>
                         </div>
                     </div>
                 </div>

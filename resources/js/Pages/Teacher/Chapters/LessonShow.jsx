@@ -1,13 +1,17 @@
 import React from 'react';
 import { Head, router } from '@inertiajs/react';
+import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import FocusedMaterialLayout from '@/Components/shared/layout/FocusedMaterialLayout';
 import VideoPlayerOverlay from '@/Components/features/teacher-lessons/VideoPlayerOverlay';
 import AttachmentList from '@/Components/features/teacher-lessons/AttachmentList';
 import EngagementPanel from '@/Components/features/teacher-lessons/EngagementPanel';
 import Icon from '@/Components/shared/ui/Icon';
+import useApiGet from '@/hooks/useApiGet';
+import moment from 'moment';
 
 export default function LessonShow({ chapterId, lessonId }) {
-    
+    const { data: material, loading } = useApiGet(`/materials/${lessonId}`);
+
     const handleBack = () => {
         router.visit(route('teacher.chapters.show', { chapterId }));
     };
@@ -16,24 +20,42 @@ export default function LessonShow({ chapterId, lessonId }) {
         router.visit(route('teacher.chapters.lessons.edit', { lessonId }));
     };
 
+    if (loading) {
+        return (
+            <FocusedMaterialLayout title="Loading..." onBack={handleBack} actions={<></>}>
+                <div className="text-center py-12 text-on-surface-variant">Loading lesson...</div>
+            </FocusedMaterialLayout>
+        );
+    }
+
+    if (!material) {
+        return (
+            <FocusedMaterialLayout title="Not Found" onBack={handleBack} actions={<></>}>
+                <div className="text-center py-12 text-on-surface-variant">Lesson not found.</div>
+            </FocusedMaterialLayout>
+        );
+    }
+
     const mockStats = {
-        completionRate: 88,
-        completedCount: 28,
-        totalStudents: 32,
-        avgTime: 12.5,
-        comprehension: 4.2,
-        quality: 4.5,
+        completionRate: material.completion_count ? Math.round((material.completion_count / 30) * 100) : 0, // Mock 30 students
+        completedCount: material.completion_count || 0,
+        totalStudents: 30,
+        avgTime: material.avg_time_seconds ? Math.round(material.avg_time_seconds / 60) : 0,
+        comprehension: material.avg_comprehension || 0,
+        quality: material.avg_material_quality || 0,
         emotions: {
-            happy: 18,
-            thinking: 6,
-            amazed: 4
+            happy: 10,
+            thinking: 5,
+            amazed: 2
         }
     };
 
-    const mockAttachments = [
-        { name: 'Chapter 2 Summary.pdf', type: 'pdf', size: '1.2 MB', date: 'Oct 12' },
-        { name: 'Cell Diagram Diagram.svg', type: 'image', size: '450 KB', date: 'Oct 12' }
-    ];
+    const attachments = (material.attachments || []).map(att => ({
+        name: att.file_name,
+        type: att.file_type || 'file',
+        size: 'Unknown',
+        date: moment(att.created_at).format('MMM D')
+    }));
 
     const actions = (
         <>
@@ -47,7 +69,7 @@ export default function LessonShow({ chapterId, lessonId }) {
                 <img 
                     className="w-full h-full object-cover" 
                     alt="Teacher" 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeK-OlYk3LEqtzQuKtiYTSJp4jNNZ7D6WM8BiMwpwMfD2cvTvWdXjgj5IYIs0TRcwGWZvOh8kBRPN95WKn9a7XhqbOe4Jz7tggu187uQU7SAuTgpO18hY_Ce917yHEjdf-_uxBNLkLG4K8OURJUKa1G7QgzvGhMP7CRorIDBCsFQ9mwntTKIMztAiy60nTo0ev-yoFuv7sLloCjK2Z1ffo61DCXiG0Y99Jy2ttbWFke7TL3YYwj9Z8pzSbqGAghzGDiAXgqCFvjKQ" 
+                    src="https://ui-avatars.com/api/?name=Teacher&background=random" 
                 />
             </div>
         </>
@@ -55,26 +77,33 @@ export default function LessonShow({ chapterId, lessonId }) {
 
     return (
         <FocusedMaterialLayout 
-            title="Cell Theory" 
+            title={material.chapter?.name || "Chapter View"} 
             onBack={handleBack} 
             actions={actions}
         >
-            <Head title="Cell Theory - Lesson View" />
+            <Head title={`${material.title} - Lesson View`} />
 
             {/* Video Player Section */}
-            <VideoPlayerOverlay title="Cell Structure and Function" />
+            {material.type === 'video' && material.video_url && (
+                <VideoPlayerOverlay title={material.title} url={material.video_url} />
+            )}
 
             {/* Content & Attachments */}
             <div className="grid lg:grid-cols-12 gap-8">
                 <div className="lg:col-span-8 space-y-8">
                     <div>
-                        <h2 className="font-headline-md text-headline-md text-on-surface mb-2">Introduction to Cell Theory</h2>
-                        <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                            This lesson covers the three fundamental tenets of cell theory and explains why the cell is the basic building block of all living organisms. We'll examine the historical contributions of Hooke, Schwann, and Virchow.
-                        </p>
+                        <h2 className="font-headline-md text-headline-md text-on-surface mb-2">{material.title}</h2>
+                        
+                        {material.type === 'text' ? (
+                            <div className="font-body-md text-body-md text-on-surface-variant leading-relaxed" dangerouslySetInnerHTML={{ __html: material.text_content }} />
+                        ) : (
+                            <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                {material.description || "No description provided."}
+                            </p>
+                        )}
                     </div>
                     
-                    <AttachmentList attachments={mockAttachments} />
+                    {attachments.length > 0 && <AttachmentList attachments={attachments} />}
                 </div>
                 
                 {/* Desktop analytics space could go here, but sticking to sticky bottom logic */}

@@ -5,8 +5,10 @@ import AssignmentFilterTabs from '@/Components/features/teacher-assignments/Assi
 import AssignmentChapterChips from '@/Components/features/teacher-assignments/AssignmentChapterChips';
 import AssignmentListCard from '@/Components/features/teacher-assignments/AssignmentListCard';
 import Icon from '@/Components/shared/ui/Icon';
+import useApiGet from '@/hooks/useApiGet';
 
 export default function Index() {
+    const { data: assignments, loading } = useApiGet('/assignments');
     
     const handleCreate = () => {
         router.visit(route('teacher.assignments.create'));
@@ -22,8 +24,8 @@ export default function Index() {
     );
 
     return (
-        <DashboardTemplate role="teacher" title="Assignments" actions={actions}>
-            <Head title="Assignments" />
+        <DashboardTemplate role="teacher" activeTab="assignments" title="Assignments" actions={actions}>
+            <Head title="Assignments | Diajar LMS" />
             
             <AssignmentFilterTabs />
             <AssignmentChapterChips />
@@ -37,47 +39,34 @@ export default function Index() {
             </div>
 
             {/* Assignment Cards List */}
-            <div className="flex flex-col gap-4 pb-24">
-                <AssignmentListCard 
-                    id="1"
-                    title="Genetics Lab Report"
-                    chapter="Chapter 3: Molecular Basis"
-                    statusText="16 Pending"
-                    statusIcon="priority_high"
-                    statusColorClass="bg-error-container text-on-error-container"
-                    submissions={28}
-                    totalStudents={32}
-                    graded={12}
-                    average="88/100"
-                    initials={['JD', 'MK', '+12']}
-                />
-                
-                <AssignmentListCard 
-                    id="2"
-                    title="Cell Diagram Drawing"
-                    chapter="Chapter 2: Cell Structure"
-                    statusText="2 Pending"
-                    statusIcon="schedule"
-                    statusColorClass="bg-tertiary-fixed text-on-tertiary-fixed"
-                    submissions={32}
-                    totalStudents={32}
-                    graded={30}
-                    average="92/100"
-                />
-                
-                <AssignmentListCard 
-                    id="3"
-                    title="Photosynthesis Essay"
-                    chapter="Chapter 2: Cell Structure"
-                    statusText="15 Pending"
-                    statusIcon="notification_important"
-                    statusColorClass="bg-error-container text-on-error-container"
-                    submissions={15}
-                    totalStudents={32}
-                    graded={0}
-                    maxPts={50}
-                />
-            </div>
+            {loading ? (
+                <div className="text-center py-12 text-on-surface-variant">Loading assignments...</div>
+            ) : (
+                <div className="flex flex-col gap-4 pb-24">
+                    {assignments && assignments.length > 0 ? (
+                        assignments.map(assignment => (
+                            <AssignmentListCard 
+                                key={assignment.id}
+                                id={assignment.id.toString()}
+                                title={assignment.title}
+                                chapter={assignment.chapter?.name || "Uncategorized"}
+                                statusText={`${assignment.pending_submissions || 0} Pending`}
+                                statusIcon={assignment.pending_submissions > 0 ? "priority_high" : "check_circle"}
+                                statusColorClass={assignment.pending_submissions > 0 ? "bg-error-container text-on-error-container" : "bg-primary-container text-on-primary-container"}
+                                submissions={assignment.total_submissions || 0}
+                                totalStudents={30} // Hardcoded until class total is available in payload
+                                graded={assignment.graded_submissions || 0}
+                                average={assignment.avg_grade ? `${assignment.avg_grade}/100` : "-"}
+                                initials={[]} // Submissions not fully eagerly loaded for index
+                            />
+                        ))
+                    ) : (
+                        <div className="p-8 text-center text-on-surface-variant bg-surface-container rounded-2xl">
+                            You have no active assignments.
+                        </div>
+                    )}
+                </div>
+            )}
 
         </DashboardTemplate>
     );

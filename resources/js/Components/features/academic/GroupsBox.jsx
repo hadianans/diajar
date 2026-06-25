@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import GroupItem from '@/Components/features/academic/GroupItem';
 
-export default function GroupsBox({ groups = [], onAddGroupClick, onViewAllGroups }) {
+export default function GroupsBox({ groups = [], onAddGroupClick, onViewAllGroups, onItemClick }) {
     return (
         <section className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-stack-md">
@@ -19,8 +19,8 @@ export default function GroupsBox({ groups = [], onAddGroupClick, onViewAllGroup
                         grade={group.grade}
                         studentsCount={group.studentsCount}
                         warning={group.warning}
-                        onClick={() => alert(`Selected Group: ${group.groupName}`)}
-                        onMoreClick={() => alert(`Options for ${group.groupName}`)}
+                        onClick={() => onItemClick ? onItemClick(group) : null}
+                        onMoreClick={() => onItemClick ? onItemClick(group) : null}
                     />
                 ))}
             </div>

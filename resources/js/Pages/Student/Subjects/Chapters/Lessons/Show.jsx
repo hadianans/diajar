@@ -1,151 +1,238 @@
-import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import VideoPlayer from '@/Components/features/student-subjects/VideoPlayer';
 import LessonTabs from '@/Components/features/student-subjects/LessonTabs';
 import LessonActions from '@/Components/features/student-subjects/LessonActions';
 import PromoBanner from '@/Components/features/student-subjects/PromoBanner';
-
-// Mock Data
-const lessonData = {
-    id: 301,
-    subjectId: 1,
-    chapterId: 101,
-    subjectTitle: 'Biology',
-    chapterNumber: 1,
-    chapterTitle: 'Principles of Growth',
-    subchapterTitle: '1.1 Cell Theory',
-    title: 'Introduction to Cell Theory',
-    duration: '12:00',
-    progress: 65,
-    overview: {
-        description: 'In this lesson, we dive deep into the fundamental unit of life. We will explore the three core principles of Cell Theory, the contributions of scientists like Schwann and Schleiden, and why this theory is essential to modern biology.',
-        points: [
-            { text: 'Definition of a biological cell.', checked: true },
-            { text: 'The 3 principles of the classic Cell Theory.', checked: true },
-            { text: 'Modern additions to Cell Theory.', checked: false },
-        ]
-    },
-    resources: [
-        {
-            title: 'Summary Notes.pdf',
-            meta: '2.4 MB',
-            icon: 'description',
-            bgClass: 'bg-error-container',
-            textClass: 'text-error',
-            actionIcon: 'download'
-        },
-        {
-            title: 'Presentation Deck',
-            meta: '12 Slides',
-            icon: 'slideshow',
-            bgClass: 'bg-primary-fixed',
-            textClass: 'text-primary',
-            actionIcon: 'open_in_new'
-        }
-    ]
-};
+import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 
 export default function Show({ 
-    subjectId = lessonData.subjectId, 
-    chapterId = lessonData.chapterId, 
-    lessonId = lessonData.id 
+    subjectId, 
+    chapterId, 
+    lessonId 
 }) {
+    const { data: materialData, loading, setData } = useApiGet(`/materials/${lessonId}`);
+
+    const [accessLogId, setAccessLogId] = useState(null);
+
+    // Track access start
+    useEffect(() => {
+        if (materialData && !accessLogId) {
+            api.post(`/materials/${lessonId}/access/start`)
+                .then(res => setAccessLogId(res.log_id))
+                .catch(err => console.error('Error starting access:', err));
+        }
+
+        return () => {
+            if (accessLogId) {
+                api.patch(`/materials/access/${accessLogId}/end`, { interaction_data: { type: 'exit' } })
+                    .catch(console.error);
+            }
+        };
+    }, [materialData, lessonId, accessLogId]);
+
+    const lesson = useMemo(() => {
+        if (!materialData) return null;
+        return {
+            id: materialData.id,
+            subjectId: subjectId,
+            chapterId: chapterId,
+            subjectTitle: 'Course', // We don't have the subject name readily available unless we fetch /subjects
+            chapterNumber: 1, // Need to find chapter order if possible
+            chapterTitle: materialData.chapter?.name || 'Chapter',
+            subchapterTitle: materialData.subchapter?.name || 'General',
+            title: materialData.title,
+            duration: materialData.duration || 'N/A',
+            progress: materialData.is_completed ? 100 : 0,
+            overview: {
+                description: materialData.description || 'No description available.',
+                points: [] // We could parse from rich text, but keeping it empty for now
+            },
+            resources: materialData.attachments?.map(att => ({
+                id: att.id,
+                title: att.file_name,
+                meta: 'Attachment',
+                icon: 'description',
+                bgClass: 'bg-primary-container',
+                textClass: 'text-primary',
+                actionIcon: 'download',
+                url: att.file_path
+            })) || [],
+            isCompleted: materialData.is_completed,
+            isBookmarked: materialData.is_bookmarked,
+            prevId: materialData.prev_material_id,
+            nextId: materialData.next_material_id,
+            relatedAssessment: materialData.related_assessment
+        };
+    }, [materialData, subjectId, chapterId]);
+
+    const handleToggleComplete = async () => {
+        try {
+            if (lesson.isCompleted) {
+                await api.patch(`/materials/${lessonId}/incomplete`);
+                setData({ ...materialData, is_completed: false });
+            } else {
+                await api.patch(`/materials/${lessonId}/complete`);
+                setData({ ...materialData, is_completed: true });
+            }
+        } catch (error) {
+            console.error('Error toggling completion status', error);
+        }
+    };
+
+    const handleToggleBookmark = async () => {
+        try {
+            if (lesson.isBookmarked) {
+                await api.delete(`/bookmarks/${lessonId}?type=App\\Models\\Material`);
+                setData({ ...materialData, is_bookmarked: false });
+            } else {
+                await api.post(`/bookmarks`, { bookmarkable_id: lessonId, bookmarkable_type: 'App\\Models\\Material' });
+                setData({ ...materialData, is_bookmarked: true });
+            }
+        } catch (error) {
+            console.error('Error toggling bookmark', error);
+        }
+    };
+
     // Header section for the DashboardTemplate
-    const headerSection = (
+    const headerSection = lesson ? (
         <section>
             <nav className="flex items-center gap-2 text-label-sm font-label-sm text-outline mb-2 overflow-x-auto no-scrollbar whitespace-nowrap">
                 <Link href={route('student.subjects.index')} className="hover:underline hover:text-on-surface transition-colors">
-                    {lessonData.subjectTitle}
+                    My Courses
                 </Link>
                 <Icon name="chevron_right" className="text-[14px]" />
                 <Link href={route('student.subjects.chapters.show', { subjectId: subjectId, chapterId: chapterId })} className="hover:underline hover:text-on-surface transition-colors">
-                    Chapter {lessonData.chapterNumber}
+                    {lesson.chapterTitle}
                 </Link>
                 <Icon name="chevron_right" className="text-[14px]" />
-                <span className="text-primary-container font-semibold">{lessonData.subchapterTitle}</span>
+                <span className="text-primary-container font-semibold">{lesson.subchapterTitle}</span>
             </nav>
             
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
-                        {lessonData.title}
+                        {lesson.title}
                     </h1>
                     <div className="flex flex-wrap items-center gap-3">
                         <div className="flex items-center gap-1 text-on-surface-variant">
                             <Icon name="play_circle" className="text-[18px]" />
-                            <span className="font-label-sm text-label-sm">Video Material</span>
+                            <span className="font-label-sm text-label-sm">{materialData?.file_type || 'Material'}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-on-surface-variant">
-                            <Icon name="schedule" className="text-[18px]" />
-                            <span className="font-label-sm text-label-sm">{lessonData.duration.replace(':00', ' mins')}</span>
-                        </div>
-                        <span className="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase tracking-wider">Foundation</span>
-                        <span className="px-2 py-0.5 bg-tertiary-fixed text-tertiary font-bold rounded-full text-[10px] uppercase tracking-wider">Core</span>
+                        {lesson.duration !== 'N/A' && (
+                            <div className="flex items-center gap-1 text-on-surface-variant">
+                                <Icon name="schedule" className="text-[18px]" />
+                                <span className="font-label-sm text-label-sm">{lesson.duration}</span>
+                            </div>
+                        )}
+                        {materialData?.tags?.map(tag => (
+                            <span key={tag.id} className="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase tracking-wider">{tag.name}</span>
+                        ))}
                     </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                    <button className="p-2 h-10 w-10 flex items-center justify-center rounded-xl bg-surface-container-highest text-primary shadow-sm hover:scale-105 transition-transform" title="Save lesson">
-                        <Icon name="bookmark" style={{ fontVariationSettings: "'FILL' 1" }} />
+                <div className="flex items-center gap-4">
+                    <button 
+                        onClick={handleToggleBookmark}
+                        className={`p-2 h-10 w-10 flex items-center justify-center rounded-xl bg-surface-container-highest shadow-sm hover:scale-105 transition-transform ${lesson.isBookmarked ? 'text-primary' : 'text-on-surface-variant'}`} 
+                        title={lesson.isBookmarked ? "Remove bookmark" : "Save lesson"}
+                    >
+                        <Icon name="bookmark" style={{ fontVariationSettings: lesson.isBookmarked ? "'FILL' 1" : "'FILL' 0" }} />
                     </button>
                     <div className="flex flex-col items-end">
-                        <span className="text-label-sm font-label-sm text-outline-variant mb-1">In Progress</span>
+                        <span className="text-label-sm font-label-sm text-outline-variant mb-1">
+                            {lesson.isCompleted ? 'Completed' : 'In Progress'}
+                        </span>
                         <div className="w-32 h-2 bg-outline-variant/30 rounded-full overflow-hidden">
-                            <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${lessonData.progress}%` }}></div>
+                            <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${lesson.progress}%` }}></div>
                         </div>
-                        <span className="text-[10px] font-bold text-primary mt-1">{lessonData.progress}% Completed</span>
+                        <span className="text-[10px] font-bold text-primary mt-1">{lesson.progress}% Completed</span>
                     </div>
                 </div>
             </div>
         </section>
-    );
+    ) : null;
+
+    if (loading) {
+        return (
+            <DashboardTemplate role="student" activeTab="Subject" title="Loading..." showBack={false}>
+                <div className="text-center py-12">Loading lesson details...</div>
+            </DashboardTemplate>
+        );
+    }
+
+    if (!lesson) {
+        return (
+            <DashboardTemplate role="student" activeTab="Subject" title="Not Found" showBack={false}>
+                <div className="text-center py-12">Lesson not found.</div>
+            </DashboardTemplate>
+        );
+    }
 
     return (
         <DashboardTemplate 
-            role="student"
-            activeTab="subjects"
-            title="LMS"
+            activeTab="Subject"
+            title="Lesson Details"
             showBack={false}
             headerSection={headerSection}
         >
-            <Head title={`${lessonData.subchapterTitle} - ${lessonData.subjectTitle}`} />
+            <Head title={`${lesson.title} - ${lesson.chapterTitle}`} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-8 mt-4">
                 {/* Video & Primary Content */}
                 <div className="lg:col-span-8 space-y-stack-md">
                     <VideoPlayer 
-                        title={lessonData.subchapterTitle}
-                        duration={lessonData.duration}
-                        progress={lessonData.progress}
+                        title={lesson.title}
+                        duration={lesson.duration}
+                        progress={lesson.progress}
+                        // Assume video material types have a specific UI. The mockup uses a placeholder.
                     />
                     
                     <LessonTabs 
-                        overviewContent={lessonData.overview}
-                        resources={lessonData.resources}
+                        overviewContent={lesson.overview}
+                        resources={lesson.resources}
+                        content={materialData?.content}
                     />
                 </div>
                 
                 {/* Side Sidebar: Learning Actions */}
                 <div className="lg:col-span-4 space-y-gutter">
                     <LessonActions 
-                        onMarkCompleted={() => console.log('Mark as Completed')}
-                        onPrevious={() => console.log('Previous')}
-                        onNext={() => console.log('Next')}
-                        onAddStudyPlan={() => console.log('Add to Study Plan')}
-                        onWriteReflection={() => console.log('Write Reflection')}
-                        onTakeQuiz={() => console.log('Take Quiz')}
+                        isCompleted={lesson.isCompleted}
+                        onMarkCompleted={handleToggleComplete}
+                        onPrevious={() => {
+                            if (lesson.prevId) router.visit(`/student/subjects/${subjectId}/chapters/${chapterId}/lessons/${lesson.prevId}`);
+                        }}
+                        onNext={() => {
+                            if (lesson.nextId) router.visit(`/student/subjects/${subjectId}/chapters/${chapterId}/lessons/${lesson.nextId}`);
+                        }}
+                        hasNext={!!lesson.nextId}
+                        hasPrev={!!lesson.prevId}
+                        onAddStudyPlan={() => alert('Feature coming soon: Add to Study Plan')}
+                        onWriteReflection={() => alert('Feature coming soon: Write Reflection')}
+                        onTakeQuiz={() => {
+                            if (lesson.relatedAssessment) {
+                                router.visit(`/student/assessments/${lesson.relatedAssessment.id}`);
+                            } else {
+                                alert('No assessment tied to this lesson.');
+                            }
+                        }}
+                        hasQuiz={!!lesson.relatedAssessment}
                     />
                     
                     {/* Bento Style Card: Suggested Next */}
-                    <PromoBanner 
-                        title="RECOMMENDED FOR YOU"
-                        description="Mastering Microscopy"
-                        buttonText="Explore Topic"
-                        icon="biotech"
-                        onAction={() => console.log('Explore suggested topic')}
-                    />
+                    {lesson.nextId && (
+                        <PromoBanner 
+                            title="UP NEXT"
+                            description="Continue to the next lesson to keep your momentum going."
+                            buttonText="Go to Next Lesson"
+                            icon="arrow_forward"
+                            onAction={() => router.visit(`/student/subjects/${subjectId}/chapters/${chapterId}/lessons/${lesson.nextId}`)}
+                        />
+                    )}
                 </div>
             </div>
         </DashboardTemplate>

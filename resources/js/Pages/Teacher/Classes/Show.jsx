@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
+import useApiGet from '@/hooks/useApiGet';
 
 // Feature Components
 import ClassSidebar from '@/Components/features/teacher-classes/ClassSidebar';
@@ -8,83 +9,37 @@ import AttentionSummary from '@/Components/features/teacher-classes/AttentionSum
 import StudentListFilter from '@/Components/features/teacher-classes/StudentListFilter';
 import StudentListCard from '@/Components/features/teacher-classes/StudentListCard';
 
-// Mock Data
-const classDetails = {
-    id: 1,
-    title: 'Biology - Class 11A',
-    year: 'AY 2023/2024',
-    grade: 'Grade 11',
-    studentsCount: 32,
-    groupsCount: 4,
-    attentionCount: 5
-};
-
-const students = [
-    {
-        id: 1,
-        name: 'Alex Johnson',
-        group: 'Group A',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAjpP9dqbuOL5jGI8ujVK1i0ZnWvz8NUxe9O-zibW1hajSxj_vlPvZ2HWOizC3EDRohhyRYopoxrHVr0Fa1Hh7GrvleCANlhU-Eao53TFlOMWhWjfXmHak50jMhKVMGMa3I_MLp9h6fjK3H6rJWLKPHJ1J8Mjh0h2cQjVuWQYQbB7G2O6u4Gbx-PIZ3YUUBwCdqfIhrAXPjM5O_9EcVE6eYdzsnvzKdlCFh-ibuqSKzURpB4Vgh-F8Kf4i-6srTUle1DDcBN4LDtPQ',
-        completion: 85,
-        grade: 'A-',
-        assmScore: 92,
-        isUrgent: false,
-        srlBadge: true
-    },
-    {
-        id: 2,
-        name: 'Maria Garcia',
-        group: 'Group B',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWkCKGB6nKeGhCRg7V34OJIQxaF9QIMG5OMJ-qlOcOx9fcC_uHPRQYbyBISSBi11uA3hP3z5lg7S-KNcP9OBSa739Qz7wiu2E3sSR5jyOiyHQ3MGOg26-mZ9lK2wpPhxvpUtdLCP-Gw1FESnJC6THqs6xozBJxJ7TmxrwrFQ0Pi3o24niY7eg8N90D76h3aa771UA-Q_gM2SQ8aXBV0jk_oi7WZz2e0-idfBjn4Z4ypf8kR6NtORSH5jhj40Ka0NQTzOStLw9Ec2Q',
-        completion: 40,
-        grade: 'B',
-        assmScore: 75,
-        isUrgent: false,
-        srlBadge: false
-    },
-    {
-        id: 3,
-        name: 'Liam Chen',
-        group: 'Group A',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBIT-d3DjI01J1GK6kaYYPlbcLeDEwmstL8d8OxnrIJLpoZ-xNtIGe5SJSopAYzKADDRUm6ediP_0eBnfWIGkU8FSIWRkpvpwib7d54tgaZ1CcMhBPombTB8d-AHiMyCJSv5iRiQog8B4PF6566SGMnlWbkvi4zU_ii-MTSyeRw2kZTqcjOlmGG5dv5yCjdyDG5L9r4TNr6g82AdoMutfeIU2UeFGyD0qsKCcnpKzRlmoJKliG65TNpWNPrW4dJEA8tIabiKo_UzSs',
-        completion: 95,
-        grade: 'A',
-        assmScore: 98,
-        isUrgent: false,
-        srlBadge: true
-    },
-    {
-        id: 4,
-        name: 'Sarah Miller',
-        group: 'Group C',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIN6QGWlc7g1iK5-DtHwqXFxYnqPXVK5miIuvXAXKnWCN2wvyAUcYoyXxtCVEsiEGp15gO4bDaTnNpaPmpQY8aykmBsARyihC1BPlBOSuphDlN1me4MIsoK28s4laIs_u4GczqdZ74Vd9ux1F2Dh04ZXM-e8Wv8KRs8H5sgWwnCHrYhD1Qt2-u0W56dqQp2Jf4LzYuoBp1KqguS_A0YiiHRPxsscyTaxeFlaHXIUUP_DgmEPhTZpL5wTXlDwOle1ywUHT6MSqfZ24',
-        completion: 12,
-        grade: 'Missing Subs',
-        assmScore: 0,
-        isUrgent: true,
-        srlBadge: false
-    },
-    {
-        id: 5,
-        name: 'James Wilson',
-        group: 'Group D',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAMkaU_P70xL_9SFU_0ZCJ-QJM-D2j007O9ctgAnh8sAXPVXJ6tUjRoAA42TKLTU7ntjAhi-qdNhKfeF1Xm8-FecdlAfP2Ua92tq2H_XIle_Vvgk5Oj2or55_TM2ZDGLhtX7Qpt-KJOidIeSlyIwnvCqHXrcJ2pAFMGNuVJiDOay1x16s2ndauwHcJRSVvxRdxuJZ0OytfsvD7F6bP4C34UKxIBYUrpjGBmHsSmGX44Tdh7_1Vrz95HtmFk93b9vZyqSrwwKS7VEtY',
-        completion: 78,
-        grade: 'B+',
-        assmScore: 80,
-        isUrgent: false,
-        srlBadge: true
-    }
-];
-
 export default function Show({ classId }) {
     const [searchQuery, setSearchQuery] = useState('');
+    const { data: classData, loading } = useApiGet(`/classes/${classId}`);
+
+    const classDetails = classData ? {
+        id: classData.id,
+        title: `${classData.subject?.subject_name} - ${classData.groupYear?.group?.name}`,
+        year: `AY ${classData.groupYear?.schoolYear?.name}`,
+        grade: classData.groupYear?.group?.name,
+        studentsCount: classData.students?.length || 0,
+        groupsCount: 1, // Mock or derived
+        attentionCount: (classData.students || []).filter(s => s.is_urgent).length
+    } : null;
+
+    const students = (classData?.students || []).map(s => ({
+        id: s.id,
+        name: s.full_name || s.username,
+        group: classData.groupYear?.group?.name,
+        avatar: s.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.full_name || s.username)}&background=random`,
+        completion: s.material_completion || 0,
+        grade: s.assignment_avg > 0 ? `${Math.round(s.assignment_avg)}%` : 'No grade',
+        assmScore: Math.round(s.assessment_avg || 0),
+        isUrgent: s.is_urgent,
+        srlBadge: false // Can be hooked up to plans later
+    }));
 
     const filteredStudents = students.filter(student =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const headerSection = (
+    const headerSection = classDetails ? (
         <section className="mb-stack-lg mt-4">
             <div className="flex justify-between items-start mb-2">
                 <div>
@@ -97,7 +52,23 @@ export default function Show({ classId }) {
                 </div>
             </div>
         </section>
-    );
+    ) : null;
+
+    if (loading) {
+        return (
+            <DashboardTemplate role="teacher" activeTab="classes" title="Loading..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Loading class details...</div>
+            </DashboardTemplate>
+        );
+    }
+
+    if (!classData) {
+        return (
+            <DashboardTemplate role="teacher" activeTab="classes" title="Class Not Found" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Class not found.</div>
+            </DashboardTemplate>
+        );
+    }
 
     return (
         <DashboardTemplate
@@ -105,13 +76,15 @@ export default function Show({ classId }) {
             activeTab="classes"
             title="Class Detail"
             showBack={true}
-            onBack={() => window.history.back()}
+            onBack={() => window.location.href = '/teacher/classes'}
             headerSection={headerSection}
         >
             <Head title="Class Detail | Diajar LMS" />
 
             <div className="max-w-[1280px] mx-auto pb-12 w-full">
-                <AttentionSummary count={classDetails.attentionCount} message="Low completion or missing tasks" />
+                {classDetails.attentionCount > 0 && (
+                    <AttentionSummary count={classDetails.attentionCount} message="Low completion or missing tasks" />
+                )}
 
                 <StudentListFilter onSearch={setSearchQuery} />
 
@@ -126,7 +99,7 @@ export default function Show({ classId }) {
                             />
                         ))
                     ) : (
-                        <div className="text-center py-8 text-on-surface-variant">
+                        <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">
                             No students found.
                         </div>
                     )}

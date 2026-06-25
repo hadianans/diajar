@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import AcademicYearItem from '@/Components/features/academic/AcademicYearItem';
 
-export default function AcademicYearsBox({ years = [], onAddYearClick }) {
+export default function AcademicYearsBox({ years = [], onAddYearClick, onItemClick }) {
     return (
         <section className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-stack-md">
@@ -27,7 +27,7 @@ export default function AcademicYearsBox({ years = [], onAddYearClick }) {
                         year={year.year}
                         range={year.range}
                         status={year.status}
-                        onClick={() => alert(`Selected Academic Year: ${year.year}`)}
+                        onClick={() => onItemClick ? onItemClick(year) : null}
                     />
                 ))}
             </div>

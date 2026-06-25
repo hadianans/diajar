@@ -1,113 +1,108 @@
-import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import React, { useMemo } from 'react';
+import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import LinkedTeachersBox from '@/Components/features/academic/LinkedTeachersBox';
 import SubjectStatsBox from '@/Components/features/academic/SubjectStatsBox';
 import SubjectClassCard from '@/Components/features/academic/SubjectClassCard';
 import Icon from '@/Components/shared/ui/Icon';
-
-const initialTeachers = [
-    { name: 'Prof. Anderson', email: 'p.anderson@diajar.edu', initials: 'PA' },
-    { name: 'Dr. Sarah Miller', email: 's.miller@diajar.edu', initials: 'SM' }
-];
-
-const activeClasses = [
-    { group: '11A - Grade 11', teacher: 'Sarah Miller', academicYear: '2024/2025' }
-];
-
-const statsData = [
-    { label: 'Total Students', value: '32' },
-    { label: 'Avg. Grade', value: 'B+' },
-    { label: 'Content Modules', value: '12' }
-];
+import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 
 const previewImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDCbqlx1v1t2GV9BBmKKmVSMMU4KpSOUdKake4dHr9dWoiVWFh-q0En3iYsIjcoOIOXzP2KoEh39sgSwXoqTxMx_G0cQWQG40ZhkyO20hr7F58uUIu5_FjO28NcyP3B-zZesO2A4fTja7Y-F-9rLAmwe5Ie1ff6Yjd3JLHWQST6ZlKHclHr_jHu7RqG5Kn4UtlOqGt8h2Q_RgTaZ6xhlc7OA2I7pQtNEdhlBbPcKs9wwXM_yp9zx5BPks3Bwsz6S7kJQszJ6sDPinM';
 
 export default function Show({ subjectId }) {
-    // Interactive demo presentation roles
-    const [selectedRole, setSelectedRole] = useState('admin');
-    const [activeTab, setActiveTab] = useState('Academic');
-    const [teachers, setTeachers] = useState(initialTeachers);
-
-    const handleRoleChange = (role) => {
-        setSelectedRole(role);
-        if (role === 'admin') {
-            setActiveTab('Academic');
-        } else if (role === 'teacher') {
-            setActiveTab('Class');
-        } else {
-            setActiveTab('Dashboard');
-        }
-    };
-
-    const viewLabelMap = {
-        admin: 'Admin View',
-        teacher: 'Teacher View',
-        student: 'Student View',
-    };
+    const { data: subject, loading, refetch } = useApiGet(`/subjects/${subjectId}`);
 
     const handleBack = () => {
-        window.history.back();
+        router.visit('/admin/academic');
     };
 
     const handleActionClick = (actionName) => {
         alert(`Initiated action: ${actionName} flow...`);
     };
 
-    const handleUnlinkTeacher = (teacher) => {
+    const handleUnlinkTeacher = async (teacher) => {
         if (confirm(`Are you sure you want to unlink ${teacher.name}?`)) {
-            setTeachers(teachers.filter(t => t.email !== teacher.email));
+            try {
+                await api.delete(`/subjects/${subjectId}/teachers/${teacher.id}`);
+                alert('Teacher unlinked successfully.');
+                refetch();
+            } catch (err) {
+                alert(err.response?.data?.message || 'Failed to unlink teacher.');
+            }
         }
     };
 
-    const subjectDisplay = subjectId
-        ? subjectId.charAt(0).toUpperCase() + subjectId.slice(1)
-        : 'Biology';
+    const handleDeleteSubject = async () => {
+        if (confirm(`Are you sure you want to delete this subject?`)) {
+            try {
+                await api.delete(`/subjects/${subjectId}`);
+                alert('Subject deleted successfully.');
+                router.visit('/admin/academic');
+            } catch (err) {
+                alert(err.response?.data?.message || 'Failed to delete subject.');
+            }
+        }
+    };
 
-    // Top switcher in headerSection
-    const headerSection = (
-        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            {/* Interactive demo role nav switcher */}
-            <div className="p-4 bg-surface-container-low border border-outline-variant rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">
-                        Interactive Demo Mode (Switch Navbars)
-                    </span>
-                    <p className="text-sm text-on-surface">Toggle role menus layout to check customized views:</p>
-                </div>
-                <div className="flex gap-2">
-                    {['admin', 'teacher', 'student'].map((r) => (
-                        <button
-                            key={r}
-                            onClick={() => handleRoleChange(r)}
-                            className={`px-4 py-2 rounded-lg font-label-sm text-xs capitalize transition-all border ${
-                                selectedRole === r
-                                    ? 'bg-primary text-on-primary border-primary shadow-sm'
-                                    : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
-                             }`}
-                            type="button"
-                        >
-                            {r} Navbar
-                        </button>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
+    const teachers = useMemo(() => {
+        if (!subject?.subject_teachers) return [];
+        return subject.subject_teachers.map(st => {
+            const t = st.teacher;
+            return {
+                id: t.id,
+                name: t.full_name,
+                email: t.email,
+                initials: t.full_name ? t.full_name.substring(0, 2).toUpperCase() : 'NA'
+            };
+        });
+    }, [subject]);
+
+    const activeClasses = useMemo(() => {
+        if (!subject?.classes) return [];
+        return subject.classes.map(c => ({
+            group: c.group_year?.group?.name || 'Unknown Group',
+            teacher: c.teacher?.full_name || 'Unassigned',
+            academicYear: c.group_year?.school_year?.name || 'Unknown Year'
+        }));
+    }, [subject]);
+
+    const statsData = useMemo(() => {
+        return [
+            { label: 'Linked Teachers', value: teachers.length.toString() },
+            { label: 'Active Classes', value: activeClasses.length.toString() }
+        ];
+    }, [teachers, activeClasses]);
+
+    if (loading) {
+        return (
+            <DashboardTemplate activeTab="Academic" title="Loading..." viewLabel="Admin View" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading subject details...</div>
+            </DashboardTemplate>
+        );
+    }
+
+    if (!subject) {
+        return (
+            <DashboardTemplate activeTab="Academic" title="Not Found" viewLabel="Admin View" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-error">Subject not found.</div>
+            </DashboardTemplate>
+        );
+    }
+
+    const subjectDisplay = subject.name;
+    const canDelete = activeClasses.length === 0 && teachers.length === 0;
 
     return (
         <>
             <Head title={`Subject Details - ${subjectDisplay}`} />
 
             <DashboardTemplate
-                role={selectedRole}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
+                activeTab="Academic"
                 title="Subject Details"
-                viewLabel={viewLabelMap[selectedRole]}
+                viewLabel="Admin View"
                 showBack={true}
                 onBack={handleBack}
-                headerSection={headerSection}
             >
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-stack-lg">
                     {/* Left Column: Primary Content */}
@@ -130,16 +125,13 @@ export default function Show({ subjectId }) {
                                         {subjectDisplay}
                                     </h2>
                                     <span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-sm font-label-sm rounded-full font-bold">
-                                        Science Dept
+                                        Subject
                                     </span>
                                 </div>
-                                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-6">
-                                    The study of living organisms and their interactions with the environment.
-                                </p>
-                                <div className="flex items-center gap-2 text-on-surface-variant">
+                                <div className="flex items-center gap-2 text-on-surface-variant mt-6">
                                     <Icon name="calendar_today" className="text-[18px]" />
                                     <span className="font-label-md text-label-md font-medium">
-                                        Created on: Aug 24, 2024
+                                        Created on: {new Date(subject.created_at).toLocaleDateString()}
                                     </span>
                                 </div>
                             </div>
@@ -160,34 +152,44 @@ export default function Show({ subjectId }) {
                                 </h3>
                             </div>
                             <div className="p-6">
-                                <div className="flex flex-col gap-4">
-                                    {activeClasses.map((cls, idx) => (
-                                        <SubjectClassCard
-                                            key={idx}
-                                            group={cls.group}
-                                            teacher={cls.teacher}
-                                            academicYear={cls.academicYear}
-                                        />
-                                    ))}
-                                </div>
+                                {activeClasses.length > 0 ? (
+                                    <div className="flex flex-col gap-4">
+                                        {activeClasses.map((cls, idx) => (
+                                            <SubjectClassCard
+                                                key={idx}
+                                                group={cls.group}
+                                                teacher={cls.teacher}
+                                                academicYear={cls.academicYear}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-on-surface-variant font-body-md">No active classes for this subject.</p>
+                                )}
                             </div>
                         </section>
 
                         {/* Destructive Actions Zone */}
                         <div className="mt-8 pt-8 border-t border-outline-variant">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-error/5 rounded-xl border border-error/10">
+                            <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-xl border ${canDelete ? 'bg-error/10 border-error' : 'bg-error/5 border-error/10'}`}>
                                 <div className="flex flex-col">
                                     <span className="font-label-md text-label-md text-error font-bold">
                                         Danger Zone
                                     </span>
                                     <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-                                        Deletion is restricted while classes are actively linked to this subject.
+                                        {canDelete 
+                                            ? "This subject is not linked to any classes or teachers and can be deleted."
+                                            : "Deletion is restricted while classes or teachers are actively linked to this subject."}
                                     </p>
                                 </div>
                                 <button
-                                    onClick={() => handleActionClick('Delete Subject')}
-                                    className="px-6 py-2.5 bg-outline-variant text-on-surface-variant rounded-lg font-label-md text-label-md cursor-not-allowed opacity-60 flex items-center gap-2 transition-all"
-                                    disabled={true}
+                                    onClick={handleDeleteSubject}
+                                    disabled={!canDelete}
+                                    className={`px-6 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 transition-all ${
+                                        canDelete 
+                                            ? 'bg-error text-on-error hover:bg-error/90 active:scale-95' 
+                                            : 'bg-outline-variant text-on-surface-variant cursor-not-allowed opacity-60'
+                                    }`}
                                     type="button"
                                 >
                                     <Icon name="delete" className="text-[18px]" />

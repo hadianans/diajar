@@ -3,8 +3,11 @@ import { Head, router } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 import QuestionPreviewCard from '@/Components/features/teacher-questions/QuestionPreviewCard';
 import QuestionMetadataPanel from '@/Components/features/teacher-questions/QuestionMetadataPanel';
+import useApiGet from '@/hooks/useApiGet';
 
 export default function Show({ questionId }) {
+    const { data: question, loading } = useApiGet(`/questions/${questionId}`);
+
     const handleBack = () => {
         router.visit(route('teacher.assessments.questions.index'));
     };
@@ -13,12 +16,27 @@ export default function Show({ questionId }) {
         router.visit(route('teacher.assessments.questions.edit', { questionId: questionId || 1 }));
     };
 
-    const options = [
-        { text: 'Protein synthesis', isCorrect: false },
-        { text: 'Energy production (ATP)', isCorrect: true },
-        { text: 'Waste removal', isCorrect: false },
-        { text: 'Genetic storage', isCorrect: false },
-    ];
+    if (loading) {
+        return (
+            <div className="bg-background text-on-background min-h-screen pb-24 pt-20 flex justify-center items-center">
+                <div className="text-on-surface-variant">Loading question...</div>
+            </div>
+        );
+    }
+
+    if (!question) {
+        return (
+            <div className="bg-background text-on-background min-h-screen pb-24 pt-20 flex justify-center items-center flex-col gap-4">
+                <div className="text-on-surface-variant">Question not found.</div>
+                <button onClick={handleBack} className="text-primary hover:underline">Go back</button>
+            </div>
+        );
+    }
+
+    const options = (question.options || []).map(opt => ({
+        text: opt.option,
+        isCorrect: Boolean(opt.is_correct)
+    }));
 
     return (
         <div className="bg-background text-on-background min-h-screen pb-24">
@@ -53,25 +71,27 @@ export default function Show({ questionId }) {
                 {/* Question Header Section */}
                 <section className="flex flex-wrap gap-2 pt-4">
                     <span className="inline-flex items-center px-3 py-1 bg-surface-container text-primary font-label-md text-label-md rounded-full border border-primary/10">
-                        Level 1: Understand
+                        Level {question.levels}
                     </span>
                     <span className="inline-flex items-center px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-md text-label-md rounded-full">
-                        5 pts
+                        {question.score} pts
                     </span>
-                    <span className="inline-flex items-center px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-md text-label-md rounded-full">
-                        Biology
-                    </span>
+                    {question.subject?.subject_name && (
+                        <span className="inline-flex items-center px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-md text-label-md rounded-full">
+                            {question.subject.subject_name}
+                        </span>
+                    )}
                 </section>
 
                 <QuestionPreviewCard 
-                    questionText="What is the primary function of mitochondria?"
+                    questionText={question.question}
                     options={options}
                 />
 
                 <QuestionMetadataPanel 
-                    explanation="Mitochondria are known as the powerhouse of the cell, converting oxygen and nutrients into adenosine triphosphate (ATP), which serves as the main energy currency for cellular functions."
-                    tags={['CellBiology', 'Organelles', 'Mitochondria']}
-                    usageCount={3}
+                    explanation={question.explanation || 'No explanation provided.'}
+                    tags={(question.tags || []).map(t => t.name)}
+                    usageCount={question.usage_count || 0}
                 />
 
                 {/* Decorative Illustration */}

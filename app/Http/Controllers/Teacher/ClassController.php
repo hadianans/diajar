@@ -83,6 +83,21 @@ class ClassController extends Controller
 
             $student->material_completion = round(($completedMaterials / $totalMaterials) * 100, 1);
 
+            // Assignment grade average
+            $student->assignment_avg = \App\Models\AssignmentSubmission::where('student_id', $studentId)
+                ->where('status', 'graded')
+                ->whereHas('classAssignment', fn($q) => $q->where('class_id', $class->id))
+                ->avg('score') ?: 0;
+
+            // Assessment score average
+            $student->assessment_avg = \App\Models\AssessmentAttempt::where('student_id', $studentId)
+                ->whereIn('status', ['submitted', 'graded'])
+                ->whereHas('classAssessment', fn($q) => $q->where('class_id', $class->id))
+                ->avg('grade') ?: 0;
+
+            // Simple Urgent logic
+            $student->is_urgent = $student->material_completion < 30 || $student->assignment_avg < 60;
+
             return $student;
         })->filter()->values();
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
+import useApiGet from '@/hooks/useApiGet';
+import moment from 'moment';
 
 // Feature Components
 import ClassSidebar from '@/Components/features/teacher-classes/ClassSidebar';
@@ -12,57 +14,59 @@ import SRLPlanCard from '@/Components/features/teacher-student-detail/SRLPlanCar
 import HistoryList from '@/Components/features/teacher-student-detail/HistoryList';
 import LatestReflectionCard from '@/Components/features/teacher-student-detail/LatestReflectionCard';
 
-// Mock Data
-const studentDetails = {
-    id: 1,
-    name: 'Alex Johnson',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCD7m5rnaSVcC60mxOwDDslj_pfdiKW0YMWKlLw9MdqKRf3282T_YmNk9CeW1QulrDTRwLGDYzXaKOU-xums2LweplClxb5k30FHs887_yGvPT2Gb0jFe2lzEfx_Fabroraa9xOAWt02GaelUK4ktsBuX1iSMYzHJjU_4o9rDx9cNcMj1gcp8hB-PPaNUzA_QhH1kxu3ztFRGy565VHwBJ9mncX4OTNuYZIm9ImTKFaox8TNf0-PhCa0PTr9s5fo6lhMsIeiTrBf5Q',
-    group: 'Group A',
-    className: 'Biology - Class 11A',
-    year: 'AY 2023/2024'
-};
-
-const trendData = [
-    { label: 'Sep', value: 80 },
-    { label: 'Oct 05', value: 82 },
-    { label: 'Oct 15', value: 81 },
-    { label: 'Oct 24', value: 85 },
-    { label: 'Oct 28', value: 88 },
-    { label: 'Now', value: 92 }
-];
-
-const engagementChapters = [
-    { title: 'Chapter 1: Molecular Basis', progress: 100 },
-    { title: 'Chapter 2: Cell Structure', progress: 100 },
-    { title: 'Chapter 3: Genetics', progress: 85 },
-    { title: 'Chapter 4: Ecology', progress: 40 }
-];
-
-const assignments = [
-    {
-        title: 'Genetics Lab Report', subtitle: 'Oct 24, 2023', score: '95/100', statusText: 'Graded',
-        icon: 'description', iconBg: 'bg-primary-container/10', iconColor: 'text-primary'
-    },
-    {
-        title: 'Cell Diagram', subtitle: 'Oct 15, 2023', score: '88/100', statusText: 'Graded',
-        icon: 'draw', iconBg: 'bg-primary-container/10', iconColor: 'text-primary'
-    }
-];
-
-const assessments = [
-    {
-        title: 'Biology Midterm Quiz', subtitle: 'Oct 28 • Time: 42m', score: '28/30',
-        statusBadge: true, statusBadgeText: 'Excellent', statusBadgeBg: 'bg-secondary-container/20', statusBadgeColor: 'text-secondary',
-        icon: 'quiz', iconBg: 'bg-tertiary-container/10', iconColor: 'text-tertiary'
-    },
-    {
-        title: 'Intro to Cells Test', subtitle: 'Oct 05 • Time: 35m', score: '25/30',
-        statusBadge: true, statusBadgeText: 'Pass', statusBadgeBg: 'bg-primary-container/20', statusBadgeColor: 'text-primary',
-        icon: 'assignment_turned_in', iconBg: 'bg-tertiary-container/10', iconColor: 'text-tertiary'
-    }
-];
-
 export default function StudentShow({ classId, studentId }) {
+    const { data: reportData, loading } = useApiGet(`/classes/${classId}/students/${studentId}`);
+
+    if (loading) {
+        return (
+            <DashboardTemplate role="teacher" activeTab="classes" title="Loading..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Loading student report...</div>
+            </DashboardTemplate>
+        );
+    }
+
+    if (!reportData) {
+        return (
+            <DashboardTemplate role="teacher" activeTab="classes" title="Not Found" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Report not found.</div>
+            </DashboardTemplate>
+        );
+    }
+
+    const { student, academic_summary, material_engagement, assignment_history, assessment_history, plans, reflections } = reportData;
+
+    const studentDetails = {
+        id: student.id,
+        name: student.full_name || student.username,
+        avatar: student.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.full_name || student.username)}&background=random`,
+        group: 'Enrolled Student', // Group name might not be passed
+        className: 'Class View',
+        year: ''
+    };
+
+    const assignments = assignment_history.map(a => ({
+        id: a.id,
+        title: a.classAssignment?.title || 'Unknown Assignment',
+        subtitle: moment(a.created_at).format('MMM D, YYYY'),
+        score: a.status === 'graded' ? `${a.grade}/100` : a.status,
+        statusText: a.status === 'graded' ? 'Graded' : 'Pending',
+        icon: 'description', iconBg: 'bg-primary-container/10', iconColor: 'text-primary'
+    }));
+
+    const assessments = assessment_history.map(a => ({
+        id: a.id,
+        title: a.classAssessment?.title || 'Unknown Assessment',
+        subtitle: `${moment(a.created_at).format('MMM D')} • Time: ${Math.round(a.time_spent_seconds / 60)}m`,
+        score: a.grade !== null ? `${a.grade}/100` : '-',
+        statusBadge: true, statusBadgeText: a.grade >= 80 ? 'Excellent' : (a.grade >= 60 ? 'Pass' : 'Needs Work'),
+        statusBadgeBg: a.grade >= 80 ? 'bg-secondary-container/20' : (a.grade >= 60 ? 'bg-primary-container/20' : 'bg-error-container/20'),
+        statusBadgeColor: a.grade >= 80 ? 'text-secondary' : (a.grade >= 60 ? 'text-primary' : 'text-error'),
+        icon: 'quiz', iconBg: 'bg-tertiary-container/10', iconColor: 'text-tertiary'
+    }));
+
+    const latestPlan = plans.length > 0 ? plans[0] : null;
+    const latestReflection = reflections.length > 0 ? reflections[0] : null;
+
     return (
         <DashboardTemplate
             role="teacher"
@@ -73,7 +77,7 @@ export default function StudentShow({ classId, studentId }) {
         >
             <Head title={`Student Progress | Diajar LMS`} />
 
-            <div className="max-w-[1280px] mx-auto pb-12 w-full">
+            <div className="max-w-[1280px] mx-auto pb-12 w-full pt-4">
                 {/* Bento Grid Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
                     
@@ -85,36 +89,42 @@ export default function StudentShow({ classId, studentId }) {
                     {/* 2. Academic Performance Summary (Spans 4 columns) */}
                     <section className="md:col-span-4">
                         <AcademicSummaryCard 
-                            avgAssignment="A-" 
-                            avgAssessment={92} 
-                            completion={85} 
-                            trend={4} 
+                            avgAssignment={`${academic_summary.avg_assignment_grade}%`}
+                            avgAssessment={academic_summary.avg_assessment_score} 
+                            completion={academic_summary.material_completion} 
+                            trend={0} 
                         />
                     </section>
 
-                    {/* 3. Grade Trend Chart (Spans 12 columns) */}
+                    {/* 3. Grade Trend Chart (Spans 12 columns) - MOCK for now */}
                     <section className="md:col-span-12">
-                        <GradeTrendChart dataPoints={trendData} />
+                        <GradeTrendChart dataPoints={[]} />
                     </section>
 
                     {/* 4. Material Engagement (Spans 6 columns) */}
                     <section className="md:col-span-6">
                         <MaterialEngagementList 
-                            totalCompleted={34} 
-                            totalItems={40} 
-                            timeSpent={12.5} 
-                            chapters={engagementChapters} 
+                            totalCompleted={academic_summary.material_completion} 
+                            totalItems={100} 
+                            timeSpent={material_engagement.total_time_spent ? material_engagement.total_time_spent / 3600 : 0} 
+                            chapters={[]} 
                         />
                     </section>
 
                     {/* 5. SRL Plans (Spans 6 columns) */}
                     <section className="md:col-span-6">
-                        <SRLPlanCard 
-                            title="Prepare for Final" 
-                            linkedChapter="Chapter 4" 
-                            targetDate="Nov 15" 
-                            progress={20} 
-                        />
+                        {latestPlan ? (
+                            <SRLPlanCard 
+                                title={latestPlan.title} 
+                                linkedChapter="" 
+                                targetDate={moment(latestPlan.target_date).format('MMM D')} 
+                                progress={latestPlan.progress} 
+                            />
+                        ) : (
+                            <div className="p-6 bg-surface-container rounded-2xl h-full flex items-center justify-center text-on-surface-variant">
+                                No active learning plans.
+                            </div>
+                        )}
                     </section>
 
                     {/* 6. History Lists (Combined Grid Spacing) */}
@@ -129,13 +139,19 @@ export default function StudentShow({ classId, studentId }) {
 
                     {/* 7. SRL Reflections (Spans 4 columns) */}
                     <section className="md:col-span-4 flex flex-col h-full">
-                        <LatestReflectionCard 
-                            taskName="Genetics Lab Report"
-                            comment="I really enjoyed the hands-on part of this lab, it made the concepts stick."
-                            rating={4}
-                            feeling="Confidence"
-                            feelingEmoji="😊"
-                        />
+                        {latestReflection ? (
+                            <LatestReflectionCard 
+                                taskName={latestReflection.title}
+                                comment={latestReflection.content}
+                                rating={latestReflection.confidence_level}
+                                feeling="Confidence"
+                                feelingEmoji="😊"
+                            />
+                        ) : (
+                            <div className="p-6 bg-surface-container rounded-2xl h-full flex items-center justify-center text-on-surface-variant">
+                                No recent reflections.
+                            </div>
+                        )}
                     </section>
                 </div>
             </div>

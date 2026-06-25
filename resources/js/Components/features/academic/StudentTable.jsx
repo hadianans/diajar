@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import Avatar from '@/Components/shared/ui/Avatar';
 
@@ -9,12 +9,21 @@ const colorBgs = [
     'bg-surface-dim text-on-surface'
 ];
 
-export default function StudentTable({ initialStudents = [] }) {
+export default function StudentTable({ initialStudents = [], onUnlink }) {
     const [students, setStudents] = useState(initialStudents);
     const [search, setSearch] = useState('');
     const [unlinkingIds, setUnlinkingIds] = useState([]);
 
+    useEffect(() => {
+        setStudents(initialStudents);
+    }, [initialStudents]);
+
     const handleUnlink = (id) => {
+        if (onUnlink) {
+            onUnlink(id);
+            return;
+        }
+        // Fallback for demo
         if (confirm('Are you sure you want to unlink this student?')) {
             setUnlinkingIds(prev => [...prev, id]);
 
@@ -64,7 +73,7 @@ export default function StudentTable({ initialStudents = [] }) {
                         <tbody className="divide-y divide-outline-variant">
                             {filteredStudents.map((student, idx) => {
                                 const isUnlinking = unlinkingIds.includes(student.id);
-                                const initials = student.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                                const initials = student.name ? student.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'NA';
                                 const avatarBg = colorBgs[idx % colorBgs.length];
 
                                 return (
@@ -106,16 +115,6 @@ export default function StudentTable({ initialStudents = [] }) {
                     <Icon name="person_off" className="text-6xl text-outline mb-4" />
                     <h4 className="text-lg font-bold text-on-surface mb-2">No students linked to this group</h4>
                     <p className="text-on-surface-variant mb-6 max-w-xs mx-auto">Get started by adding students manually or importing from a CSV file.</p>
-                    <button className="bg-primary text-on-primary px-6 py-2 rounded-xl font-label-md hover:opacity-90 active:scale-[0.98] transition-all">Add First Student</button>
-                </div>
-            )}
-            
-            {students.length > 0 && (
-                <div className="p-6 bg-surface-container-low flex justify-center border-t border-outline-variant">
-                    <button className="text-primary font-label-md hover:underline flex items-center gap-2" type="button">
-                        Show All {students.length} Students
-                        <Icon name="keyboard_arrow_down" className="text-sm" />
-                    </button>
                 </div>
             )}
         </section>

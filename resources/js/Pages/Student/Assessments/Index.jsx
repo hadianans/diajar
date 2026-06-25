@@ -1,50 +1,29 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import AssessmentFilters from '@/Components/features/student-assessments/AssessmentFilters';
 import AssessmentCard from '@/Components/features/student-assessments/AssessmentCard';
-
-// Mock Data
-const assessmentsData = [
-    {
-        id: 1,
-        subject: 'Biology',
-        title: 'Biology Midterm Quiz',
-        date: 'Oct 28, 10:00 AM',
-        duration: '45 mins',
-        questionsCount: 30,
-        status: 'Upcoming',
-        type: 'Exam',
-        priority: 'High Priority'
-    },
-    {
-        id: 2,
-        subject: 'Mathematics',
-        title: 'Calculus Unit 1 Test',
-        date: 'Oct 30, 2:00 PM',
-        duration: '60 mins',
-        questionsCount: 20,
-        status: 'In Progress',
-        type: 'Quiz',
-        progress: 45,
-        progressText: '45% Completed • 9 questions left'
-    },
-    {
-        id: 3,
-        subject: 'History',
-        title: 'History: Renaissance Quiz',
-        date: 'Nov 5, 11:59 PM',
-        duration: '30 mins',
-        questionsCount: 15,
-        status: 'Not Started',
-        type: 'Practice'
-    }
-];
+import useApiGet from '@/hooks/useApiGet';
 
 export default function Index() {
+    const { data: assessmentsData, loading } = useApiGet('/assessments');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredAssessments = assessmentsData.filter(assessment => 
+    const mappedAssessments = (assessmentsData || []).map(item => ({
+        id: item.id,
+        subject: item.classModel?.subject?.subject_name || item.classModel?.subject?.name || 'Subject',
+        title: item.title,
+        date: item.due_date ? `Due ${new Date(item.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}` : 'No due date',
+        duration: item.duration_minutes ? `${item.duration_minutes} mins` : 'Untimed',
+        questionsCount: item.question_count || 0,
+        status: item.attempt_status === 'no_attempt' ? 'Upcoming' : (item.attempt_status === 'in_progress' ? 'In Progress' : 'Completed'),
+        type: item.type || 'Quiz',
+        priority: item.attempt_status === 'no_attempt' && item.due_date && new Date(item.due_date).getTime() - new Date().getTime() < 86400000 ? 'High Priority' : null,
+        progress: item.attempt_status === 'in_progress' ? 50 : (item.attempt_status !== 'no_attempt' ? 100 : 0),
+        progressText: item.attempt_status === 'in_progress' ? 'In Progress' : (item.attempt_status !== 'no_attempt' ? 'Completed' : 'Not Started')
+    }));
+
+    const filteredAssessments = mappedAssessments.filter(assessment => 
         assessment.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
         assessment.subject.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -58,8 +37,7 @@ export default function Index() {
 
     return (
         <DashboardTemplate 
-            role="student"
-            activeTab="tasks" // Assuming assessments fall under tasks
+            activeTab="tasks"
             title="Assessments"
             headerSection={headerSection}
         >
@@ -69,16 +47,22 @@ export default function Index() {
                 <AssessmentFilters onSearch={setSearchQuery} />
                 
                 <div className="space-y-gutter">
-                    {filteredAssessments.length > 0 ? (
+                    {loading ? (
+                        <div className="text-center py-8 text-on-surface-variant">Loading assessments...</div>
+                    ) : filteredAssessments.length > 0 ? (
                         filteredAssessments.map(assessment => (
-                            <AssessmentCard 
-                                key={assessment.id} 
-                                {...assessment} 
-                                onAction={() => console.log('Bookmarked', assessment.id)}
-                            />
+                            <div key={assessment.id} onClick={() => router.visit(`/student/assessments/${assessment.id}`)}>
+                                <AssessmentCard 
+                                    {...assessment} 
+                                    onAction={(e) => {
+                                        e.stopPropagation();
+                                        console.log('Action', assessment.id);
+                                    }}
+                                />
+                            </div>
                         ))
                     ) : (
-                        <div className="text-center py-8 text-on-surface-variant">
+                        <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">
                             No assessments found.
                         </div>
                     )}
