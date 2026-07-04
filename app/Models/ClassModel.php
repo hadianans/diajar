@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClassModel extends Model
@@ -13,7 +14,7 @@ class ClassModel extends Model
     protected $fillable = [
         'subject_id',
         'teacher_id',
-        'group_years_id',
+        'school_year_id',
         'day_schedule',
         'time_schedule',
         'assignment_weight',
@@ -41,9 +42,14 @@ class ClassModel extends Model
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    public function groupYear(): BelongsTo
+    public function schoolYear(): BelongsTo
     {
-        return $this->belongsTo(GroupYear::class, 'group_years_id');
+        return $this->belongsTo(SchoolYear::class);
+    }
+
+    public function groupYears(): BelongsToMany
+    {
+        return $this->belongsToMany(GroupYear::class, 'class_group_years', 'class_id', 'group_year_id');
     }
 
     public function classAssessments(): HasMany

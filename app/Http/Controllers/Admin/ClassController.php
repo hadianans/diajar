@@ -24,15 +24,18 @@ class ClassController extends Controller
             ->with([
                 'subject:id,subject_name',
                 'teacher:id,full_name',
-                'groupYear.group:id,name',
-                'groupYear.schoolYear:id,name,status',
-            ])
-            ->withCount([
-                'groupYear as student_count' => fn ($q) => $q->withCount('studentGroups'),
+                'schoolYear:id,name',
+                'groupYears' => function ($q) {
+                    $q->withCount('studentGroups')
+                      ->with(['group:id,name', 'schoolYear:id,name,status']);
+                }
             ]);
 
         if ($yearId) {
-            $query->whereHas('groupYear', fn ($q) => $q->where('year_id', $yearId));
+            $query->where(function ($q) use ($yearId) {
+                $q->whereHas('groupYears', fn ($q2) => $q2->where('year_id', $yearId))
+                  ->orDoesntHave('groupYears');
+            });
         }
 
         if ($request->filled('subject_id')) {
@@ -42,15 +45,15 @@ class ClassController extends Controller
             $query->where('teacher_id', $request->teacher_id);
         }
         if ($request->filled('group_id')) {
-            $query->whereHas('groupYear', fn ($q) => $q->where('group_id', $request->group_id));
+            $query->whereHas('groupYears', fn ($q) => $q->where('group_id', $request->group_id));
         }
 
         $classes = $query->get();
 
         // Compute student_count and is_complete flags
         $classes->each(function ($class) {
-            $class->student_count = $class->groupYear?->studentGroups?->count() ?? 0;
-            $class->is_complete = $class->group_years_id
+            $class->student_count = $class->groupYears->sum('student_groups_count');
+            $class->is_complete = $class->groupYears->isNotEmpty()
                 && $class->day_schedule !== null
                 && $class->time_schedule !== null;
         });
@@ -69,9 +72,16 @@ class ClassController extends Controller
             return $this->error('Teacher is not linked to this subject.', 422);
         }
 
-        $class = ClassModel::create($request->validated());
+        $class = ClassModel::create($request->except('group_years_ids'));
+        $class->groupYears()->attach($request->group_years_ids);
 
-        $class->load('subject:id,subject_name', 'teacher:id,full_name', 'groupYear.group:id,name', 'groupYear.schoolYear:id,name');
+        $class->load([
+            'subject',
+            'teacher',
+            'schoolYear',
+            'groupYears.group',
+            'groupYears.schoolYear',
+        ]);
 
         ActivityLogService::log(auth()->id(), 'class.created', 'Class', $class->id);
 
@@ -84,9 +94,10 @@ class ClassController extends Controller
             ->with([
                 'subject:id,subject_name',
                 'teacher:id,full_name,email,picture',
-                'groupYear.group:id,name',
-                'groupYear.schoolYear:id,name,status',
-                'groupYear.studentGroups' => fn ($q) => $q->with('student:id,full_name,username,picture')->limit(8),
+                'schoolYear:id,name',
+                'groupYears.group:id,name',
+                'groupYears.schoolYear:id,name,status',
+                'groupYears.studentGroups' => fn ($q) => $q->with('student:id,full_name,username,picture')->limit(8),
             ])
             ->findOrFail($id);
 
@@ -109,10 +120,32 @@ class ClassController extends Controller
         return $this->success($class);
     }
 
+    public function updateCohorts(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'group_years_ids'   => 'present|array',
+            'group_years_ids.*' => 'exists:group_years,id',
+        ]);
+
+        $class = ClassModel::whereNull('deleted_at')->findOrFail($id);
+        $class->groupYears()->sync($request->group_years_ids);
+
+        ActivityLogService::log(auth()->id(), 'class.cohorts_updated', 'Class', $class->id);
+
+        return $this->success(null, 'Cohorts updated successfully');
+    }
+
     public function destroy(int $id): JsonResponse
     {
         $class = ClassModel::whereNull('deleted_at')->findOrFail($id);
-        $class->update(['deleted_at' => now()]);
+        
+        $class->deleted_at = now();
+        $class->save();
+
+        // Unlink the teacher from the subject to keep state consistent
+        \App\Models\SubjectTeacher::where('subject_id', $class->subject_id)
+            ->where('teacher_id', $class->teacher_id)
+            ->delete();
 
         ActivityLogService::log(auth()->id(), 'class.deleted', 'Class', $class->id);
 

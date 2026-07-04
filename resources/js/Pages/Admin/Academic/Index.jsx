@@ -1,59 +1,91 @@
-import React, { useMemo } from 'react';
-import { Head, router } from '@inertiajs/react';
+import React, { useMemo, useState } from 'react';
+import { Head, router, usePage } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import ProgressMetricCard from '@/Components/features/academic/ProgressMetricCard';
 import AcademicYearsBox from '@/Components/features/academic/AcademicYearsBox';
 import SubjectsBox from '@/Components/features/academic/SubjectsBox';
 import GroupsBox from '@/Components/features/academic/GroupsBox';
 import EcosystemBanner from '@/Components/features/academic/EcosystemBanner';
+import AcademicYearModal from '@/Components/features/academic/modals/AcademicYearModal';
+import SubjectModal from '@/Components/features/academic/modals/SubjectModal';
+import GroupModal from '@/Components/features/academic/modals/GroupModal';
 import useApiGet from '@/hooks/useApiGet';
 
 const bannerImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAugxZOwpAEuPgRLfjnGSAvR4IKQLMzp3eBMEm4HH4hq979R4Kh8MtPYPwxVlg0HR2J_WJlO8bAEjnHg3HO-xefEH69SQj2YB3W4HTkjBsbxZoySpXJzJTeavwhX6WVxRHm-k_RzcyiHZjhVwI6G46BWZIOd6z2oMtLfthV8WJYEW0kECUGZ3amsK2NFipU3IJlnWnLfWICI4nSXn44z40pddEmNxP-xWPBaMxhQHi1KumvRzE7lO94u4dH2rGGum4bQ1f8ylS-6fE';
 
 export default function Index() {
-    const { data: yearsData, loading: yearsLoading } = useApiGet('/school-years');
-    const { data: subjectsData, loading: subjectsLoading } = useApiGet('/subjects');
-    const { data: groupsData, loading: groupsLoading } = useApiGet('/groups');
+    const { data: yearsData, loading: yearsLoading, refetch: refetchYears } = useApiGet('/school-years');
+    const { data: subjectsData, loading: subjectsLoading, refetch: refetchSubjects } = useApiGet('/subjects');
+    const { data: groupsData, loading: groupsLoading, refetch: refetchGroups } = useApiGet('/groups');
 
-    const handleActionClick = (actionName) => {
-        alert(`Initiated action: ${actionName} setup flow...`);
+    const { url } = usePage();
+
+    // Initialize tab from URL
+    const initialTab = useMemo(() => {
+        try {
+            const search = url.split('?')[1];
+            if (search) {
+                const params = new URLSearchParams(search);
+                return params.get('tab') || 'years';
+            }
+        } catch (e) { }
+        return 'years';
+    }, [url]);
+
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('tab', tab);
+        window.history.replaceState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
     };
+    const [showYearModal, setShowYearModal] = useState(false);
+    const [showSubjectModal, setShowSubjectModal] = useState(false);
+    const [showGroupModal, setShowGroupModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Format data for the UI components
     const years = useMemo(() => {
         if (!yearsData) return [];
-        return yearsData.map(y => ({
-            id: y.id,
-            year: y.name,
-            range: `${new Date(y.date_start).toLocaleDateString()} - ${new Date(y.date_end).toLocaleDateString()}`,
-            status: y.status === 'active' ? 'Active' : 'Archived'
-        }));
-    }, [yearsData]);
+        return yearsData
+            .filter(y => y.name.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map(y => ({
+                id: y.id,
+                year: y.name,
+                range: `${new Date(y.date_start).toLocaleDateString()} - ${new Date(y.date_end).toLocaleDateString()}`,
+                status: y.status === 'active' ? 'Active' : 'Archived'
+            }));
+    }, [yearsData, searchQuery]);
 
-    const activeYear = years.find(y => y.status === 'Active');
+    const activeYear = yearsData ? yearsData.find(y => y.status === 'active') : null;
 
     const subjects = useMemo(() => {
         if (!subjectsData) return [];
-        return subjectsData.map(s => ({
-            id: s.id,
-            name: s.name,
-            teachersCount: s.teacher_count || 0,
-            icon: 'menu_book', // Mock icon or can be mapped dynamically
-            warning: s.has_no_teacher
-        }));
-    }, [subjectsData]);
+        return subjectsData
+            .filter(s => s.subject_name.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map(s => ({
+                id: s.id,
+                name: s.subject_name,
+                teachersCount: s.teacher_count || 0,
+                icon: 'menu_book', // Mock icon or can be mapped dynamically
+                warning: s.has_no_teacher
+            }));
+    }, [subjectsData, searchQuery]);
 
     const groups = useMemo(() => {
         if (!groupsData) return [];
-        return groupsData.map(gy => ({
-            id: gy.group_id,
-            groupYearId: gy.id,
-            groupName: gy.group.name,
-            grade: gy.grade,
-            studentsCount: gy.student_count || 0,
-            warning: gy.has_no_students
-        }));
-    }, [groupsData]);
+        return groupsData
+            .filter(gy => gy.group.name.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map(gy => ({
+                id: gy.group_id,
+                groupYearId: gy.id,
+                groupName: gy.group.name,
+                grade: gy.grade,
+                studentsCount: gy.student_count || 0,
+                warning: gy.has_no_students
+            }));
+    }, [groupsData, searchQuery]);
 
     // Header switcher section
     const headerSection = (
@@ -117,46 +149,102 @@ export default function Index() {
                 headerSection={headerSection}
                 statsSection={metricsSection}
             >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
-                    {/* Academic Years Box */}
-                    <div className="lg:col-span-4">
-                        <AcademicYearsBox
-                            years={years}
-                            onAddYearClick={() => handleActionClick('New Academic Year')}
-                            onItemClick={(year) => router.visit(`/admin/academic/years/${year.id}`)}
-                        />
+                <div className="w-full flex flex-col">
+                    {/* Tabs Navigation and Search */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-stack-md">
+                        <div className="flex space-x-1 bg-surface-container-low p-1 rounded-xl border border-outline-variant/30 overflow-x-auto shrink-0 w-full sm:w-auto">
+                            <button
+                                onClick={() => handleTabChange('years')}
+                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'years' ? 'bg-white text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
+                            >
+                                Academic Years
+                            </button>
+                            <button
+                                onClick={() => handleTabChange('subjects')}
+                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'subjects' ? 'bg-white text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
+                            >
+                                Subjects
+                            </button>
+                            <button
+                                onClick={() => handleTabChange('groups')}
+                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'groups' ? 'bg-white text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
+                            >
+                                Student Groups
+                            </button>
+                        </div>
+
+                        <div className="relative w-full sm:w-64 shrink-0">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-surface-container-low border border-outline-variant/50 rounded-xl py-2.5 px-4 text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm"
+                            />
+                        </div>
                     </div>
 
-                    {/* Subjects Box */}
-                    <div className="lg:col-span-4">
-                        <SubjectsBox
-                            subjects={subjects}
-                            onAddSubjectClick={() => handleActionClick('New Subject')}
-                            onViewAllSubjects={() => handleActionClick('View All Subjects')}
-                            onItemClick={(sub) => router.visit(`/admin/academic/subjects/${sub.id}`)}
-                        />
-                    </div>
-
-                    {/* Student Groups Box */}
-                    <div className="lg:col-span-4">
-                        <GroupsBox
-                            groups={groups}
-                            onAddGroupClick={() => handleActionClick('New Student Group')}
-                            onViewAllGroups={() => handleActionClick('View All Student Groups')}
-                            onItemClick={(group) => router.visit(`/admin/academic/groups/${group.id}`)}
-                        />
+                    {/* Tab Content */}
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        {activeTab === 'years' && (
+                            <AcademicYearsBox
+                                years={years}
+                                onAddYearClick={() => setShowYearModal(true)}
+                                onItemClick={(year) => router.visit(`/admin/academic/years/${year.id}`)}
+                            />
+                        )}
+                        {activeTab === 'subjects' && (
+                            <SubjectsBox
+                                subjects={subjects}
+                                onAddSubjectClick={() => setShowSubjectModal(true)}
+                                onItemClick={(sub) => router.visit(`/admin/academic/subjects/${sub.id}`)}
+                            />
+                        )}
+                        {activeTab === 'groups' && (
+                            <GroupsBox
+                                groups={groups}
+                                onAddGroupClick={() => setShowGroupModal(true)}
+                                onItemClick={(group) => router.visit(`/admin/academic/groups/${group.id}`)}
+                            />
+                        )}
                     </div>
 
                     {/* Ecosystem Premium Banner */}
-                    <div className="lg:col-span-12 hidden lg:block">
+                    {/* <div className="mt-stack-lg hidden lg:block">
                         <EcosystemBanner
                             imageUrl={bannerImageUrl}
                             title="Streamline your academic ecosystem"
                             subtitle="Unified management for years, subjects, and student cohorts designed for administrative clarity."
                         />
-                    </div>
+                    </div> */}
                 </div>
             </DashboardTemplate>
+
+            <AcademicYearModal
+                show={showYearModal}
+                onClose={() => setShowYearModal(false)}
+                onSuccess={() => {
+                    setShowYearModal(false);
+                    refetchYears();
+                }}
+            />
+            <SubjectModal
+                show={showSubjectModal}
+                onClose={() => setShowSubjectModal(false)}
+                onSuccess={() => {
+                    setShowSubjectModal(false);
+                    refetchSubjects();
+                }}
+            />
+            <GroupModal
+                show={showGroupModal}
+                onClose={() => setShowGroupModal(false)}
+                onSuccess={() => {
+                    setShowGroupModal(false);
+                    refetchGroups();
+                }}
+                activeYearId={activeYear?.id}
+            />
         </>
     );
 }

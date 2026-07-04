@@ -41,6 +41,14 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function subjects(): JsonResponse
+    {
+        $subjects = \App\Models\Subject::whereHas('subjectTeachers', fn($q) => $q->where('teacher_id', auth()->id()))
+            ->get(['id', 'subject_name', 'description']);
+            
+        return $this->success($subjects);
+    }
+
     private function getPendingActions(Collection $activeClassIds): array
     {
         $ungradedSubmissions = AssignmentSubmission::whereHas('classAssignment', fn($q) => $q->whereIn('class_id', $activeClassIds)->whereNull('deleted_at'))

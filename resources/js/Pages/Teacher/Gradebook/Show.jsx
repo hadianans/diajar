@@ -5,14 +5,14 @@ import GradebookOverview from '@/Components/features/teacher-gradebook/Gradebook
 import GradebookTable from '@/Components/features/teacher-gradebook/GradebookTable';
 import useApiGet from '@/hooks/useApiGet';
 
-export default function Show({ groupYearId }) {
+export default function Show({ classId }) {
     const [sort, setSort] = useState('name');
     const [filter, setFilter] = useState('all');
 
-    const { data, loading } = useApiGet(`/gradebook/${groupYearId}?sort=${sort}&column_filter=${filter}`);
+    const { data, loading } = useApiGet(`/gradebook/${classId}?sort=${sort}&column_filter=${filter}`);
 
     const handleBack = () => {
-        router.visit(route('teacher.classes.show', { id: groupYearId || 1 }));
+        router.visit(route('teacher.classes.show', { id: classId || 1 }));
     };
 
     if (loading) {

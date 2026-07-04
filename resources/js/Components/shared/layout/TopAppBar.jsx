@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePage } from '@inertiajs/react';
+import { usePage, Link } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
 export default function TopAppBar({ title = 'Group Details', viewLabel = 'Admin View', onBack, showBack = true }) {
@@ -48,6 +48,15 @@ export default function TopAppBar({ title = 'Group Details', viewLabel = 'Admin 
                             <span>{initials}</span>
                         )}
                     </div>
+                    <Link
+                        href={route('logout')}
+                        method="post"
+                        as="button"
+                        className="material-symbols-outlined text-error hover:bg-error-container hover:text-on-error-container p-2 rounded-full bg-white border border-outline-variant shadow-sm active:scale-95 transition-all flex items-center justify-center"
+                        title="Log Out"
+                    >
+                        logout
+                    </Link>
                 </div>
             </div>
         </header>

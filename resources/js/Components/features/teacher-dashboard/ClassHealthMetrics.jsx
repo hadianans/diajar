@@ -1,10 +1,14 @@
 import React from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function ClassHealthMetrics({ completion = 78, avgGrade = 82, avgScore = 75 }) {
+export default function ClassHealthMetrics({ completion = 78, avgGrade = 82, avgScore = 75, layout = 'horizontal' }) {
     // Math for SVG circle: C = 2 * pi * r = 2 * 3.14159 * 34 = 213.6
     const circumference = 213.6;
     
+    const gridClass = layout === 'vertical' 
+        ? 'grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-6' 
+        : 'grid grid-cols-1 sm:grid-cols-3 gap-6';
+
     return (
         <div className="bg-white/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-headline-md text-headline-md mb-6 flex items-center gap-2 text-on-surface">
@@ -12,7 +16,7 @@ export default function ClassHealthMetrics({ completion = 78, avgGrade = 82, avg
                 Class Health Overview
             </h3>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className={gridClass}>
                 {/* Metric 1 */}
                 <div className="flex flex-col items-center text-center p-4 rounded-xl bg-surface-container-low">
                     <div className="relative w-20 h-20 flex items-center justify-center mb-3">

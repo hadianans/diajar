@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ClassFilters from '@/Components/features/classes/ClassFilters';
 import ClassSortBar from '@/Components/features/classes/ClassSortBar';
 import ClassGridCard from '@/Components/features/classes/ClassGridCard';
@@ -14,6 +14,17 @@ export default function ClassesBentoGrid({ initialClasses = [], onClassClick }) 
     const [sortBy, setSortBy] = useState('Subject');
     const [isDescending, setIsDescending] = useState(false);
 
+    // Auto-select a valid year when data loads
+    useEffect(() => {
+        if (initialClasses.length > 0) {
+            const availableYears = Array.from(new Set(initialClasses.map(c => c.year)));
+            if (availableYears.length > 0 && !availableYears.includes(selectedYear)) {
+                // Default to the first available year (or you can sort and pick the most recent)
+                setSelectedYear(availableYears.sort().reverse()[0]); 
+            }
+        }
+    }, [initialClasses, selectedYear]);
+
     // Derived metadata sets for filters
     const years = useMemo(() => {
         const set = new Set(initialClasses.map(c => c.year));
@@ -26,10 +37,12 @@ export default function ClassesBentoGrid({ initialClasses = [], onClassClick }) 
     }, [initialClasses]);
 
     const groups = useMemo(() => {
-        const set = new Set(initialClasses.map(c => {
-            // Extract cohort code, e.g. "10A - Grade 10" -> "10A"
-            return c.group.split(' ')[0];
-        }));
+        const set = new Set();
+        initialClasses.forEach(c => {
+            if (c.group && c.group !== 'Unknown Group') {
+                c.group.split(', ').forEach(g => set.add(g));
+            }
+        });
         return Array.from(set).sort();
     }, [initialClasses]);
 
@@ -39,8 +52,7 @@ export default function ClassesBentoGrid({ initialClasses = [], onClassClick }) 
             const matchesYear = cls.year === selectedYear;
             const matchesSubject = selectedSubject === 'All' || cls.subject === selectedSubject;
             
-            const groupCode = cls.group.split(' ')[0];
-            const matchesGroup = selectedGroup === 'All' || groupCode === selectedGroup;
+            const matchesGroup = selectedGroup === 'All' || cls.group.split(', ').includes(selectedGroup);
             
             const matchesTeacher = teacherSearch.trim() === '' || 
                 cls.teacher.toLowerCase().includes(teacherSearch.toLowerCase());

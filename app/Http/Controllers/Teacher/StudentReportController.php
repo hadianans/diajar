@@ -25,8 +25,8 @@ class StudentReportController extends Controller
             ->with('subject')
             ->findOrFail($classId);
 
-        // Verify student belongs to this class
-        $enrolled = StudentGroup::where('group_year_id', $class->group_years_id)
+        // Verify student belongs to this class (checking against all groups assigned to the class)
+        $enrolled = StudentGroup::whereIn('group_year_id', $class->groupYears->pluck('id'))
             ->where('student_id', $studentId)
             ->exists();
 

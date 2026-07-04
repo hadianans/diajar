@@ -101,6 +101,8 @@ export default function AccountList({ onCreateClick }) {
                                 email: account.email,
                                 role: account.role,
                                 avatar: account.picture,
+                                isActive: account.is_active,
+                                gender: account.gender,
                                 createdDate: new Date(account.created_at).toLocaleDateString()
                             }}
                             onMoreClick={() => handleMoreClick(account)}

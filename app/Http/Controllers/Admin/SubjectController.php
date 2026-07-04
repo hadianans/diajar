@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\SubjectRequest;
 use App\Models\Subject;
 use App\Models\SubjectTeacher;
 use App\Models\User;
+use App\Models\ClassModel;
+use App\Models\SchoolYear;
 use App\Services\ActivityLogService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -17,7 +19,9 @@ class SubjectController extends Controller
 
     public function index(): JsonResponse
     {
-        $subjects = Subject::withCount('subjectTeachers as teacher_count')->get();
+        $subjects = Subject::with(['subjectTeachers.teacher:id,full_name'])
+            ->withCount('subjectTeachers as teacher_count')
+            ->get();
 
         $subjects->each(fn ($s) => $s->has_no_teacher = $s->teacher_count === 0);
 
@@ -39,8 +43,9 @@ class SubjectController extends Controller
             'subjectTeachers.teacher:id,full_name,email,picture',
             'classes' => fn ($q) => $q->whereNull('deleted_at'),
             'classes.teacher:id,full_name',
-            'classes.groupYear.group:id,name',
-            'classes.groupYear.schoolYear:id,name',
+            'classes.groupYears.group:id,name',
+            'classes.groupYears.schoolYear:id,name',
+            'classes.schoolYear:id,name',
         ]);
 
         return $this->success($subject);
@@ -80,11 +85,31 @@ class SubjectController extends Controller
             ->where('role', 'teacher')
             ->pluck('id');
 
+        $activeYearId = SchoolYear::where('status', 'active')->value('id');
+
         foreach ($validTeachers as $teacherId) {
             SubjectTeacher::firstOrCreate([
                 'subject_id' => $subjectId,
                 'teacher_id' => $teacherId,
             ]);
+
+            $class = ClassModel::where('subject_id', $subjectId)
+                ->where('teacher_id', $teacherId)
+                ->first();
+
+            if ($class) {
+                if ($class->deleted_at !== null) {
+                    $class->deleted_at = null;
+                    $class->school_year_id = $activeYearId;
+                    $class->save();
+                }
+            } else {
+                ClassModel::create([
+                    'subject_id' => $subjectId,
+                    'teacher_id' => $teacherId,
+                    'school_year_id' => $activeYearId,
+                ]);
+            }
 
             ActivityLogService::log(auth()->id(), 'subject.teacher_linked', 'Subject', $subjectId, "Teacher #{$teacherId}");
         }
@@ -99,6 +124,11 @@ class SubjectController extends Controller
         SubjectTeacher::where('subject_id', $subjectId)
             ->where('teacher_id', $teacherId)
             ->delete();
+
+        // Soft-delete associated class
+        ClassModel::where('subject_id', $subjectId)
+            ->where('teacher_id', $teacherId)
+            ->update(['deleted_at' => now()]);
 
         ActivityLogService::log(auth()->id(), 'subject.teacher_unlinked', 'Subject', $subjectId, "Teacher #{$teacherId}");
 

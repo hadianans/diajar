@@ -22,7 +22,7 @@ class DashboardController extends Controller
             ->first();
 
         $subjectCount = Subject::count();
-        $activeYear = SchoolYear::where('status', 'active')->first(['id', 'name', 'date_start', 'date_end']);
+        $activeYear = SchoolYear::where('status', 'active')->first(['id', 'name', 'date_start', 'date_end', 'status']);
 
         return $this->success([
             'student_count' => (int) $counts->student_count,
@@ -67,7 +67,7 @@ class DashboardController extends Controller
         // Step 6: Classes generated
         $classCount = $activeYearId
             ? ClassModel::whereNull('deleted_at')
-                ->whereHas('groupYear', fn ($q) => $q->where('year_id', $activeYearId))
+                ->where('school_year_id', $activeYearId)
                 ->count()
             : 0;
         $step6 = $classCount > 0;

@@ -26,10 +26,22 @@ class GroupController extends Controller
             return $this->success([]);
         }
 
-        $groupYears = GroupYear::where('year_id', $yearId)
+        $query = GroupYear::where('year_id', $yearId)
             ->with('group')
-            ->withCount('studentGroups as student_count')
-            ->get();
+            ->withCount('studentGroups as student_count');
+
+        if ($request->filled('exclude_subject_id') && $request->filled('except_class_id')) {
+            $excludeSubjectId = $request->input('exclude_subject_id');
+            $exceptClassId = $request->input('except_class_id');
+
+            $query->whereDoesntHave('classes', function ($q) use ($excludeSubjectId, $exceptClassId) {
+                $q->where('subject_id', $excludeSubjectId)
+                  ->where('classes.id', '!=', $exceptClassId)
+                  ->whereNull('deleted_at');
+            });
+        }
+
+        $groupYears = $query->get();
 
         $groupYears->each(fn ($gy) => $gy->has_no_students = $gy->student_count === 0);
 
@@ -38,6 +50,21 @@ class GroupController extends Controller
 
     public function store(GroupRequest $request): JsonResponse
     {
+        if ($request->has('groups')) {
+            $createdGroups = [];
+            foreach ($request->groups as $g) {
+                $group = Group::create(['name' => $g['name']]);
+                $groupYear = GroupYear::create([
+                    'group_id' => $group->id,
+                    'year_id'  => $request->year_id,
+                    'grade'    => $g['grade'],
+                ]);
+                $createdGroups[] = $group;
+            }
+            ActivityLogService::log(auth()->id(), 'group.bulk_created', 'Group', null, "Created " . count($createdGroups) . " groups");
+            return $this->created(['groups' => $createdGroups]);
+        }
+
         $group = Group::create(['name' => $request->name]);
 
         $groupYear = GroupYear::create([

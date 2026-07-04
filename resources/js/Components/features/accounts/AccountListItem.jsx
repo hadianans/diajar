@@ -34,9 +34,20 @@ export default function AccountListItem({ account, onMoreClick }) {
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${badgeStyle}`}>
                         {account.role}
                     </span>
+                    {!account.isActive && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-error-container text-on-error-container">
+                            Inactive
+                        </span>
+                    )}
                 </div>
                 <p className="font-body-md text-body-md text-on-surface-variant truncate">{account.email}</p>
-                <p className="text-[11px] text-outline mt-1 uppercase tracking-tight">Created {account.createdDate}</p>
+                <div className="flex items-center gap-2 mt-1">
+                    <p className="text-[11px] text-outline uppercase tracking-tight">Created {account.createdDate}</p>
+                    <span className="text-[11px] text-outline uppercase tracking-tight">&bull;</span>
+                    <p className="text-[11px] text-outline uppercase tracking-tight">
+                        {account.gender == 1 ? 'Male' : 'Female'}
+                    </p>
+                </div>
             </div>
             {onMoreClick && (
                 <button

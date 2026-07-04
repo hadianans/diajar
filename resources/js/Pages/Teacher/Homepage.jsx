@@ -15,6 +15,7 @@ import UpcomingDeadlines from '@/Components/features/teacher-dashboard/UpcomingD
 
 export default function Homepage() {
     const { data: dashboardData, loading } = useApiGet('/dashboard');
+    const { data: activitiesData } = useApiGet('/activity-logs?days=7');
 
     const summary = dashboardData || {};
     
@@ -33,6 +34,41 @@ export default function Homepage() {
         title: ch.name,
         progress: ch.completion
     }));
+
+    const activities = activitiesData?.data || [];
+    const recentActivities = activities.slice(0, 5).map(act => {
+        const date = moment(act.created_at);
+        const now = moment();
+        const timeStr = now.diff(date, 'hours') < 24 ? date.fromNow() : date.format('MMM D, HH:mm');
+
+        let icon = 'info';
+        let iconBg = 'bg-surface-container';
+        let iconColor = 'text-on-surface-variant';
+        
+        if (act.action.includes('created') || act.action.includes('submitted')) {
+            icon = 'add_circle';
+            iconBg = 'bg-success/10';
+            iconColor = 'text-success-600';
+        } else if (act.action.includes('updated') || act.action.includes('graded')) {
+            icon = 'edit';
+            iconBg = 'bg-warning/10';
+            iconColor = 'text-warning-600';
+        } else if (act.action.includes('deleted')) {
+            icon = 'delete';
+            iconBg = 'bg-error/10';
+            iconColor = 'text-error';
+        }
+
+        return {
+            studentName: act.target_type || 'System',
+            action: act.description || act.action,
+            time: timeStr,
+            type: act.action,
+            icon,
+            iconBg,
+            iconColor
+        };
+    });
 
     const deadlines = [];
     if (summary.upcoming_deadlines?.assignment) {
@@ -88,9 +124,8 @@ export default function Homepage() {
                     <div className="md:col-span-8 flex flex-col gap-gutter">
                         <ActionRequiredCard ungradedCount={ungradedCount} reviewCount={reviewCount} />
                         <ClassHealthMetrics completion={Math.round(avgOverall)} avgGrade={avgAssignment} avgScore={avgAssessment} />
-                        {/* Mock Recent Activity since it's not in the API yet */}
-                        <RecentActivityList activities={[
-                            { studentName: 'System', action: 'Dashboard loaded', time: 'Just now', type: 'Info', icon: 'info', iconBg: 'bg-surface-container', iconColor: 'text-on-surface-variant' }
+                        <RecentActivityList activities={recentActivities.length > 0 ? recentActivities : [
+                            { studentName: 'System', action: 'No recent activity in the last 7 days.', time: '', type: 'Info', icon: 'info', iconBg: 'bg-surface-container', iconColor: 'text-on-surface-variant' }
                         ]} />
                     </div>
 

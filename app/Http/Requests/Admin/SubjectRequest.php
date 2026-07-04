@@ -14,7 +14,7 @@ class SubjectRequest extends FormRequest
     public function rules(): array
     {
         return match (true) {
-            $this->isMethod('POST') && $this->routeIs('*teachers*') => [
+            $this->isMethod('POST') && ($this->routeIs('*teachers*') || $this->is('*teachers*')) => [
                 'teacher_ids' => 'required|array|min:1',
                 'teacher_ids.*' => 'integer|exists:users,id',
             ],

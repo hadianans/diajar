@@ -13,10 +13,7 @@ class RoleMiddleware
         $user = $request->user();
 
         if (! $user || ! in_array($user->role, $roles, true)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Forbidden — insufficient role.',
-            ], 403);
+            abort(403, 'Forbidden — insufficient role.');
         }
 
         return $next($request);

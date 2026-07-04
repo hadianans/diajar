@@ -6,7 +6,7 @@ export default function StudentListCard({ classId, studentId, name, group, avata
     const [isHovered, setIsHovered] = useState(false);
 
     const handleClick = () => {
-        router.visit(route('teacher.classes.students.show', { class: classId, student: studentId }));
+        router.visit(route('teacher.classes.students.show', { classId: classId, studentId: studentId }));
     };
 
     let progressBarColor = 'bg-secondary';
@@ -33,8 +33,8 @@ export default function StudentListCard({ classId, studentId, name, group, avata
                     <span className="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">{group}</span>
                 </div>
                 
-                <div className="flex items-center gap-3 text-on-surface-variant">
-                    <div className="flex-grow">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-on-surface-variant">
+                    <div className="flex-grow w-full">
                         <div className="flex justify-between items-center mb-1">
                             <span className={`text-[10px] font-semibold ${isUrgent ? 'text-error' : (completion < 70 ? 'text-tertiary' : '')}`}>
                                 {completion}% Completion
@@ -47,8 +47,8 @@ export default function StudentListCard({ classId, studentId, name, group, avata
                         </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                        <div className="text-right">
+                    <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end mt-1 sm:mt-0">
+                        <div className="text-left sm:text-right flex sm:block items-center gap-2 sm:gap-0">
                             <div className={`text-[10px] font-bold ${isUrgent ? 'text-error' : (completion >= 80 ? 'text-primary' : 'text-on-surface')}`}>
                                 {grade} Grade
                             </div>

@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import SubjectItem from '@/Components/features/academic/SubjectItem';
+import Pagination from '@/Components/shared/ui/Pagination';
 
 export default function SubjectsBox({ subjects = [], onAddSubjectClick, onViewAllSubjects, onItemClick }) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedSubjects = subjects.slice(startIndex, startIndex + itemsPerPage);
     return (
         <section className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-stack-md">
@@ -11,8 +17,8 @@ export default function SubjectsBox({ subjects = [], onAddSubjectClick, onViewAl
                     <h3 className="font-headline-md text-headline-md font-bold text-on-surface">Subjects</h3>
                 </div>
             </div>
-            <div className="space-y-stack-sm flex-grow">
-                {subjects.map((sub, idx) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-grow">
+                {paginatedSubjects.map((sub, idx) => (
                     <SubjectItem
                         key={idx}
                         name={sub.name}
@@ -23,6 +29,15 @@ export default function SubjectsBox({ subjects = [], onAddSubjectClick, onViewAl
                     />
                 ))}
             </div>
+            {subjects.length > 0 && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalItems={subjects.length}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={setCurrentPage}
+                    onItemsPerPageChange={setItemsPerPage}
+                />
+            )}
             <div className="mt-stack-md flex flex-col gap-2">
                 {onViewAllSubjects && (
                     <button

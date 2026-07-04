@@ -19,7 +19,8 @@ class ClassRequest extends FormRequest
             'store' => [
                 'subject_id'        => 'required|integer|exists:subjects,id',
                 'teacher_id'        => 'required|integer|exists:users,id',
-                'group_years_id'    => 'required|integer|exists:group_years,id',
+                'group_years_ids'   => 'required|array|min:1',
+                'group_years_ids.*' => 'integer|exists:group_years,id',
                 'day_schedule'      => 'nullable|integer|between:0,6',
                 'time_schedule'     => 'nullable|date_format:H:i',
                 'assignment_weight' => 'required|numeric|min:0|max:100',

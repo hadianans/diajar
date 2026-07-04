@@ -16,23 +16,43 @@ export default function Index() {
         `/classes${searchQuery ? `?search=${encodeURIComponent(searchQuery)}` : ''}`
     );
 
-    const activeClasses = (classesData || []).filter(c => c.is_active).map(c => ({
-        id: c.id,
-        subject: c.subject?.subject_name,
-        subjectIcon: 'science', // Fallback or dynamic based on subject
-        title: `${c.subject?.subject_name} - ${c.group_year?.group?.name}`,
-        grade: c.group_year?.group?.name,
-        studentsCount: c.student_count || 0,
-        year: `AY ${c.group_year?.school_year?.name}`,
-        additionalStudents: Math.max(0, (c.student_count || 0) - 3)
-    }));
+    const activeClasses = [];
+    const archivedClasses = [];
 
-    const archivedClasses = (classesData || []).filter(c => !c.is_active).map(c => ({
-        id: c.id,
-        title: `${c.subject?.subject_name} - ${c.group_year?.group?.name}`,
-        year: c.group_year?.school_year?.name,
-        studentsCount: c.student_count || 0
-    }));
+    (classesData || []).forEach(c => {
+        const baseClass = {
+            id: c.id,
+            subject: c.subject?.subject_name,
+            subjectIcon: 'science',
+            studentsCount: c.student_count || 0, // Fallback to total class students
+            additionalStudents: Math.max(0, (c.student_count || 0) - 3)
+        };
+
+        if (!c.group_years || c.group_years.length === 0) {
+            const classItem = {
+                ...baseClass,
+                title: `${c.subject?.subject_name} - Unassigned Group`,
+                grade: 'Unassigned',
+                year: `AY ${c.school_year?.name || 'Unknown'}`,
+                groupId: null,
+            };
+            if (c.is_active) activeClasses.push(classItem);
+            else archivedClasses.push(classItem);
+        } else {
+            c.group_years.forEach(gy => {
+                const classItem = {
+                    ...baseClass,
+                    title: `${c.subject?.subject_name} - ${gy.group?.name || 'Unknown'}`,
+                    grade: gy.group?.name || 'Unknown',
+                    year: `AY ${gy.school_year?.name || c.school_year?.name || 'Unknown'}`,
+                    groupId: gy.id,
+                    // If we had per-group student counts from API, we'd use it here.
+                };
+                if (c.is_active) activeClasses.push(classItem);
+                else archivedClasses.push(classItem);
+            });
+        }
+    });
 
     const headerSection = (
         <section className="space-y-1 mb-6 mt-4">
@@ -59,8 +79,19 @@ export default function Index() {
                     <>
                         <div className="space-y-4">
                             {activeClasses.length > 0 ? (
-                                activeClasses.map(ac => (
-                                    <ActiveClassCard key={ac.id} {...ac} />
+                                activeClasses.map(cls => (
+                                    <ActiveClassCard
+                                        key={`${cls.id}-${cls.groupId || 'unassigned'}`}
+                                        id={cls.id}
+                                        groupId={cls.groupId}
+                                        subject={cls.subject}
+                                        subjectIcon={cls.subjectIcon}
+                                        title={cls.title}
+                                        grade={cls.grade}
+                                        studentsCount={cls.studentsCount}
+                                        year={cls.year}
+                                        additionalStudents={cls.additionalStudents}
+                                    />
                                 ))
                             ) : (
                                 <div className="p-6 bg-surface-container rounded-xl text-center text-on-surface-variant text-sm">
@@ -73,8 +104,15 @@ export default function Index() {
                             <section className="space-y-stack-sm pb-8 mt-8">
                                 <h2 className="text-label-sm font-label-sm tracking-wider text-outline uppercase px-1">Archived Classes</h2>
                                 <div className="space-y-stack-md">
-                                    {archivedClasses.map((ac) => (
-                                        <ArchivedClassCard key={ac.id} {...ac} />
+                                    {archivedClasses.map((cls) => (
+                                        <ArchivedClassCard
+                                            key={`${cls.id}-${cls.groupId || 'unassigned'}`}
+                                            id={cls.id}
+                                            groupId={cls.groupId}
+                                            title={cls.title}
+                                            year={cls.year}
+                                            studentsCount={cls.studentsCount}
+                                        />
                                     ))}
                                 </div>
                             </section>

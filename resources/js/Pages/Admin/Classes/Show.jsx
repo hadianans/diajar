@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import ClassSummaryCard from '@/Components/features/classes/ClassSummaryCard';
@@ -7,11 +7,29 @@ import StudentsAccessCard from '@/Components/features/classes/StudentsAccessCard
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import ClassScheduleModal from '@/Components/features/classes/ClassScheduleModal';
+import GroupYearSelectionModal from '@/Components/features/academic/modals/GroupYearSelectionModal';
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function Show({ classId }) {
-    const { data: cls, loading } = useApiGet(`/classes/${classId}`);
+    const { data: cls, loading, refetch: refetchClass } = useApiGet(`/classes/${classId}`);
+    const { data: groupsData } = useApiGet(cls ? `/groups?exclude_subject_id=${cls.subject_id}&except_class_id=${cls.id}` : null);
+
+    const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+    const [isCohortModalOpen, setIsCohortModalOpen] = useState(false);
+    const [groupYears, setGroupYears] = useState([]);
+
+    useEffect(() => {
+        if (groupsData) {
+            const allGroupYears = groupsData.map(gy => ({
+                id: gy.id,
+                group_name: gy.group?.name || 'Unknown',
+                grade: gy.grade
+            }));
+            setGroupYears(allGroupYears);
+        }
+    }, [groupsData]);
 
     const handleBack = () => {
         router.visit('/admin/classes');
@@ -33,34 +51,44 @@ export default function Show({ classId }) {
         }
     };
 
-    const handleEditSchedule = async () => {
-        const day = prompt('Enter day of week (0=Sun, 1=Mon, ..., 6=Sat):', cls?.day_schedule || 1);
-        if (day === null) return;
-        const time = prompt('Enter time schedule (HH:MM) 24h format:', cls?.time_schedule ? cls.time_schedule.substring(0, 5) : '09:00');
-        if (time === null) return;
-        
+    const handleEditScheduleClick = () => {
+        setIsScheduleModalOpen(true);
+    };
+
+    const handleCohortSubmit = async (selectedIds) => {
         try {
-            await api.patch(`/classes/${classId}/schedule`, {
-                day_schedule: parseInt(day),
-                time_schedule: time
+            await api.patch(`/classes/${classId}/cohorts`, {
+                group_years_ids: selectedIds
             });
-            alert('Schedule updated successfully! Please reload the page.');
+            refetchClass();
+            setIsCohortModalOpen(false);
+            alert('Cohorts updated successfully!');
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to update schedule.');
+            alert(err.response?.data?.message || 'Failed to update cohorts.');
         }
     };
 
     const students = useMemo(() => {
-        if (!cls?.group_year?.student_groups) return [];
-        return cls.group_year.student_groups.map(sg => {
-            const st = sg.student;
-            return {
-                id: st.id,
-                name: st.full_name,
-                avatarUrl: st.picture || null,
-                initials: st.full_name ? st.full_name.substring(0, 2).toUpperCase() : 'NA'
-            };
+        if (!cls?.group_years) return [];
+        const allStudents = [];
+        cls.group_years.forEach(gy => {
+            if (gy.student_groups) {
+                gy.student_groups.forEach(sg => {
+                    const st = sg.student;
+                    if (st) {
+                        if (!allStudents.find(s => s.id === st.id)) {
+                            allStudents.push({
+                                id: st.id,
+                                name: st.full_name,
+                                avatarUrl: st.picture || null,
+                                initials: st.full_name ? st.full_name.substring(0, 2).toUpperCase() : 'NA'
+                            });
+                        }
+                    }
+                });
+            }
         });
+        return allStudents;
     }, [cls]);
 
     if (loading) {
@@ -81,11 +109,13 @@ export default function Show({ classId }) {
 
     const subjectName = cls.subject?.name || cls.subject?.subject_name || 'Unknown Subject';
     const teacherName = cls.teacher?.full_name || 'Unassigned';
-    const groupName = cls.group_year?.group?.name ? `${cls.group_year.group.name} - ${cls.group_year.grade || ''}` : 'Unknown Group';
-    const yearName = cls.group_year?.school_year?.name || 'Unknown Year';
+    const groupName = cls.group_years && cls.group_years.length > 0
+        ? cls.group_years.map(gy => gy.group?.name ? gy.group.name : 'Unknown').join(', ')
+        : 'Unknown Group';
+    const yearName = cls.group_years?.[0]?.school_year?.name || cls.school_year?.name || 'Unknown Year';
     const scheduleStr = cls.day_schedule !== null && cls.time_schedule ? `${days[cls.day_schedule]} • ${cls.time_schedule.substring(0, 5)}` : 'Not set';
-    const isComplete = cls.group_years_id && cls.day_schedule !== null && cls.time_schedule;
-    const title = `${subjectName} — ${groupName}`;
+    const isComplete = cls.group_years && cls.group_years.length > 0 && cls.day_schedule !== null && cls.time_schedule;
+    const title = `${subjectName} — ${teacherName}`;
 
     // Hero title info card
     const headerSection = (
@@ -135,13 +165,13 @@ export default function Show({ classId }) {
                             teacher={teacherName}
                             schedule={scheduleStr}
                             academicYear={yearName}
-                            onEditScheduleClick={handleEditSchedule}
+                            onEditScheduleClick={handleEditScheduleClick}
                         />
 
                         <LinkedCohortCard
                             cohortName={groupName}
                             activeStudentsCount={students.length}
-                            onChangeGroupClick={() => handleActionClick('Change Student Group')}
+                            onChangeGroupClick={() => setIsCohortModalOpen(true)}
                             onCohortClick={() => handleActionClick('View Student Group Details')}
                         />
                     </div>
@@ -156,18 +186,50 @@ export default function Show({ classId }) {
                     </div>
                 </div>
 
-                {/* Destructive zone */}
-                <footer className="mt-stack-lg pt-stack-lg border-t border-outline-variant flex justify-center w-full">
-                    <button
-                        onClick={handleDeleteClass}
-                        className="px-8 py-3 rounded-xl border border-error text-error font-headline-md text-headline-md hover:bg-error-container/10 transition-all active:scale-95 flex items-center gap-2 font-bold"
-                        type="button"
-                    >
-                        <Icon name="delete_forever" className="text-[22px]" />
-                        <span>Delete Class</span>
-                    </button>
-                </footer>
+                {/* Danger Zone */}
+                <section className="mt-12 w-full animate-in fade-in duration-700 delay-300">
+                    <h3 className="font-title-md text-title-md text-error font-bold mb-4">Danger Zone</h3>
+                    <div className="border border-error/30 bg-error-container/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
+                        <div className="flex-1">
+                            <h4 className="font-label-lg text-label-lg text-on-surface font-bold flex items-center gap-2">
+                                <Icon name="warning" className="text-error text-[20px]" />
+                                Delete this class
+                            </h4>
+                            <p className="text-body-md text-on-surface-variant mt-2 max-w-3xl leading-relaxed">
+                                Once you delete a class, there is no going back. All student links, cohorts, schedules, and associated configurations will be permanently wiped from the database. Please be certain.
+                            </p>
+                        </div>
+                        <button
+                            onClick={handleDeleteClass}
+                            className="shrink-0 w-full md:w-auto px-6 py-3 rounded-xl bg-error text-on-error font-label-md text-label-md hover:bg-[#B3261E] transition-colors active:scale-95 flex justify-center items-center gap-2 font-bold shadow-sm"
+                            type="button"
+                        >
+                            <Icon name="delete_forever" className="text-[20px]" />
+                            <span>Delete Class</span>
+                        </button>
+                    </div>
+                </section>
             </DashboardTemplate>
+
+            <ClassScheduleModal
+                show={isScheduleModalOpen}
+                onClose={() => setIsScheduleModalOpen(false)}
+                classId={classId}
+                currentDay={cls?.day_schedule}
+                currentTime={cls?.time_schedule}
+                onSuccess={() => {
+                    setIsScheduleModalOpen(false);
+                    refetchClass();
+                }}
+            />
+
+            <GroupYearSelectionModal
+                show={isCohortModalOpen}
+                onClose={() => setIsCohortModalOpen(false)}
+                onApply={handleCohortSubmit}
+                groupYears={groupYears}
+                initialSelected={cls?.group_years?.map(gy => gy.id) || []}
+            />
         </>
     );
 }

@@ -8,25 +8,32 @@ import ClassSidebar from '@/Components/features/teacher-classes/ClassSidebar';
 import AttentionSummary from '@/Components/features/teacher-classes/AttentionSummary';
 import StudentListFilter from '@/Components/features/teacher-classes/StudentListFilter';
 import StudentListCard from '@/Components/features/teacher-classes/StudentListCard';
+import ClassHealthMetrics from '@/Components/features/teacher-dashboard/ClassHealthMetrics';
 
 export default function Show({ classId }) {
     const [searchQuery, setSearchQuery] = useState('');
-    const { data: classData, loading } = useApiGet(`/classes/${classId}`);
+
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const filterGroupId = params?.get('group_id');
+
+    const { data: classData, loading } = useApiGet(
+        `/classes/${classId}${filterGroupId ? `?group_id=${filterGroupId}` : ''}`
+    );
 
     const classDetails = classData ? {
         id: classData.id,
-        title: `${classData.subject?.subject_name} - ${classData.groupYear?.group?.name}`,
-        year: `AY ${classData.groupYear?.schoolYear?.name}`,
-        grade: classData.groupYear?.group?.name,
+        title: `${classData.subject?.subject_name} - ${(classData.group_years || []).map(gy => gy.group?.name).join(', ') || 'Unassigned Group'}`,
+        year: `AY ${(classData.group_years || [])[0]?.school_year?.name || classData.school_year?.name || 'Unknown'}`,
+        grade: (classData.group_years || []).map(gy => gy.group?.name).join(', ') || 'Unassigned',
         studentsCount: classData.students?.length || 0,
-        groupsCount: 1, // Mock or derived
+        groupsCount: Math.max(1, (classData.group_years || []).length),
         attentionCount: (classData.students || []).filter(s => s.is_urgent).length
     } : null;
 
     const students = (classData?.students || []).map(s => ({
         id: s.id,
         name: s.full_name || s.username,
-        group: classData.groupYear?.group?.name,
+        group: s.group_name || 'Unknown',
         avatar: s.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.full_name || s.username)}&background=random`,
         completion: s.material_completion || 0,
         grade: s.assignment_avg > 0 ? `${Math.round(s.assignment_avg)}%` : 'No grade',
@@ -39,14 +46,19 @@ export default function Show({ classId }) {
         student.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const totalStudents = students.length;
+    const avgCompletion = totalStudents ? Math.round(students.reduce((acc, s) => acc + s.completion, 0) / totalStudents) : 0;
+    const avgGrade = totalStudents ? Math.round(students.reduce((acc, s) => acc + (parseInt(s.grade) || 0), 0) / totalStudents) : 0;
+    const avgScore = totalStudents ? Math.round(students.reduce((acc, s) => acc + s.assmScore, 0) / totalStudents) : 0;
+
     const headerSection = classDetails ? (
-        <section className="mb-stack-lg mt-4">
-            <div className="flex justify-between items-start mb-2">
-                <div>
-                    <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">{classDetails.title}</h1>
-                    <p className="font-body-md text-body-md text-on-surface-variant">{classDetails.year} • {classDetails.grade}</p>
+        <section className="mb-stack-md mt-4">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-2">
+                <div className="flex-grow">
+                    <h1 className="font-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight break-words">{classDetails.title}</h1>
+                    <p className="font-body-md text-body-md text-on-surface-variant mt-1">{classDetails.year} • {classDetails.grade}</p>
                 </div>
-                <div className="flex flex-col items-end">
+                <div className="flex flex-row md:flex-col items-center md:items-end gap-3 md:gap-1 flex-shrink-0">
                     <span className="font-label-md text-label-md text-white bg-primary-container px-3 py-1 rounded-full">{classDetails.studentsCount} Students</span>
                     <span className="font-label-sm text-label-sm text-on-surface-variant mt-1">{classDetails.groupsCount} Groups</span>
                 </div>
@@ -81,29 +93,44 @@ export default function Show({ classId }) {
         >
             <Head title="Class Detail | Diajar LMS" />
 
-            <div className="max-w-[1280px] mx-auto pb-12 w-full">
-                {classDetails.attentionCount > 0 && (
-                    <AttentionSummary count={classDetails.attentionCount} message="Low completion or missing tasks" />
-                )}
+            <div className="max-w-[1280px] mx-auto pb-12 w-full px-4 lg:px-8 mt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    {/* Left Sidebar (Analytics & Attention) - Sticky on Desktop */}
+                    <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
+                        {classDetails.attentionCount > 0 && (
+                            <AttentionSummary count={classDetails.attentionCount} message="Low completion or missing tasks" />
+                        )}
+                        <ClassHealthMetrics
+                            completion={avgCompletion}
+                            avgGrade={avgGrade}
+                            avgScore={avgScore}
+                            layout="vertical"
+                        />
+                    </div>
 
-                <StudentListFilter onSearch={setSearchQuery} />
+                    {/* Right Main Content (Student List) */}
+                    <div className="lg:col-span-8 space-y-6">
+                        <StudentListFilter onSearch={setSearchQuery} />
 
-                <section className="space-y-stack-sm pb-10 mt-4">
-                    {filteredStudents.length > 0 ? (
-                        filteredStudents.map(student => (
-                            <StudentListCard
-                                key={student.id}
-                                classId={classDetails.id}
-                                studentId={student.id}
-                                {...student}
-                            />
-                        ))
-                    ) : (
-                        <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">
-                            No students found.
-                        </div>
-                    )}
-                </section>
+                        <section className="space-y-4">
+                            {filteredStudents.length > 0 ? (
+                                filteredStudents.map(student => (
+                                    <StudentListCard
+                                        key={student.id}
+                                        classId={classDetails.id}
+                                        studentId={student.id}
+                                        {...student}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center py-12 text-on-surface-variant bg-surface-container-lowest rounded-2xl border border-outline-variant/50 shadow-sm">
+                                    <span className="material-symbols-rounded text-4xl mb-3 block opacity-50">search_off</span>
+                                    No students found matching your search.
+                                </div>
+                            )}
+                        </section>
+                    </div>
+                </div>
             </div>
         </DashboardTemplate>
     );

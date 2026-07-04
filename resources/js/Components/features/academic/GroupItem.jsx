@@ -13,10 +13,10 @@ export default function GroupItem({ groupName, grade, studentsCount, warning, on
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-error-container flex items-center justify-center font-bold text-error flex-shrink-0">
-                            {groupName}
+                            <span className="material-symbols-outlined " data-icon="groups">groups</span>
                         </div>
                         <div>
-                            <p className="font-label-md text-label-md text-on-surface font-bold">{grade}</p>
+                            <p className="font-label-md text-label-md text-on-surface font-bold">{grade} - {groupName}</p>
                             <p className="text-label-sm font-label-sm text-error font-medium">{studentsCount} students</p>
                         </div>
                     </div>
@@ -36,10 +36,10 @@ export default function GroupItem({ groupName, grade, studentsCount, warning, on
         >
             <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary flex-shrink-0">
-                    {groupName}
+                    <span className="material-symbols-outlined " data-icon="groups">groups</span>
                 </div>
                 <div>
-                    <p className="font-label-md text-label-md text-on-surface font-bold">{grade}</p>
+                    <p className="font-label-md text-label-md text-on-surface font-bold">{grade} - {groupName}</p>
                     <p className="text-label-sm font-label-sm text-on-surface-variant font-medium">{studentsCount} students</p>
                 </div>
             </div>

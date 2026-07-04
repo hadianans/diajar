@@ -5,9 +5,13 @@ import ChapterFilterBar from '@/Components/features/teacher-chapters/ChapterFilt
 import ChapterListCard from '@/Components/features/teacher-chapters/ChapterListCard';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
+import ChapterModal from '@/Components/features/teacher-chapters/modals/ChapterModal';
 
 export default function Index() {
-    const { data: chapters, loading } = useApiGet('/chapters');
+    const { data: chapters, loading, refetch } = useApiGet('/chapters');
+    const [showModal, setShowModal] = useState(false);
+    const [editingChapter, setEditingChapter] = useState(null);
 
     const headerSection = (
         <section className="mb-stack-lg">
@@ -20,7 +24,18 @@ export default function Index() {
     );
 
     const handleCreateChapter = () => {
-        router.visit('/teacher/chapters/create');
+        setEditingChapter(null);
+        setShowModal(true);
+    };
+
+    const handleDeleteChapter = async (chapterId) => {
+        if (!confirm('Are you sure you want to delete this chapter?')) return;
+        try {
+            await api.delete(`/chapters/${chapterId}`);
+            refetch();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error deleting chapter');
+        }
     };
 
     return (
@@ -45,6 +60,11 @@ export default function Index() {
                                 assignmentsCount={ch.class_assignments_count || 0}
                                 assessmentsCount={ch.class_assessments_count || 0}
                                 completionProgress={0} // To be calculated or mocked if needed
+                                onEdit={() => {
+                                    setEditingChapter(ch);
+                                    setShowModal(true);
+                                }}
+                                onDelete={() => handleDeleteChapter(ch.id)}
                             />
                         ))
                     ) : (
@@ -65,6 +85,16 @@ export default function Index() {
                     New Chapter
                 </div>
             </button>
+
+            <ChapterModal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                onSuccess={() => {
+                    setShowModal(false);
+                    refetch();
+                }}
+                initialData={editingChapter}
+            />
         </DashboardTemplate>
     );
 }

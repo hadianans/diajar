@@ -31,8 +31,8 @@ class GroupYear extends Model
         return $this->hasMany(StudentGroup::class, 'group_year_id');
     }
 
-    public function classes(): HasMany
+    public function classes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->hasMany(ClassModel::class, 'group_years_id');
+        return $this->belongsToMany(ClassModel::class, 'class_group_years', 'group_year_id', 'class_id');
     }
 }

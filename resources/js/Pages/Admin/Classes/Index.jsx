@@ -8,14 +8,6 @@ import useApiGet from '@/hooks/useApiGet';
 export default function Index() {
     const { data: classesData, loading } = useApiGet('/classes');
 
-    const handleActionClick = (actionName) => {
-        if (actionName === 'Generate New Class') {
-            router.visit('/admin/classes/create');
-        } else {
-            alert(`Initiated action: ${actionName} flow...`);
-        }
-    };
-
     const handleClassClick = (cls) => {
         router.visit(`/admin/classes/${cls.id}`);
     };
@@ -25,9 +17,12 @@ export default function Index() {
         return classesData.map(c => {
             const subjectName = c.subject?.name || c.subject?.subject_name || 'Unknown Subject';
             const teacherName = c.teacher?.full_name || 'Unassigned';
-            const groupName = c.group_year?.group?.name ? `${c.group_year.group.name} - ${c.group_year.grade || ''}` : 'Unknown Group';
-            const yearName = c.group_year?.school_year?.name || 'Unknown Year';
-            const schedule = c.day_schedule ? `${c.day_schedule} • ${c.time_schedule}` : 'Not set';
+            const groupName = c.group_years && c.group_years.length > 0 
+                ? c.group_years.map(gy => gy.group?.name ? gy.group.name : 'Unknown').join(', ') 
+                : 'Unknown Group';
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const yearName = c.group_years?.[0]?.school_year?.name || c.school_year?.name || 'Unknown Year';
+            const schedule = (c.day_schedule !== null && c.day_schedule !== undefined) ? `${days[c.day_schedule]} • ${c.time_schedule}` : 'Not set';
 
             return {
                 id: c.id,
@@ -54,14 +49,6 @@ export default function Index() {
                         {loading ? 'Loading...' : `${classes.length} total classes registered`}
                     </p>
                 </div>
-                <button
-                    onClick={() => handleActionClick('Generate New Class')}
-                    className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-3 rounded-xl flex items-center justify-center gap-2 font-label-md text-label-md active:scale-95 transition-all shadow-md"
-                    type="button"
-                >
-                    <Icon name="add" className="text-[20px]" />
-                    <span>Generate New Class</span>
-                </button>
             </div>
         </div>
     );
@@ -85,16 +72,6 @@ export default function Index() {
                             initialClasses={classes}
                             onClassClick={handleClassClick}
                         />
-
-                        {/* Mobile-only Floating Action Button (FAB) */}
-                        <button
-                            onClick={() => handleActionClick('Generate New Class')}
-                            className="md:hidden fixed right-6 bottom-20 w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-xl z-40 active:scale-90 transition-transform"
-                            type="button"
-                            title="Generate New Class"
-                        >
-                            <Icon name="add" className="text-2xl" />
-                        </button>
                     </>
                 )}
             </DashboardTemplate>

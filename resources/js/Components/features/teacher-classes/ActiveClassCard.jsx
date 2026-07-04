@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function ActiveClassCard({ id, subject, subjectIcon, title, grade, studentsCount, year, additionalStudents, onAction }) {
+export default function ActiveClassCard({ id, groupId, subject, subjectIcon, title, grade, studentsCount, year, additionalStudents, onAction }) {
     return (
         <section className="space-y-stack-sm">
             <h2 className="text-label-sm font-label-sm tracking-wider text-outline uppercase px-1">Active Class</h2>
@@ -48,7 +48,7 @@ export default function ActiveClassCard({ id, subject, subjectIcon, title, grade
                     </div>
                     
                     <Link 
-                        href={route('teacher.classes.show', id)}
+                        href={`/teacher/classes/${id}${groupId ? `?group_id=${groupId}` : ''}`}
                         className="bg-white text-primary px-6 py-2.5 rounded-xl font-label-md text-label-md shadow-md active:scale-95 transition-transform inline-block text-center"
                     >
                         View Class

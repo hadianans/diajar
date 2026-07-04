@@ -30,6 +30,8 @@ class UserRequest extends FormRequest
             'email'     => 'required|email|max:255|unique:users,email',
             'password'  => 'required|string|min:8|confirmed',
             'role'      => 'required|in:admin,teacher,student',
+            'gender'    => 'required|boolean',
+            'is_active' => 'required|boolean',
             'picture'   => 'nullable|string|max:255',
         ];
     }
@@ -43,6 +45,8 @@ class UserRequest extends FormRequest
             'username'              => ['required', 'string', 'max:255', Rule::unique('users')->ignore($userId)],
             'email'                 => ['required', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
             'role'                  => 'required|in:admin,teacher,student',
+            'gender'                => 'required|boolean',
+            'is_active'             => 'required|boolean',
             'role_change_confirmed' => 'sometimes|boolean',
             'picture'               => 'nullable|string|max:255',
         ];

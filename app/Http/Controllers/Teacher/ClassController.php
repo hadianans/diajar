@@ -22,25 +22,27 @@ class ClassController extends Controller
             ->whereNull('deleted_at')
             ->with([
                 'subject:id,subject_name',
-                'groupYear.group:id,name',
-                'groupYear.schoolYear:id,name,status',
+                'groupYears.group:id,name',
+                'groupYears.schoolYear:id,name,status',
+                'schoolYear:id,name,status',
             ]);
 
         if ($request->filled('search')) {
             $s = $request->search;
             $query->whereHas('subject', fn ($q) => $q->where('subject_name', 'like', "%{$s}%"))
-                ->orWhereHas('groupYear.group', fn ($q) => $q->where('name', 'like', "%{$s}%"));
+                ->orWhereHas('groupYears.group', fn ($q) => $q->where('name', 'like', "%{$s}%"));
         }
 
         if ($request->filled('year_id')) {
-            $query->whereHas('groupYear', fn ($q) => $q->where('year_id', $request->year_id));
+            $query->whereHas('groupYears', fn ($q) => $q->where('year_id', $request->year_id));
         }
 
         $classes = $query->get();
 
         $classes->each(function ($class) {
-            $class->student_count = StudentGroup::where('group_year_id', $class->group_years_id)->count();
-            $class->is_active = $class->groupYear?->schoolYear?->status === 'active';
+            $class->student_count = \App\Models\StudentGroup::whereIn('group_year_id', $class->groupYears->pluck('id'))->count();
+            // A class is active if any of its linked school years is active
+            $class->is_active = $class->groupYears->contains(fn($gy) => $gy->schoolYear?->status === 'active');
         });
 
         // Sort: active first, then by year desc
@@ -49,26 +51,35 @@ class ClassController extends Controller
         return $this->success($sorted);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $class = ClassModel::where('teacher_id', auth()->id())
             ->whereNull('deleted_at')
             ->with([
                 'subject:id,subject_name',
-                'groupYear.group:id,name',
-                'groupYear.schoolYear:id,name,status',
-                'groupYear.studentGroups.student:id,full_name,username,picture',
+                'groupYears.group:id,name',
+                'groupYears.schoolYear:id,name,status',
+                'groupYears.studentGroups.student:id,full_name,username,picture',
+                'schoolYear:id,name,status',
             ])
             ->findOrFail($id);
 
+        if ($request->filled('group_id')) {
+            $groupId = $request->input('group_id');
+            $class->setRelation('groupYears', $class->groupYears->filter(fn($gy) => $gy->id == $groupId)->values());
+        }
+
         // Enhance each student with metrics
-        $students = $class->groupYear?->studentGroups?->map(function ($sg) use ($class) {
+        $allStudentGroups = $class->groupYears->flatMap->studentGroups;
+        $students = $allStudentGroups->map(function ($sg) use ($class) {
             $student = $sg->student;
             if (! $student) {
                 return null;
             }
 
             $studentId = $student->id;
+            // Add group name for frontend display
+            $student->group_name = $sg->groupYear?->group?->name;
 
             $totalMaterials = $class->subject?->chapters()
                 ->where('teacher_id', auth()->id())
@@ -87,7 +98,7 @@ class ClassController extends Controller
             $student->assignment_avg = \App\Models\AssignmentSubmission::where('student_id', $studentId)
                 ->where('status', 'graded')
                 ->whereHas('classAssignment', fn($q) => $q->where('class_id', $class->id))
-                ->avg('score') ?: 0;
+                ->avg('grade') ?: 0;
 
             // Assessment score average
             $student->assessment_avg = \App\Models\AssessmentAttempt::where('student_id', $studentId)

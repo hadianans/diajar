@@ -2,11 +2,20 @@ import axios from 'axios';
 
 // Create a custom axios instance for the API
 const api = axios.create({
-    baseURL: '/api/admin', // Base URL for all admin API endpoints
+    withCredentials: true,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
     },
+});
+
+// Add a request interceptor to evaluate baseURL dynamically
+api.interceptors.request.use((config) => {
+    const basePath = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'admin';
+    const rolePrefix = ['admin', 'teacher', 'student'].includes(basePath) ? basePath : 'admin';
+    config.baseURL = `/api/${rolePrefix}`;
+    return config;
 });
 
 // Add a response interceptor

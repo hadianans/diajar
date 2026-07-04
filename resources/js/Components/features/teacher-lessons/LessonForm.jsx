@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function LessonForm({ initialData = {}, isEditMode = false }) {
-    const [contentType, setContentType] = useState(initialData.type || 'video');
+export default function LessonForm({ formData, onChange, errors = {}, chapters = [], subchapters = [] }) {
+    const handleTypeChange = (type) => {
+        onChange({ ...formData, type });
+    };
 
     return (
         <div className="space-y-stack-lg mb-stack-lg">
@@ -12,46 +14,84 @@ export default function LessonForm({ initialData = {}, isEditMode = false }) {
                     <div className="md:col-span-2">
                         <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Material Title *</label>
                         <input 
-                            className="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-lg font-body-lg focus:ring-2 focus:ring-primary shadow-sm" 
+                            className={`w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-lg font-body-lg focus:ring-2 focus:ring-primary shadow-sm ${errors.title ? 'ring-2 ring-error' : ''}`}
                             placeholder="e.g. Introduction to Cellular Respiration" 
                             type="text" 
-                            defaultValue={initialData.title || ''}
+                            value={formData.title}
+                            onChange={(e) => onChange({ ...formData, title: e.target.value })}
                         />
+                        {errors.title && <p className="text-error text-xs mt-1">{errors.title[0]}</p>}
                     </div>
                     
                     <div className="md:col-span-2">
                         <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Description (Optional)</label>
                         <textarea 
-                            className="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm resize-none" 
+                            className={`w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm resize-none ${errors.description ? 'ring-2 ring-error' : ''}`}
                             placeholder="Brief overview of the material content..." 
                             rows="3"
-                            defaultValue={initialData.description || ''}
+                            value={formData.description}
+                            onChange={(e) => onChange({ ...formData, description: e.target.value })}
                         ></textarea>
+                        {errors.description && <p className="text-error text-xs mt-1">{errors.description[0]}</p>}
                     </div>
                     
                     <div>
-                        <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Chapter Selector</label>
+                        <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Chapter *</label>
                         <div className="relative">
                             <select 
-                                className="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md appearance-none focus:ring-2 focus:ring-primary shadow-sm"
-                                defaultValue={initialData.chapterId || ''}
+                                className={`w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md appearance-none focus:ring-2 focus:ring-primary shadow-sm ${errors.chapter_id ? 'ring-2 ring-error' : ''}`}
+                                value={formData.chapter_id}
+                                onChange={(e) => onChange({ ...formData, chapter_id: e.target.value, subchapter_id: '' })}
                             >
                                 <option value="" disabled>Select a Chapter</option>
-                                <option value="1">Biology 101: The Basics</option>
-                                <option value="2">Advanced Molecular Genetics</option>
-                                <option value="3">Ecological Balance</option>
+                                {chapters.map(ch => (
+                                    <option key={ch.id} value={ch.id}>{ch.name}</option>
+                                ))}
                             </select>
                             <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" />
                         </div>
+                        {errors.chapter_id && <p className="text-error text-xs mt-1">{errors.chapter_id[0]}</p>}
+                    </div>
+
+                    <div>
+                        <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Subchapter (Optional)</label>
+                        <div className="relative">
+                            <select 
+                                className={`w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md appearance-none focus:ring-2 focus:ring-primary shadow-sm ${errors.subchapter_id ? 'ring-2 ring-error' : ''}`}
+                                value={formData.subchapter_id || ''}
+                                onChange={(e) => onChange({ ...formData, subchapter_id: e.target.value })}
+                                disabled={!formData.chapter_id}
+                            >
+                                <option value="">None (General Material)</option>
+                                {subchapters.map(sub => (
+                                    <option key={sub.id} value={sub.id}>{sub.name}</option>
+                                ))}
+                            </select>
+                            <Icon name="expand_more" className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" />
+                        </div>
+                        {errors.subchapter_id && <p className="text-error text-xs mt-1">{errors.subchapter_id[0]}</p>}
                     </div>
                     
                     <div>
                         <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Order Position</label>
                         <input 
-                            className="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm" 
+                            className={`w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm ${errors.order ? 'ring-2 ring-error' : ''}`}
                             type="number" 
-                            defaultValue={initialData.order || 1}
+                            value={formData.order}
+                            onChange={(e) => onChange({ ...formData, order: e.target.value })}
                         />
+                        {errors.order && <p className="text-error text-xs mt-1">{errors.order[0]}</p>}
+                    </div>
+
+                    <div>
+                        <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Estimated Minutes</label>
+                        <input 
+                            className={`w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-body-md font-body-md focus:ring-2 focus:ring-primary shadow-sm ${errors.estimated_minutes ? 'ring-2 ring-error' : ''}`}
+                            type="number" 
+                            value={formData.estimated_minutes}
+                            onChange={(e) => onChange({ ...formData, estimated_minutes: e.target.value })}
+                        />
+                        {errors.estimated_minutes && <p className="text-error text-xs mt-1">{errors.estimated_minutes[0]}</p>}
                     </div>
                 </div>
             </section>
@@ -61,16 +101,16 @@ export default function LessonForm({ initialData = {}, isEditMode = false }) {
                 <div className="bg-surface-container-high p-1.5 rounded-full flex items-center max-w-sm mx-auto shadow-inner">
                     <button 
                         type="button"
-                        onClick={() => setContentType('video')}
-                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${contentType === 'video' ? 'bg-white text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
+                        onClick={() => handleTypeChange('video')}
+                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${formData.type === 'video' ? 'bg-white text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
                     >
                         <Icon name="videocam" className="text-[20px]" />
                         Video
                     </button>
                     <button 
                         type="button"
-                        onClick={() => setContentType('text')}
-                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${contentType === 'text' ? 'bg-white text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
+                        onClick={() => handleTypeChange('text')}
+                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${formData.type === 'text' ? 'bg-white text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
                     >
                         <Icon name="article" className="text-[20px]" />
                         Text Content
@@ -79,7 +119,7 @@ export default function LessonForm({ initialData = {}, isEditMode = false }) {
             </section>
 
             {/* Section 3: Video Input */}
-            {contentType === 'video' && (
+            {formData.type === 'video' && (
                 <section className="space-y-stack-md animate-in fade-in duration-300">
                     <div className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm">
                         <label className="font-label-md text-label-md text-on-surface-variant mb-2 block">Video URL Source</label>
@@ -87,19 +127,22 @@ export default function LessonForm({ initialData = {}, isEditMode = false }) {
                             <div className="relative flex-1">
                                 <Icon name="link" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" />
                                 <input 
-                                    className="w-full bg-surface-container-low border-none rounded-xl py-3 pl-12 pr-5 text-body-md font-body-md focus:ring-2 focus:ring-primary" 
+                                    className={`w-full bg-surface-container-low border-none rounded-xl py-3 pl-12 pr-5 text-body-md font-body-md focus:ring-2 focus:ring-primary ${errors.video_url ? 'ring-2 ring-error' : ''}`}
                                     placeholder="https://youtube.com/..." 
                                     type="text" 
-                                    defaultValue={initialData.videoUrl || ''}
+                                    value={formData.video_url || ''}
+                                    onChange={(e) => onChange({ ...formData, video_url: e.target.value })}
                                 />
                             </div>
                             <button type="button" className="bg-surface-container-highest px-4 py-3 rounded-xl hover:bg-surface-variant transition-colors">
                                 <Icon name="sync" className="text-primary" />
                             </button>
                         </div>
+                        {errors.video_url && <p className="text-error text-xs mt-1">{errors.video_url[0]}</p>}
                         <p className="mt-2 text-label-sm font-label-sm text-on-surface-variant">Supported: YouTube, Vimeo, Loom, or direct .mp4 links.</p>
                         
                         {/* Thumbnail Preview */}
+                        {formData.video_url && (
                         <div className="mt-stack-lg group relative overflow-hidden rounded-2xl aspect-video bg-surface-container shadow-lg">
                             <div className="absolute inset-0 z-0 overflow-hidden">
                                 <div 
@@ -113,20 +156,21 @@ export default function LessonForm({ initialData = {}, isEditMode = false }) {
                                 </div>
                             </div>
                             <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-                                <span className="bg-black/60 text-white px-3 py-1 rounded-md text-label-sm font-label-sm backdrop-blur-sm">Preview: 3D Cell Anatomy</span>
+                                <span className="bg-black/60 text-white px-3 py-1 rounded-md text-label-sm font-label-sm backdrop-blur-sm">Preview</span>
                                 <button type="button" className="bg-white/20 hover:bg-white/40 text-white p-2 rounded-full backdrop-blur-md transition-colors">
                                     <Icon name="photo_camera" />
                                 </button>
                             </div>
                         </div>
+                        )}
                     </div>
                 </section>
             )}
 
             {/* Section 4: Text Input */}
-            {contentType === 'text' && (
+            {formData.type === 'text' && (
                 <section className="space-y-stack-md animate-in fade-in duration-300">
-                    <div className="bg-white rounded-2xl border border-outline-variant shadow-sm overflow-hidden flex flex-col min-h-[400px]">
+                    <div className={`bg-white rounded-2xl border ${errors.content ? 'border-error' : 'border-outline-variant'} shadow-sm overflow-hidden flex flex-col min-h-[400px]`}>
                         {/* Toolbar */}
                         <div className="bg-surface-container-low p-2 border-b border-outline-variant flex flex-wrap gap-1">
                             <button type="button" className="p-2 hover:bg-surface-variant rounded-lg transition-colors text-on-surface-variant"><Icon name="format_bold" /></button>
@@ -145,9 +189,11 @@ export default function LessonForm({ initialData = {}, isEditMode = false }) {
                         <textarea 
                             className="flex-1 w-full border-none p-6 font-body-md text-body-md focus:ring-0 resize-none min-h-[300px]" 
                             placeholder="Start typing your educational content here... Use the toolbar for formatting."
-                            defaultValue={initialData.textContent || ''}
+                            value={formData.content || ''}
+                            onChange={(e) => onChange({ ...formData, content: e.target.value })}
                         ></textarea>
                     </div>
+                    {errors.content && <p className="text-error text-xs mt-1">{errors.content[0]}</p>}
                 </section>
             )}
 

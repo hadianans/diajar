@@ -18,19 +18,17 @@ class GradebookController extends Controller
 {
     use ApiResponse;
 
-    public function groupGrades(int $groupYearId, Request $request): JsonResponse
+    public function groupGrades(int $classId, Request $request): JsonResponse
     {
-        $groupYear = GroupYear::findOrFail($groupYearId);
-
-        $class = ClassModel::where('group_years_id', $groupYearId)
+        $class = ClassModel::where('id', $classId)
             ->where('teacher_id', auth()->id())
             ->whereNull('deleted_at')
+            ->with('groupYears.studentGroups.student:id,full_name,username,picture')
             ->firstOrFail();
 
-        $students = StudentGroup::where('group_year_id', $groupYearId)
-            ->with('student:id,full_name,username,picture')
-            ->get()
-            ->pluck('student')
+        $students = $class->groupYears
+            ->flatMap->studentGroups
+            ->map->student
             ->filter();
 
         $assignments = ClassAssignment::where('class_id', $class->id)

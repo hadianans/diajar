@@ -5,18 +5,24 @@ import Badge from '@/Components/shared/ui/Badge';
 import Icon from '@/Components/shared/ui/Icon';
 import GroupStats from '@/Components/features/academic/GroupStats';
 import StudentTable from '@/Components/features/academic/StudentTable';
+import StudentModal from '@/Components/features/academic/modals/StudentModal';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
 
 export default function Show({ groupId }) {
     const { data, loading, refetch } = useApiGet(`/groups/${groupId}`);
+    const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
 
     const handleBack = () => {
         router.visit('/admin/academic');
     };
 
     const handleActionClick = (actionName) => {
-        alert(`Initiated action: ${actionName} flow...`);
+        if (actionName === 'Add Students') {
+            setIsStudentModalOpen(true);
+        } else {
+            alert(`Initiated action: ${actionName} flow...`);
+        }
     };
 
     const students = useMemo(() => {
@@ -31,7 +37,9 @@ export default function Show({ groupId }) {
     const handleRemoveStudent = async (studentId) => {
         if (confirm('Are you sure you want to remove this student from the group?')) {
             try {
-                await api.delete(`/groups/${groupId}/students/${studentId}`);
+                await api.delete(`/groups/${groupId}/students/${studentId}`, {
+                    data: { year_id: data?.group_year?.year_id }
+                });
                 alert('Student removed successfully.');
                 refetch();
             } catch (err) {
@@ -100,8 +108,19 @@ export default function Show({ groupId }) {
                 headerSection={headerSection}
                 statsSection={<GroupStats totalStudents={data.student_count} unlinkedStudents="--" progressPercent={0} assignedCount={0} totalCapacity={0} />}
             >
-                <StudentTable initialStudents={students} />
+                <StudentTable initialStudents={students} onUnlink={handleRemoveStudent} />
             </DashboardTemplate>
+
+            <StudentModal 
+                show={isStudentModalOpen}
+                onClose={() => setIsStudentModalOpen(false)}
+                onSuccess={() => {
+                    setIsStudentModalOpen(false);
+                    refetch();
+                }}
+                groupId={groupId}
+                yearId={groupYear?.year_id}
+            />
         </>
     );
 }

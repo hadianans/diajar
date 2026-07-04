@@ -77,8 +77,10 @@ export default function Show({ accountId }) {
         role: user.role,
         email: user.email,
         username: user.username,
+        gender: user.gender,
+        isActive: user.is_active,
         createdDate: new Date(user.created_at).toLocaleDateString(),
-        lastLogin: 'Never', // Not tracked in DB yet
+        lastLogin: user.active_at ? new Date(user.active_at).toLocaleString() : 'Never',
         avatar: user.picture
     };
 

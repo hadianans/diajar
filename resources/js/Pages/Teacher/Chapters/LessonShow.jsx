@@ -7,10 +7,11 @@ import AttachmentList from '@/Components/features/teacher-lessons/AttachmentList
 import EngagementPanel from '@/Components/features/teacher-lessons/EngagementPanel';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 import moment from 'moment';
 
 export default function LessonShow({ chapterId, lessonId }) {
-    const { data: material, loading } = useApiGet(`/materials/${lessonId}`);
+    const { data: material, loading, refetch } = useApiGet(`/materials/${lessonId}`);
 
     const handleBack = () => {
         router.visit(route('teacher.chapters.show', { chapterId }));
@@ -18,6 +19,26 @@ export default function LessonShow({ chapterId, lessonId }) {
 
     const handleEdit = () => {
         router.visit(route('teacher.chapters.lessons.edit', { lessonId }));
+    };
+
+    const handleDelete = async () => {
+        if (!confirm('Are you sure you want to delete this material?')) return;
+        try {
+            await api.delete(`/materials/${lessonId}`);
+            router.visit(route('teacher.chapters.show', { chapterId: material.chapter_id || chapterId }));
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error deleting material');
+        }
+    };
+
+    const handleTogglePublish = async () => {
+        const action = material.status === 'published' ? 'unpublish' : 'publish';
+        try {
+            await api.patch(`/materials/${lessonId}/${action}`);
+            refetch();
+        } catch (err) {
+            alert(err.response?.data?.message || `Error attempting to ${action} material`);
+        }
     };
 
     if (loading) {
@@ -58,21 +79,36 @@ export default function LessonShow({ chapterId, lessonId }) {
     }));
 
     const actions = (
-        <>
+        <div className="flex items-center gap-2">
+            <button 
+                onClick={handleTogglePublish}
+                className={`hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full font-label-md transition-colors active:scale-95 ${material.status === 'published' ? 'bg-error-container text-error' : 'bg-primary-container text-on-primary-container'}`}
+            >
+                <Icon name={material.status === 'published' ? 'unpublished' : 'rocket_launch'} className="text-[18px]" />
+                {material.status === 'published' ? 'Unpublish' : 'Publish'}
+            </button>
             <button 
                 onClick={handleEdit}
-                className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low"
+                className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high"
+                title="Edit Material"
             >
                 <Icon name="edit" className="text-primary" />
             </button>
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+            <button 
+                onClick={handleDelete}
+                className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20"
+                title="Delete Material"
+            >
+                <Icon name="delete" className="text-error" />
+            </button>
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container ml-2">
                 <img 
                     className="w-full h-full object-cover" 
                     alt="Teacher" 
                     src="https://ui-avatars.com/api/?name=Teacher&background=random" 
                 />
             </div>
-        </>
+        </div>
     );
 
     return (

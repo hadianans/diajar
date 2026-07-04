@@ -16,7 +16,7 @@ return new class extends Migration {
                 $table->string('password');
                 $table->string('picture')->nullable();
                 $table->enum('role', ['admin', 'teacher', 'student']);
-                $table->timestamp('deleted_at')->useCurrent()->useCurrentOnUpdate();
+                $table->softDeletes();
                 $table->timestamps();
             });
 

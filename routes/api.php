@@ -108,6 +108,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::get('/classes/{id}', [AdminClassController::class, 'show']);
     Route::patch('/classes/{id}/schedule', [AdminClassController::class, 'updateSchedule']);
     Route::patch('/classes/{id}/grading-scheme', [AdminClassController::class, 'updateGradingScheme']);
+    Route::patch('/classes/{id}/cohorts', [AdminClassController::class, 'updateCohorts']);
     Route::delete('/classes/{id}', [AdminClassController::class, 'destroy']);
 
     // Activity Logs
@@ -122,8 +123,10 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
 
 Route::prefix('teacher')->middleware(['auth:sanctum', 'role:teacher'])->group(function () {
 
-    // Dashboard
+    // Dashboard & Activity
     Route::get('/dashboard', [TeacherDashboardController::class, 'summary']);
+    Route::get('/subjects', [TeacherDashboardController::class, 'subjects']);
+    Route::get('/activity-logs', [ActivityLogController::class, 'index']);
 
     // Classes
     Route::get('/classes', [TeacherClassController::class, 'index']);
@@ -200,7 +203,7 @@ Route::prefix('teacher')->middleware(['auth:sanctum', 'role:teacher'])->group(fu
     Route::patch('/attempts/{attemptId}/finalize', [GradingAssessmentController::class, 'finalizeGrade']);
 
     // Gradebook
-    Route::get('/gradebook/{groupYearId}', [GradebookController::class, 'groupGrades']);
+    Route::get('/gradebook/{classId}', [GradebookController::class, 'groupGrades']);
 
     // Reflection comment (teacher adds comment to student reflection)
     Route::patch('/reflections/{id}/comment', [StudentReflectionController::class, 'addComment']);

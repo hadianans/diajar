@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import LinkedTeachersBox from '@/Components/features/academic/LinkedTeachersBox';
 import SubjectStatsBox from '@/Components/features/academic/SubjectStatsBox';
 import SubjectClassCard from '@/Components/features/academic/SubjectClassCard';
+import TeacherModal from '@/Components/features/academic/modals/TeacherModal';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
@@ -12,13 +13,18 @@ const previewImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDCb
 
 export default function Show({ subjectId }) {
     const { data: subject, loading, refetch } = useApiGet(`/subjects/${subjectId}`);
+    const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
 
     const handleBack = () => {
         router.visit('/admin/academic');
     };
 
     const handleActionClick = (actionName) => {
-        alert(`Initiated action: ${actionName} flow...`);
+        if (actionName === 'Link Teacher') {
+            setIsTeacherModalOpen(true);
+        } else {
+            alert(`Initiated action: ${actionName} flow...`);
+        }
     };
 
     const handleUnlinkTeacher = async (teacher) => {
@@ -60,11 +66,17 @@ export default function Show({ subjectId }) {
 
     const activeClasses = useMemo(() => {
         if (!subject?.classes) return [];
-        return subject.classes.map(c => ({
-            group: c.group_year?.group?.name || 'Unknown Group',
-            teacher: c.teacher?.full_name || 'Unassigned',
-            academicYear: c.group_year?.school_year?.name || 'Unknown Year'
-        }));
+        return subject.classes.map(c => {
+            const groupName = c.group_years && c.group_years.length > 0 
+                ? c.group_years.map(gy => gy.group?.name ? gy.group.name : 'Unknown').join(', ') 
+                : 'Unknown Group';
+            const yearName = c.group_years?.[0]?.school_year?.name || c.school_year?.name || 'Unknown Year';
+            return {
+                group: groupName,
+                teacher: c.teacher?.full_name || 'Unassigned',
+                academicYear: yearName
+            };
+        });
     }, [subject]);
 
     const statsData = useMemo(() => {
@@ -90,7 +102,7 @@ export default function Show({ subjectId }) {
         );
     }
 
-    const subjectDisplay = subject.name;
+    const subjectDisplay = subject.subject_name || 'Subject';
     const canDelete = activeClasses.length === 0 && teachers.length === 0;
 
     return (
@@ -210,6 +222,17 @@ export default function Show({ subjectId }) {
                     </div>
                 </div>
             </DashboardTemplate>
+
+            <TeacherModal
+                show={isTeacherModalOpen}
+                onClose={() => setIsTeacherModalOpen(false)}
+                onSuccess={() => {
+                    setIsTeacherModalOpen(false);
+                    refetch();
+                }}
+                subjectId={subjectId}
+                linkedTeacherIds={teachers.map(t => t.id)}
+            />
         </>
     );
 }

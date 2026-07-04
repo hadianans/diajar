@@ -11,7 +11,7 @@ Route::get('/', function () {
 // ============================================================
 // Student Routes
 // ============================================================
-Route::middleware(['auth', 'verified'])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/homepage', function () {
         return Inertia::render('Student/Homepage');
     })->name('homepage');
@@ -83,7 +83,7 @@ Route::middleware(['auth', 'verified'])->prefix('student')->name('student.')->gr
 // ============================================================
 // Teacher Routes
 // ============================================================
-Route::middleware(['auth', 'verified'])->prefix('teacher')->name('teacher.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/homepage', function () {
         return Inertia::render('Teacher/Homepage');
     })->name('homepage');
@@ -117,8 +117,8 @@ Route::middleware(['auth', 'verified'])->prefix('teacher')->name('teacher.')->gr
         return Inertia::render('Teacher/Chapters/Show', ['chapterId' => $chapterId]);
     })->name('chapters.show');
 
-    Route::get('/chapters/lessons/create', function () {
-        return Inertia::render('Teacher/Chapters/Create');
+    Route::get('/chapters/{chapterId}/lessons/create', function ($chapterId) {
+        return Inertia::render('Teacher/Chapters/Create', ['chapterId' => $chapterId]);
     })->name('chapters.lessons.create');
 
     Route::get('/chapters/lessons/{lessonId}/edit', function ($lessonId) {
@@ -235,15 +235,15 @@ Route::middleware(['auth', 'verified'])->prefix('teacher')->name('teacher.')->gr
         return Inertia::render('Teacher/Gradebook/Index');
     })->name('gradebook.index');
 
-    Route::get('/gradebook/{groupId}', function ($groupId) {
-        return Inertia::render('Teacher/Gradebook/Show', ['groupId' => $groupId]);
+    Route::get('/gradebook/{classId}', function ($classId) {
+        return Inertia::render('Teacher/Gradebook/Show', ['classId' => $classId]);
     })->name('gradebook.show');
 });
 
 // ============================================================
 // Admin Routes
 // ============================================================
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/homepage', function () {
         return Inertia::render('Admin/Homepage');
     })->name('homepage');

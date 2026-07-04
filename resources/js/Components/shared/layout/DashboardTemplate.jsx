@@ -1,6 +1,7 @@
 import React from 'react';
 import TopAppBar from '@/Components/shared/layout/TopAppBar';
 import RoleNavbar from '@/Components/shared/layout/RoleNavbar';
+import Breadcrumbs from '@/Components/shared/ui/Breadcrumbs';
 
 export default function DashboardTemplate({
     role = 'admin',
@@ -26,6 +27,9 @@ export default function DashboardTemplate({
 
                 {/* Main Content Layout */}
                 <main className="pt-28 pb-24 px-margin-mobile md:px-margin-desktop max-w-5xl w-full mx-auto flex-grow flex flex-col">
+                    <div className="mb-6">
+                        <Breadcrumbs />
+                    </div>
                     {headerSection && <div className="mb-stack-lg">{headerSection}</div>}
                     {statsSection && <div className="mb-stack-lg">{statsSection}</div>}
                     <div className="flex-grow">

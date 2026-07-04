@@ -13,52 +13,15 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [avatarUrl, setAvatarUrl] = useState(initialData.avatarUrl || '');
+    const [gender, setGender] = useState(initialData.gender ?? 1);
+    const [isActive, setIsActive] = useState(initialData.is_active ?? 1);
 
-    // Username checking state
-    const [isUsernameChecking, setIsUsernameChecking] = useState(false);
-    const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
-    
     // API State
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
     // Password visibility state
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-    // Real username checker
-    useEffect(() => {
-        if (username.length < 3) {
-            setIsUsernameChecking(false);
-            setIsUsernameAvailable(false);
-            return;
-        }
-
-        // if editing and username hasn't changed, it's available
-        if (isEdit && username === initialData.username) {
-            setIsUsernameAvailable(true);
-            return;
-        }
-
-        setIsUsernameChecking(true);
-        setIsUsernameAvailable(false);
-
-        const timer = setTimeout(async () => {
-            try {
-                let url = `/users/check-username?username=${encodeURIComponent(username)}`;
-                if (isEdit && initialData.id) {
-                    url += `&exclude_id=${initialData.id}`;
-                }
-                const result = await api.get(url);
-                setIsUsernameAvailable(result?.available);
-            } catch (err) {
-                console.error("Failed to check username", err);
-            } finally {
-                setIsUsernameChecking(false);
-            }
-        }, 500);
-
-        return () => clearTimeout(timer);
-    }, [username, isEdit, initialData]);
 
     const handleGeneratePassword = () => {
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
@@ -90,10 +53,13 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
             try {
                 await onSubmit({
                     role,
+                    gender,
+                    is_active: isActive,
                     full_name: name,
                     username,
                     email,
                     password: password || undefined,
+                    password_confirmation: confirmPassword || undefined,
                     picture: avatarUrl || undefined
                 });
             } catch (err) {
@@ -126,14 +92,6 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                         {isEdit ? 'Edit Account' : 'New Account'}
                     </h3>
                 </div>
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-2 rounded-full font-label-md text-label-md active:scale-95 transition-all shadow-md font-bold disabled:opacity-50 flex items-center gap-2"
-                >
-                    {loading && <Icon name="sync" className="animate-spin text-[16px]" />}
-                    {loading ? 'Saving...' : 'Save'}
-                </button>
             </div>
 
             {/* Role Select Grid */}
@@ -205,25 +163,19 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <div className="relative">
                         <input
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.username ? 'ring-2 ring-error bg-error-container/10' : ''}`}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                if (errors.username) {
+                                    setErrors(prev => ({ ...prev, username: null }));
+                                }
+                            }}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.username ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                             placeholder="aditiya_w"
                             type="text"
                             required
                         />
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center">
-                            {isUsernameChecking && (
-                                <Icon name="sync" className="text-primary animate-spin text-lg" />
-                            )}
-                            {isUsernameAvailable && !isUsernameChecking && (
-                                <Icon name="check_circle" className="text-secondary text-lg fill-icon" style={{ fontVariationSettings: "'FILL' 1" }} />
-                            )}
-                        </div>
                     </div>
                     {errors.username && <p className="text-error text-xs mt-1">{errors.username[0]}</p>}
-                    {!isUsernameChecking && !isUsernameAvailable && username.length >= 3 && !errors.username && (
-                        <p className="text-error text-xs mt-1">Username is not available.</p>
-                    )}
                 </div>
 
                 {/* Email */}
@@ -240,6 +192,54 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                         required
                     />
                     {errors.email && <p className="text-error text-xs mt-1">{errors.email[0]}</p>}
+                </div>
+                
+                {/* Gender */}
+                <div>
+                    <label className="block font-label-md text-label-md text-on-surface-variant mb-2">
+                        Gender *
+                    </label>
+                    <div className="flex gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="gender"
+                                value={1}
+                                checked={gender == 1}
+                                onChange={() => setGender(1)}
+                                className="w-5 h-5 text-primary border-outline-variant focus:ring-primary"
+                            />
+                            <span className="text-body-md text-on-surface">Male</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="gender"
+                                value={0}
+                                checked={gender == 0}
+                                onChange={() => setGender(0)}
+                                className="w-5 h-5 text-primary border-outline-variant focus:ring-primary"
+                            />
+                            <span className="text-body-md text-on-surface">Female</span>
+                        </label>
+                    </div>
+                    {errors.gender && <p className="text-error text-xs mt-1">{errors.gender[0]}</p>}
+                </div>
+
+                {/* Is Active */}
+                <div>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={isActive == 1}
+                            onChange={(e) => setIsActive(e.target.checked ? 1 : 0)}
+                            className="w-5 h-5 rounded text-primary border-outline-variant focus:ring-primary"
+                        />
+                        <span className="font-label-md text-label-md text-on-surface-variant">
+                            Active Account
+                        </span>
+                    </label>
+                    {errors.is_active && <p className="text-error text-xs mt-1">{errors.is_active[0]}</p>}
                 </div>
             </section>
 
@@ -309,6 +309,16 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <p className="font-label-sm text-label-sm text-on-surface-variant leading-relaxed">
                         Note: Credentials are not automatically sent. Please ensure you share the password securely with the user after saving.
                     </p>
+                </div>
+                <div className="flex justify-end pt-6 border-t border-outline-variant/30 mt-6">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-2 rounded-full font-label-md text-label-md active:scale-95 transition-all shadow-md font-bold disabled:opacity-50 flex items-center gap-2"
+                    >
+                        {loading && <Icon name="sync" className="animate-spin text-[16px]" />}
+                        {loading ? 'Saving...' : 'Save Account'}
+                    </button>
                 </div>
             </section>
         </form>

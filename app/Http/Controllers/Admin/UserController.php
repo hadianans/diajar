@@ -27,15 +27,15 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('username', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('username', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
         $sort = $request->input('sort', 'newest');
-        $query->when($sort === 'name', fn ($q) => $q->orderBy('full_name'))
-              ->when($sort === 'newest', fn ($q) => $q->orderByDesc('created_at'))
-              ->when($sort === 'role', fn ($q) => $q->orderBy('role')->orderBy('full_name'));
+        $query->when($sort === 'name', fn($q) => $q->orderBy('full_name'))
+            ->when($sort === 'newest', fn($q) => $q->orderByDesc('created_at'))
+            ->when($sort === 'role', fn($q) => $q->orderBy('role')->orderBy('full_name'));
 
         $users = $query->paginate(15)->withQueryString();
 
@@ -44,8 +44,8 @@ class UserController extends Controller
             ->first();
 
         return $this->success([
-            'users'         => $users,
-            'admin_count'   => (int) $counts->admin_count,
+            'users' => $users,
+            'admin_count' => (int) $counts->admin_count,
             'teacher_count' => (int) $counts->teacher_count,
             'student_count' => (int) $counts->student_count,
         ]);
@@ -55,11 +55,13 @@ class UserController extends Controller
     {
         $user = User::create([
             'full_name' => $request->full_name,
-            'username'  => $request->username,
-            'email'     => $request->email,
-            'password'  => Hash::make($request->password),
-            'role'      => $request->role,
-            'picture'   => $request->picture,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'gender' => $request->gender,
+            'is_active' => $request->is_active,
+            'picture' => $request->picture,
         ]);
 
         ActivityLogService::log(auth()->id(), 'user.created', 'User', $user->id);
@@ -87,11 +89,11 @@ class UserController extends Controller
         $oldRole = $user->role;
         $newRole = $request->role;
 
-        if ($oldRole !== $newRole && ! $request->boolean('role_change_confirmed')) {
+        if ($oldRole !== $newRole && !$request->boolean('role_change_confirmed')) {
             return $this->error('Role change requires role_change_confirmed: true', 422);
         }
 
-        $user->update($request->only('full_name', 'username', 'email', 'role', 'picture'));
+        $user->update($request->only('full_name', 'username', 'email', 'role', 'gender', 'is_active', 'picture'));
 
         $description = $oldRole !== $newRole ? "Role changed from {$oldRole} to {$newRole}" : null;
         ActivityLogService::log(auth()->id(), 'user.updated', 'User', $user->id, $description);
@@ -129,6 +131,6 @@ class UserController extends Controller
             $query->where('id', '!=', $request->exclude_id);
         }
 
-        return $this->success(['available' => ! $query->exists()]);
+        return $this->success(['available' => !$query->exists()]);
     }
 }

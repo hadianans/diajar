@@ -4,6 +4,7 @@ import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import api from '@/utils/api';
 import useApiGet from '@/hooks/useApiGet';
 import Icon from '@/Components/shared/ui/Icon';
+import GroupYearSelectionModal from '@/Components/features/academic/modals/GroupYearSelectionModal';
 
 export default function Create() {
     const { data: subjects } = useApiGet('/subjects');
@@ -12,7 +13,7 @@ export default function Create() {
     const [form, setForm] = useState({
         subject_id: '',
         teacher_id: '',
-        group_years_id: '',
+        group_years_ids: [],
         day_schedule: '',
         time_schedule: '',
         assignment_weight: 50,
@@ -22,6 +23,7 @@ export default function Create() {
     const [teachers, setTeachers] = useState([]);
     const [groupYears, setGroupYears] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isCohortModalOpen, setIsCohortModalOpen] = useState(false);
 
     useEffect(() => {
         if (form.subject_id && subjects) {
@@ -39,22 +41,23 @@ export default function Create() {
 
     useEffect(() => {
         if (groups) {
-            const g = groups.find(g => g.id.toString() === form.group_id?.toString() || true);
-            // Wait, we need flat group years. Groups index returns groups with groupYears? Let's flat them out.
-            const allGroupYears = [];
-            groups.forEach(gr => {
-                if (gr.group_years) {
-                    gr.group_years.forEach(gy => {
-                        allGroupYears.push({ ...gy, group_name: gr.name });
-                    });
-                }
-            });
+            // API returns GroupYear objects directly, not Groups.
+            const allGroupYears = groups.map(gy => ({
+                id: gy.id,
+                group_name: gy.group?.name || 'Unknown',
+                grade: gy.grade
+            }));
             setGroupYears(allGroupYears);
         }
     }, [groups]);
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        if (e.target.name === 'group_years_ids') {
+            const values = Array.from(e.target.selectedOptions, option => option.value);
+            setForm({ ...form, [e.target.name]: values });
+        } else {
+            setForm({ ...form, [e.target.name]: e.target.value });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -64,7 +67,7 @@ export default function Create() {
             await api.post('/classes', {
                 subject_id: parseInt(form.subject_id),
                 teacher_id: parseInt(form.teacher_id),
-                group_years_id: parseInt(form.group_years_id),
+                group_years_ids: form.group_years_ids.map(id => parseInt(id)),
                 day_schedule: form.day_schedule ? parseInt(form.day_schedule) : null,
                 time_schedule: form.time_schedule || null,
                 assignment_weight: parseFloat(form.assignment_weight),
@@ -119,13 +122,38 @@ export default function Create() {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="font-label-md text-on-surface-variant">Cohort / Group Year *</label>
-                            <select required name="group_years_id" value={form.group_years_id} onChange={handleChange} className="p-3 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary">
-                                <option value="">Select a cohort group</option>
-                                {groupYears.map(gy => (
-                                    <option key={gy.id} value={gy.id}>{gy.group_name} {gy.grade ? `- Grade ${gy.grade}` : ''}</option>
-                                ))}
-                            </select>
+                            <label className="font-label-md text-on-surface-variant">Cohorts / Group Years *</label>
+                            <div 
+                                onClick={() => setIsCohortModalOpen(true)}
+                                className="p-3 bg-surface-container-low rounded-xl border border-outline-variant hover:border-primary cursor-pointer flex justify-between items-center transition-colors min-h-[50px]"
+                            >
+                                <span className={form.group_years_ids.length > 0 ? "text-on-surface" : "text-on-surface-variant"}>
+                                    {form.group_years_ids.length > 0 
+                                        ? `${form.group_years_ids.length} cohort(s) selected` 
+                                        : "Select cohorts..."}
+                                </span>
+                                <Icon name="expand_more" />
+                            </div>
+                            
+                            {form.group_years_ids.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    {form.group_years_ids.map(id => {
+                                        const gy = groupYears.find(g => g.id === id);
+                                        return gy ? (
+                                            <span key={id} className="px-3 py-1 bg-primary-container text-on-primary-container rounded-lg text-sm font-medium flex items-center gap-1">
+                                                {gy.group_name} {gy.grade ? `- Grade ${gy.grade}` : ''}
+                                                <Icon name="close" className="text-[14px] cursor-pointer hover:text-error ml-1" onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setForm(prev => ({
+                                                        ...prev,
+                                                        group_years_ids: prev.group_years_ids.filter(i => i !== id)
+                                                    }));
+                                                }} />
+                                            </span>
+                                        ) : null;
+                                    })}
+                                </div>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -169,6 +197,16 @@ export default function Create() {
                     </form>
                 </div>
             </DashboardTemplate>
+
+            <GroupYearSelectionModal 
+                show={isCohortModalOpen}
+                onClose={() => setIsCohortModalOpen(false)}
+                onApply={(selectedIds) => {
+                    setForm(prev => ({ ...prev, group_years_ids: selectedIds }));
+                }}
+                groupYears={groupYears}
+                initialSelected={form.group_years_ids}
+            />
         </>
     );
 }

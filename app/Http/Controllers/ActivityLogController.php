@@ -22,8 +22,14 @@ class ActivityLogController extends Controller
         if ($request->filled('action')) {
             $query->where('action', $request->action);
         }
-        if ($request->filled('actor_id')) {
-            $query->where('actor_id', $request->actor_id);
+        
+        $actorId = $request->input('actor_id');
+        if (auth()->user()->role === 'teacher') {
+            $actorId = auth()->id();
+        }
+
+        if ($actorId) {
+            $query->where('actor_id', $actorId);
         }
 
         $logs = $query->paginate(50)->withQueryString();

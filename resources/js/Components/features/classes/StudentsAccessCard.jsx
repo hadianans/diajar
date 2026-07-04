@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ClassStudentRow from '@/Components/features/classes/ClassStudentRow';
 import Icon from '@/Components/shared/ui/Icon';
+import Pagination from '@/Components/shared/ui/Pagination';
 
 export default function StudentsAccessCard({
     students = [],
@@ -14,6 +15,17 @@ export default function StudentsAccessCard({
         if (searchQuery.trim() === '') return students;
         return students.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()));
     }, [students, searchQuery]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    // Reset pagination when searching
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedStudents = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
     return (
         <article className="bg-white/80 backdrop-blur-md border border-outline-variant rounded-xl p-6 h-full flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -53,7 +65,7 @@ export default function StudentsAccessCard({
                         No students found.
                     </div>
                 ) : (
-                    filteredStudents.map((student) => (
+                    paginatedStudents.map((student) => (
                         <ClassStudentRow
                             key={student.id}
                             name={student.name}
@@ -65,6 +77,19 @@ export default function StudentsAccessCard({
                     ))
                 )}
             </div>
+            
+            {filteredStudents.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-outline-variant/30">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={filteredStudents.length}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={setCurrentPage}
+                        onItemsPerPageChange={setItemsPerPage}
+                        itemsPerPageOptions={[5, 10, 20, 50]}
+                    />
+                </div>
+            )}
 
             <button
                 onClick={onViewAllClick}

@@ -55,6 +55,16 @@ export default function AccountOverviewCard({ account = {}, onEdit, onResetPassw
                         <span className="font-body-md text-on-surface font-semibold">{account.createdDate}</span>
                     </div>
                     <div className="flex justify-between items-center">
+                        <span className="font-label-sm text-on-surface-variant font-medium">Gender</span>
+                        <span className="font-body-md text-on-surface font-semibold">{account.gender == 1 ? 'Male' : 'Female'}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="font-label-sm text-on-surface-variant font-medium">Status</span>
+                        <span className={`font-label-sm px-2 py-0.5 rounded text-xs font-semibold ${account.isActive ? 'bg-primary-container text-on-primary-container' : 'bg-error-container text-on-error-container'}`}>
+                            {account.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div className="flex justify-between items-center">
                         <span className="font-label-sm text-on-surface-variant font-medium">Last Login</span>
                         <span className="font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant text-xs font-semibold">
                             {account.lastLogin || 'Never'}

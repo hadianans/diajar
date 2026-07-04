@@ -20,16 +20,16 @@ export default function Homepage() {
             'Groups': '/admin/academic',
             'Classes': '/admin/classes',
         };
-        
+
         if (routes[target]) {
             router.visit(routes[target]);
         }
     };
 
     // Transform API checklist to match component props
-    const checklistSteps = (checklistData || []).map(item => ({
+    const checklistSteps = (checklistData?.checklist || []).map(item => ({
         label: item.label,
-        completed: item.completed,
+        completed: item.complete,
         action: item.shortcut_url ? {
             label: 'Go',
             onClick: () => router.visit(item.shortcut_url)
@@ -46,7 +46,7 @@ export default function Homepage() {
 
     // Transform API activities
     const activities = activitiesResult?.data || [];
-    const recentActivities = activities.map(act => {
+    const recentActivities = activities.slice(0, 10).map(act => {
         // Convert created_at to a relative time or readable format
         const date = new Date(act.created_at);
         const now = new Date();
@@ -76,7 +76,7 @@ export default function Homepage() {
                     <div className="flex items-center gap-2 opacity-90">
                         <Icon name="calendar_today" className="text-[18px]" />
                         <p className="font-body-md text-body-md font-medium">
-                            {summaryData?.active_year?.date_start} - {summaryData?.active_year?.date_end}
+                            {summaryData?.active_year?.date_start && new Date(summaryData.active_year.date_start).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })} - {summaryData?.active_year?.date_end && new Date(summaryData.active_year.date_end).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
                     </div>
                 </div>
@@ -136,25 +136,32 @@ export default function Homepage() {
                 headerSection={bannerHeader}
                 statsSection={metricsSection}
             >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
-                    <section className="lg:col-span-8 flex flex-col gap-stack-md">
-                        {checklistLoading ? (
-                            <div className="bg-white p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
-                        ) : (
-                            <SetupChecklist items={checklistSteps} />
-                        )}
-                    </section>
-                    <aside className="lg:col-span-4 flex flex-col gap-stack-lg">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-4">
+                    {/* Main Content Area */}
+                    <div className="lg:col-span-8 flex flex-col gap-8">
+                        <section className="flex flex-col gap-4">
+                            {checklistLoading ? (
+                                <div className="bg-white p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
+                            ) : (
+                                <SetupChecklist items={checklistSteps} />
+                            )}
+                        </section>
+                        <section className="flex flex-col gap-4">
+                            {activitiesLoading ? (
+                                <div className="bg-white p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
+                            ) : (
+                                <RecentActivity
+                                    activities={recentActivities}
+                                    onViewLogs={() => router.visit('/admin/activity-logs')}
+                                />
+                            )}
+                        </section>
+                    </div>
+
+                    {/* Right Sidebar */}
+                    <div className="lg:col-span-4 lg:sticky lg:top-8">
                         <QuickAccess items={quickAccessItems} />
-                        {activitiesLoading ? (
-                            <div className="bg-white p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
-                        ) : (
-                            <RecentActivity
-                                activities={recentActivities}
-                                onViewLogs={() => router.visit('/admin/activity-logs')}
-                            />
-                        )}
-                    </aside>
+                    </div>
                 </div>
             </DashboardTemplate>
         </>

@@ -1,9 +1,12 @@
-import React from 'react';
+import { Link } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function ArchivedClassCard({ title, year, studentsCount }) {
+export default function ArchivedClassCard({ id, groupId, title, year, studentsCount }) {
     return (
-        <div className="flex items-center gap-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 opacity-75 hover:opacity-100 transition-all duration-300 cursor-pointer">
+        <Link 
+            href={`/teacher/classes/${id}${groupId ? `?group_id=${groupId}` : ''}`}
+            className="flex items-center gap-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 opacity-75 hover:opacity-100 transition-all duration-300 cursor-pointer"
+        >
             <div className="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center flex-shrink-0">
                 <Icon name="inventory_2" className="text-on-surface-variant" />
             </div>
@@ -17,6 +20,6 @@ export default function ArchivedClassCard({ title, year, studentsCount }) {
             <button className="p-2 rounded-full hover:bg-surface-container-high transition-colors">
                 <Icon name="chevron_right" className="text-outline" />
             </button>
-        </div>
+        </Link>
     );
 }

@@ -12,7 +12,7 @@ trait ApiResponse
             'success' => true,
             'message' => $message,
             'data'    => $data,
-        ], $status);
+        ], $status, ['Content-Type' => 'application/json; charset=utf-8']);
     }
 
     protected function created($data = null, string $message = 'Created'): JsonResponse
@@ -31,7 +31,7 @@ trait ApiResponse
             $payload['errors'] = $errors;
         }
 
-        return response()->json($payload, $status);
+        return response()->json($payload, $status, ['Content-Type' => 'application/json; charset=utf-8']);
     }
 
     protected function notFound(string $message = 'Not found'): JsonResponse
