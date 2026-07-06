@@ -31,7 +31,7 @@ export default function Index() {
         if (!c.group_years || c.group_years.length === 0) {
             const classItem = {
                 ...baseClass,
-                title: `${c.subject?.subject_name} - Unassigned Group`,
+                title: 'Unassigned Group',
                 grade: 'Unassigned',
                 year: `AY ${c.school_year?.name || 'Unknown'}`,
                 groupId: null,
@@ -42,7 +42,7 @@ export default function Index() {
             c.group_years.forEach(gy => {
                 const classItem = {
                     ...baseClass,
-                    title: `${c.subject?.subject_name} - ${gy.group?.name || 'Unknown'}`,
+                    title: gy.group?.name || 'Unknown Cohort',
                     grade: gy.group?.name || 'Unknown',
                     year: `AY ${gy.school_year?.name || c.school_year?.name || 'Unknown'}`,
                     groupId: gy.id,
@@ -70,14 +70,14 @@ export default function Index() {
         >
             <Head title="Teacher Classes | Diajar LMS" />
 
-            <div className="max-w-2xl mx-auto space-y-stack-lg pb-12">
+            <div className="w-full space-y-stack-lg pb-12">
                 <ClassFilters onSearch={setSearchQuery} />
 
                 {loading ? (
                     <div className="text-center p-8 text-on-surface-variant">Loading classes...</div>
                 ) : (
                     <>
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {activeClasses.length > 0 ? (
                                 activeClasses.map(cls => (
                                     <ActiveClassCard
@@ -103,12 +103,13 @@ export default function Index() {
                         {archivedClasses.length > 0 && (
                             <section className="space-y-stack-sm pb-8 mt-8">
                                 <h2 className="text-label-sm font-label-sm tracking-wider text-outline uppercase px-1">Archived Classes</h2>
-                                <div className="space-y-stack-md">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {archivedClasses.map((cls) => (
                                         <ArchivedClassCard
                                             key={`${cls.id}-${cls.groupId || 'unassigned'}`}
                                             id={cls.id}
                                             groupId={cls.groupId}
+                                            subject={cls.subject}
                                             title={cls.title}
                                             year={cls.year}
                                             studentsCount={cls.studentsCount}

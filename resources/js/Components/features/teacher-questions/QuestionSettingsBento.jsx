@@ -1,8 +1,9 @@
 import React from 'react';
 import Icon from '@/Components/shared/ui/Icon';
+import RichTextEditor from '@/Components/shared/editor/RichTextEditor';
 
-export default function QuestionSettingsBento({ score, tags, selectedBloom, onScoreChange, onBloomChange, explanation, onExplanationChange }) {
-    
+export default function QuestionSettingsBento({ score, tags, selectedBloom, onScoreChange, onBloomChange, explanation, onExplanationChange, onAddTag, onRemoveTag }) {
+
     const blooms = [
         { id: 0, name: 'Remember' },
         { id: 1, name: 'Understand' },
@@ -20,10 +21,10 @@ export default function QuestionSettingsBento({ score, tags, selectedBloom, onSc
                     <label className="block font-label-md text-label-md text-on-surface-variant mb-stack-sm">Score per correct answer</label>
                     <div className="flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant focus-within:border-primary transition-all">
                         <Icon name="grade" className="text-outline" />
-                        <input 
-                            className="w-full bg-transparent border-none focus:ring-0 font-headline-md text-headline-md text-on-surface p-0" 
-                            type="number" 
-                            min="0" 
+                        <input
+                            className="w-full bg-transparent border-none focus:ring-0 font-headline-md text-headline-md text-on-surface p-0"
+                            type="number"
+                            min="0"
                             value={score}
                             onChange={(e) => onScoreChange && onScoreChange(e.target.value)}
                         />
@@ -36,16 +37,26 @@ export default function QuestionSettingsBento({ score, tags, selectedBloom, onSc
                         {tags.map((tag, idx) => (
                             <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-surface-container-high rounded-full font-label-sm text-on-surface-variant">
                                 #{tag}
-                                <button className="hover:text-error flex items-center justify-center"><Icon name="close" className="text-[14px]" /></button>
+                                <button onClick={() => onRemoveTag && onRemoveTag(tag)} className="hover:text-error flex items-center justify-center"><Icon name="close" className="text-[14px]" /></button>
                             </span>
                         ))}
                     </div>
                     <div className="flex items-center gap-2 border-b border-outline-variant pb-1 focus-within:border-primary transition-all">
                         <Icon name="add" className="text-outline text-sm" />
-                        <input 
-                            className="bg-transparent border-none focus:ring-0 font-label-sm text-label-sm w-full p-0" 
-                            placeholder="Add tag..." 
-                            type="text" 
+                        <input
+                            className="bg-transparent border-none focus:ring-0 font-label-sm text-label-sm w-full p-0"
+                            placeholder="Add tag and press Enter..."
+                            type="text"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    const val = e.target.value.trim();
+                                    if (val && onAddTag) {
+                                        onAddTag(val);
+                                        e.target.value = '';
+                                    }
+                                }
+                            }}
                         />
                     </div>
                 </div>
@@ -58,17 +69,16 @@ export default function QuestionSettingsBento({ score, tags, selectedBloom, onSc
                     {blooms.map((bloom) => {
                         const isSelected = selectedBloom === bloom.id;
                         return (
-                            <button 
+                            <button
                                 key={bloom.id}
                                 onClick={() => onBloomChange && onBloomChange(bloom.id)}
-                                className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
-                                    isSelected 
-                                    ? 'border-2 border-primary bg-primary-container/20' 
+                                className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${isSelected
+                                    ? 'border-2 border-primary bg-primary-container/20'
                                     : 'border-outline-variant bg-surface-container-lowest hover:border-primary/50'
-                                }`}
+                                    }`}
                             >
-                                <span className={`font-headline-md ${isSelected ? 'text-primary' : 'text-on-surface'}`}>{bloom.id}</span>
-                                <span className={`font-label-sm text-label-sm ${isSelected ? 'text-on-primary-container' : 'text-on-surface-variant'}`}>{bloom.name}</span>
+                                <span className={`font-headline-md ${isSelected ? 'text-primary' : 'text-on-surface'}`}>{bloom.id + 1}</span>
+                                <span className={`font-label-sm text-label-sm ${isSelected ? 'text-primary' : 'text-on-surface-variant'}`}>{bloom.name}</span>
                             </button>
                         );
                     })}
@@ -76,17 +86,13 @@ export default function QuestionSettingsBento({ score, tags, selectedBloom, onSc
             </section>
 
             {/* Explanation Section */}
-            <section className="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-sm">
+            <section className="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-sm space-y-2">
                 <label className="block font-label-md text-label-md text-on-surface-variant mb-stack-sm">Explanation (shown after answer)</label>
-                <div className="flex items-start gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant focus-within:border-primary transition-all">
-                    <Icon name="lightbulb" className="text-outline mt-1" />
-                    <textarea 
-                        className="w-full min-h-[100px] bg-transparent border-none focus:ring-0 text-on-surface resize-none font-body-md text-body-md p-0" 
-                        placeholder="Provide pedagogical feedback for the correct answer..."
-                        value={explanation}
-                        onChange={(e) => onExplanationChange && onExplanationChange(e.target.value)}
-                    ></textarea>
-                </div>
+                <RichTextEditor
+                    content={explanation}
+                    onChange={(val) => onExplanationChange && onExplanationChange(val)}
+                    placeholder="Provide pedagogical feedback for the correct answer..."
+                />
             </section>
         </div>
     );

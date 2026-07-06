@@ -1,17 +1,64 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import AssessmentFilterTabs from '@/Components/features/teacher-assessments/AssessmentFilterTabs';
 import AssessmentCard from '@/Components/features/teacher-assessments/AssessmentCard';
 import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 import moment from 'moment';
 
 export default function Index() {
-    const { data: assessments, loading } = useApiGet('/assessments');
+    const { data: assessments, loading, refetch } = useApiGet('/assessments');
+    const [activeTab, setActiveTab] = useState('all');
 
     const handleCreate = () => {
         router.visit(route('teacher.assessments.create'));
+    };
+
+    const handleDelete = async (id) => {
+        if (!confirm('Are you sure you want to delete this assessment?')) return;
+        try {
+            await api.delete(`/assessments/${id}`);
+            refetch();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error deleting assessment');
+        }
+    };
+
+    // Compute filter counts and filtered list
+    const { filteredAssessments, counts } = useMemo(() => {
+        if (!assessments) return { filteredAssessments: [], counts: {} };
+
+        const all = assessments;
+        const scheduled = all.filter(a => a.lifecycle_status === 'scheduled');
+        const active = all.filter(a => a.lifecycle_status === 'active');
+        const completed = all.filter(a => a.lifecycle_status === 'completed');
+
+        const counts = {
+            all: all.length,
+            scheduled: scheduled.length,
+            active: active.length,
+            completed: completed.length,
+        };
+
+        let filtered = all;
+        if (activeTab !== 'all') {
+            filtered = all.filter(a => a.lifecycle_status === activeTab);
+        }
+
+        return { filteredAssessments: filtered, counts };
+    }, [assessments, activeTab]);
+
+    const calculateTimeRemaining = (dueDate) => {
+        if (!dueDate) return null;
+        const diff = moment(dueDate).diff(moment(), 'minutes');
+        if (diff <= 0) return null;
+        if (diff > 24 * 60) return `${Math.floor(diff / (24 * 60))}d remaining`;
+        const hours = Math.floor(diff / 60);
+        const mins = diff % 60;
+        if (hours > 0) return `${hours}h ${mins}m`;
+        return `${mins}m`;
     };
 
     const customTitleSection = (
@@ -31,45 +78,39 @@ export default function Index() {
         </button>
     );
 
-    const calculateTimeRemaining = (dueDate) => {
-        if (!dueDate) return null;
-        const diff = moment(dueDate).diff(moment(), 'minutes');
-        if (diff <= 0) return null;
-        if (diff > 24 * 60) return `${Math.floor(diff / (24 * 60))}d remaining`;
-        const hours = Math.floor(diff / 60);
-        const mins = diff % 60;
-        if (hours > 0) return `${hours}h ${mins}m`;
-        return `${mins}m`;
-    };
+    const headerSection = (
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            {customTitleSection}
+            <div className="flex items-center gap-2">
+                <button 
+                    onClick={() => router.visit(route('teacher.assessments.questions.index'))}
+                    className="flex items-center justify-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-label-md text-label-md hover:bg-surface-container-highest active:scale-95 transition-all shadow-sm"
+                >
+                    <Icon name="database" />
+                    Question Bank
+                </button>
+                {actions}
+            </div>
+        </div>
+    );
 
     return (
-        <DashboardTemplate role="teacher" activeTab="assessments" customTitle={customTitleSection} actions={actions}>
+        <DashboardTemplate role="teacher" activeTab="assessments" headerSection={headerSection}>
             <Head title="Assessments | Diajar LMS" />
             
-            <AssessmentFilterTabs />
-            
-            {/* Secondary Filters */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-stack-lg">
-                <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar py-1">
-                    <button className="bg-primary text-on-primary px-4 py-1.5 rounded-full font-label-sm text-label-sm whitespace-nowrap">All Chapters</button>
-                </div>
-                
-                <div className="flex items-center gap-2 self-end">
-                    <span className="font-label-sm text-label-sm text-on-surface-variant">Sort by:</span>
-                    <button className="flex items-center gap-2 bg-white border border-outline-variant px-3 py-1.5 rounded-lg font-label-sm text-label-sm text-on-surface hover:border-primary transition-colors">
-                        Newest
-                        <Icon name="expand_more" className="text-[18px]" />
-                    </button>
-                </div>
-            </div>
+            <AssessmentFilterTabs 
+                activeTab={activeTab} 
+                onTabChange={setActiveTab} 
+                counts={counts}
+            />
 
             {/* Assessment Grid */}
             {loading ? (
                 <div className="text-center py-12 text-on-surface-variant">Loading assessments...</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24">
-                    {assessments && assessments.length > 0 ? (
-                        assessments.map(a => (
+                    {filteredAssessments.length > 0 ? (
+                        filteredAssessments.map(a => (
                             <AssessmentCard 
                                 key={a.id}
                                 id={a.id.toString()}
@@ -78,16 +119,17 @@ export default function Index() {
                                 state={a.lifecycle_status}
                                 classAvg={a.avg_score ? `${a.avg_score}%` : "-"}
                                 participationCompleted={a.attempt_count || 0}
-                                participationTotal={30} // mocked class total
+                                participationTotal={a.class_model?.group_year?.student_groups_count || a.attempt_count || 0}
                                 duration={a.duration || 0}
                                 questionsCount={a.question_count || 0}
                                 timeRemaining={a.lifecycle_status === 'active' ? calculateTimeRemaining(a.due_date) : null}
-                                progressPercentage={a.attempt_count ? (a.attempt_count / 30) * 100 : 0}
+                                progressPercentage={a.attempt_count ? Math.min((a.attempt_count / (a.class_model?.group_year?.student_groups_count || 30)) * 100, 100) : 0}
+                                onDelete={() => handleDelete(a.id)}
                             />
                         ))
                     ) : (
                         <div className="col-span-full p-8 text-center text-on-surface-variant bg-surface-container rounded-2xl">
-                            You have no assessments.
+                            {activeTab === 'all' ? 'You have no assessments.' : `No ${activeTab} assessments.`}
                         </div>
                     )}
                 </div>

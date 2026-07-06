@@ -5,35 +5,46 @@ import AssignmentMetricsBento from '@/Components/features/teacher-assignments/As
 import GradeDistributionChart from '@/Components/features/teacher-assignments/GradeDistributionChart';
 import CollapsibleRubric from '@/Components/features/teacher-assignments/CollapsibleRubric';
 import SubmissionRoster from '@/Components/features/teacher-assignments/SubmissionRoster';
+import AttachmentList from '@/Components/features/teacher-lessons/AttachmentList';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 import moment from 'moment';
 
 export default function Show({ assignmentId }) {
-    const { data: assignment, loading } = useApiGet(`/assignments/${assignmentId}`);
+    const { data: assignment, loading, refetch } = useApiGet(`/assignments/${assignmentId}`);
 
-    // Use DashboardTemplate but with a custom header section/actions to mimic the specific design
-    const customTitleSection = (
-        <div className="flex items-center gap-3">
-            <button 
-                onClick={() => router.visit(route('teacher.assignments.index'))}
-                className="w-10 h-10 flex items-center justify-center rounded-full active:scale-95 transition-transform hover:bg-surface-container-low"
-            >
-                <Icon name="arrow_back" className="text-primary" />
-            </button>
-            <h1 className="font-headline-md text-headline-md-mobile text-primary">Assignment Details</h1>
-        </div>
-    );
+    const handleBack = () => {
+        router.visit(route('teacher.assignments.index'));
+    };
 
-    const actions = (
-        <button className="w-10 h-10 flex items-center justify-center rounded-full active:scale-95 transition-transform hover:bg-surface-container-low">
-            <Icon name="more_vert" className="text-on-surface-variant" />
-        </button>
-    );
+    const handleEdit = () => {
+        router.visit(route('teacher.assignments.edit', { assignmentId }));
+    };
+
+    const handleDelete = async () => {
+        if (!confirm('Are you sure you want to delete this assignment? This cannot be undone.')) return;
+        try {
+            await api.delete(`/assignments/${assignmentId}`);
+            router.visit(route('teacher.assignments.index'));
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error deleting assignment');
+        }
+    };
+
+    const handleToggleStatus = async () => {
+        const action = assignment.status === 'open' ? 'close' : 'reopen';
+        try {
+            await api.patch(`/assignments/${assignmentId}/${action}`);
+            refetch();
+        } catch (err) {
+            alert(err.response?.data?.message || `Error trying to ${action} assignment`);
+        }
+    };
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" customTitle={customTitleSection} actions={actions}>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Loading..." showBack={true} onBack={handleBack}>
                 <div className="text-center py-12 text-on-surface-variant">Loading assignment...</div>
             </DashboardTemplate>
         );
@@ -41,7 +52,7 @@ export default function Show({ assignmentId }) {
 
     if (!assignment) {
         return (
-            <DashboardTemplate role="teacher" customTitle={customTitleSection} actions={actions}>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Not Found" showBack={true} onBack={handleBack}>
                 <div className="text-center py-12 text-on-surface-variant">Assignment not found.</div>
             </DashboardTemplate>
         );
@@ -58,7 +69,7 @@ export default function Show({ assignmentId }) {
         { label: '90-100', percentage: maxBucketCount ? (assignment.grade_distribution['90-100'] / maxBucketCount) * 100 : 0, colorClass: 'bg-primary-container' },
         { label: '80-89', percentage: maxBucketCount ? (assignment.grade_distribution['80-89'] / maxBucketCount) * 100 : 0, colorClass: 'bg-primary' },
         { label: '70-79', percentage: maxBucketCount ? (assignment.grade_distribution['70-79'] / maxBucketCount) * 100 : 0, colorClass: 'bg-secondary-fixed-dim' },
-        { label: '<70', percentage: maxBucketCount ? (assignment.grade_distribution['0-49'] + assignment.grade_distribution['50-59'] + assignment.grade_distribution['60-69']) / maxBucketCount * 100 : 0, colorClass: 'bg-error-container' },
+        { label: '<70', percentage: maxBucketCount ? ((assignment.grade_distribution['0-49'] || 0) + (assignment.grade_distribution['50-59'] || 0) + (assignment.grade_distribution['60-69'] || 0)) / maxBucketCount * 100 : 0, colorClass: 'bg-error-container' },
     ] : [];
 
     const rubricCriteria = assignment.rubric?.criteria?.map(c => ({
@@ -67,6 +78,14 @@ export default function Show({ assignmentId }) {
         weight: c.weight,
         weightStr: `${c.weight}%`
     })) || [];
+
+    const attachments = (assignment.attachments || []).map(att => ({
+        name: att.title || att.file_url.split('/').pop(),
+        type: 'file',
+        size: 'Unknown',
+        date: moment(att.created_at).format('MMM D'),
+        url: att.file_url
+    }));
 
     const students = (assignment.submissions || []).map(sub => ({
         id: sub.student.id,
@@ -79,34 +98,87 @@ export default function Show({ assignmentId }) {
         grade: sub.grade
     }));
 
+    const actions = (
+        <div className="flex items-center gap-2">
+            <button
+                onClick={handleToggleStatus}
+                className={`hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full font-label-md transition-colors active:scale-95 ${
+                    assignment.status === 'open' 
+                        ? 'bg-error-container text-error' 
+                        : 'bg-primary-container text-on-primary-container'
+                }`}
+            >
+                <Icon name={assignment.status === 'open' ? 'lock' : 'lock_open'} className="text-[18px]" />
+                {assignment.status === 'open' ? 'Close' : 'Reopen'}
+            </button>
+            <button 
+                onClick={handleEdit}
+                className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high"
+                title="Edit Assignment"
+            >
+                <Icon name="edit" className="text-primary" />
+            </button>
+            <button 
+                onClick={handleDelete}
+                className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20"
+                title="Delete Assignment"
+            >
+                <Icon name="delete" className="text-error" />
+            </button>
+        </div>
+    );
+
     return (
-        <DashboardTemplate role="teacher" activeTab="assignments" customTitle={customTitleSection} actions={actions}>
+        <DashboardTemplate 
+            role="teacher" 
+            activeTab="assignments" 
+            title="Assignment Details" 
+            showBack={true}
+            onBack={handleBack}
+            actions={actions}
+        >
             <Head title={`Assignment ${assignment.title || 'Details'} | Diajar LMS`} />
 
-            <div className="max-w-md mx-auto space-y-stack-lg w-full pb-24 mt-4">
+            <div className="max-w-3xl mx-auto space-y-stack-lg w-full pb-24 mt-4">
                 {/* Title Section */}
                 <section className="space-y-stack-sm">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">{assignment.title}</h2>
-                            <p className="font-body-md text-on-surface-variant">{assignment.chapter?.name || 'Uncategorized'}</p>
+                    <div>
+                        <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">{assignment.title}</h2>
+                        <p className="font-body-md text-on-surface-variant mt-1">{assignment.chapter?.name || 'Uncategorized'}</p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/20 text-on-secondary-container">
+                            <Icon name="grade" className="text-sm" />
+                            <span className="font-label-md text-label-md">Max Grade: {assignment.grade} pts</span>
                         </div>
-                        <button 
-                            onClick={() => router.visit(route('teacher.assignments.edit', { assignmentId: assignment.id }))}
-                            className="p-2 rounded-lg bg-surface-container-low text-primary-container transition-transform active:scale-90"
-                        >
-                            <Icon name="edit" />
-                        </button>
+                        {assignment.due_date && (
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/20 text-on-primary-container">
+                                <Icon name="schedule" className="text-sm" />
+                                <span className="font-label-md text-label-md">Due: {moment(assignment.due_date).format('MMM D, YYYY HH:mm')}</span>
+                            </div>
+                        )}
+                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${
+                            assignment.status === 'open' ? 'bg-secondary-container/20 text-secondary' : 'bg-error-container/20 text-error'
+                        }`}>
+                            <Icon name={assignment.status === 'open' ? 'lock_open' : 'lock'} className="text-sm" />
+                            <span className="font-label-md text-label-md capitalize">{assignment.status}</span>
+                        </div>
                     </div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/20 text-on-secondary-container">
-                        <Icon name="grade" className="text-sm" />
-                        <span className="font-label-md text-label-md">Max Grade: {assignment.grade} pts</span>
-                    </div>
+                    {assignment.description && (
+                        <div className="font-body-md text-on-surface-variant leading-relaxed mt-2" dangerouslySetInnerHTML={{ __html: assignment.description }} />
+                    )}
                 </section>
+                
+                {attachments.length > 0 && (
+                    <section className="space-y-stack-sm">
+                        <h3 className="font-headline-sm text-on-surface">Attachments</h3>
+                        <AttachmentList attachments={attachments} />
+                    </section>
+                )}
 
-                <AssignmentMetricsBento 
+                <AssignmentMetricsBento  
                     submissions={assignment.total_submissions || 0}
-                    totalStudents={30} // Hardcoded for now
+                    totalStudents={30}
                     pendingCount={assignment.ungraded_count || 0}
                     isUrgent={(assignment.ungraded_count || 0) > 0}
                     gradedCount={assignment.graded_count || 0}

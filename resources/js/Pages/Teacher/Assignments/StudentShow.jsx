@@ -5,7 +5,7 @@ import SubmissionViewer from '@/Components/features/teacher-assignments/Submissi
 import RubricGradingPanel from '@/Components/features/teacher-assignments/RubricGradingPanel';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
-import axios from 'axios';
+import api from '@/utils/api';
 
 export default function StudentShow({ assignmentId, studentId }) {
     const { data, loading, mutate } = useApiGet(`/assignments/${assignmentId}/submissions/${studentId}`);
@@ -47,7 +47,7 @@ export default function StudentShow({ assignmentId, studentId }) {
         if (!data || saving) return;
         setSaving(true);
         try {
-            await axios.patch(`/api/teacher/assignments/${assignmentId}/submissions/${studentId}/score`, {
+            await api.patch(`/assignments/${assignmentId}/submissions/${studentId}/score`, {
                 rubric_points: Object.values(localRubricPoints).map(pt => ({
                     class_criterion_id: pt.class_criterion_id,
                     class_rubric_level_id: pt.class_rubric_level_id
@@ -66,7 +66,7 @@ export default function StudentShow({ assignmentId, studentId }) {
         if (!data || saving) return;
         setSaving(true);
         try {
-            await axios.patch(`/api/teacher/assignments/${assignmentId}/submissions/${studentId}/submit-grade`, {
+            await api.patch(`/assignments/${assignmentId}/submissions/${studentId}/submit-grade`, {
                 rubric_points: Object.values(localRubricPoints).map(pt => ({
                     class_criterion_id: pt.class_criterion_id,
                     class_rubric_level_id: pt.class_rubric_level_id

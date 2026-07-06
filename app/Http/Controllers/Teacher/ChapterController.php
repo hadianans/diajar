@@ -16,10 +16,18 @@ class ChapterController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $chapters = Chapter::where('teacher_id', auth()->id())
-            ->withCount(['materials', 'classAssignments', 'classAssessments'])
-            ->orderBy('order')
-            ->get();
+        $query = Chapter::where('teacher_id', auth()->id())
+            ->withCount(['materials', 'classAssignments', 'classAssessments']);
+            
+        if ($search = $request->input('search')) {
+            $searchStr = strtolower($search);
+            $query->where(function ($q) use ($searchStr) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchStr}%"])
+                  ->orWhereRaw('LOWER(tags) LIKE ?', ["%{$searchStr}%"]);
+            });
+        }
+
+        $chapters = $query->orderBy('order')->get();
 
         return $this->success($chapters);
     }
@@ -32,6 +40,19 @@ class ChapterController extends Controller
 
         if (! $linked) {
             return $this->forbidden('You are not linked to this subject.');
+        }
+
+        if ($request->filled('order')) {
+            $query = Chapter::where('teacher_id', auth()->id())
+                ->where('subject_id', $request->subject_id);
+
+            if ($request->filled('target_grade')) {
+                $query->where('target_grade', $request->target_grade);
+            } else {
+                $query->whereNull('target_grade');
+            }
+
+            $query->where('order', '>=', $request->order)->increment('order');
         }
 
         $chapter = Chapter::create([
@@ -60,6 +81,52 @@ class ChapterController extends Controller
     public function update(ChapterRequest $request, int $id): JsonResponse
     {
         $chapter = Chapter::where('teacher_id', auth()->id())->findOrFail($id);
+
+        if ($request->filled('order')) {
+            $newOrder = $request->order;
+            $oldOrder = $chapter->order;
+            $newTargetGrade = $request->input('target_grade');
+            $oldTargetGrade = $chapter->target_grade;
+            $newSubjectId = $request->input('subject_id', $chapter->subject_id);
+
+            // Scope logic closures
+            $applyOldScope = fn($q) => $q->where('subject_id', $chapter->subject_id)
+                                         ->when($oldTargetGrade, fn($q2) => $q2->where('target_grade', $oldTargetGrade), fn($q2) => $q2->whereNull('target_grade'));
+            $applyNewScope = fn($q) => $q->where('subject_id', $newSubjectId)
+                                         ->when($newTargetGrade, fn($q2) => $q2->where('target_grade', $newTargetGrade), fn($q2) => $q2->whereNull('target_grade'));
+
+            if ($newTargetGrade != $oldTargetGrade || $newSubjectId != $chapter->subject_id) {
+                // Remove from old scope (decrement items after it)
+                Chapter::where('teacher_id', auth()->id())
+                    ->where($applyOldScope)
+                    ->where('order', '>', $oldOrder)
+                    ->decrement('order');
+
+                // Insert into new scope (increment items at or after it)
+                Chapter::where('teacher_id', auth()->id())
+                    ->where($applyNewScope)
+                    ->where('order', '>=', $newOrder)
+                    ->increment('order');
+            } else {
+                // Same scope
+                if ($newOrder != $oldOrder) {
+                    $query = Chapter::where('teacher_id', auth()->id())->where($applyOldScope);
+
+                    if ($oldOrder > $newOrder) {
+                        // Moved up (e.g., 3 -> 2). Increment items in between.
+                        $query->where('order', '>=', $newOrder)
+                              ->where('order', '<', $oldOrder)
+                              ->increment('order');
+                    } else {
+                        // Moved down (e.g., 1 -> 4). Decrement items in between.
+                        $query->where('order', '>', $oldOrder)
+                              ->where('order', '<=', $newOrder)
+                              ->decrement('order');
+                    }
+                }
+            }
+        }
+
         $chapter->update($request->validated());
 
         return $this->success($chapter);

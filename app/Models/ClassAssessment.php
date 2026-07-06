@@ -74,7 +74,7 @@ class ClassAssessment extends Model
 
     public function tags()
     {
-        return Tag::whereHas('taggables', fn ($q) => $q->where('taggable_id', $this->id)->where('taggable_type', self::class));
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function taggables(): HasMany

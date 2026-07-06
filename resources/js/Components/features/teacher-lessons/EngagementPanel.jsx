@@ -1,106 +1,148 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
+import moment from 'moment';
 
 export default function EngagementPanel({ stats }) {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [showFullReport, setShowFullReport] = useState(false);
 
     return (
-        <aside 
-            className={`fixed bottom-0 left-0 right-0 z-40 bg-surface-container-low border-t border-outline-variant shadow-[0_-8px_30px_rgb(0,0,0,0.08)] rounded-t-[32px] transition-all duration-500 ease-in-out transform ${!isExpanded ? 'translate-y-[calc(100%-72px)]' : 'translate-y-0'}`}
-        >
-            {/* Panel Header/Handle */}
-            <div 
-                className="px-margin-mobile py-4 flex items-center justify-between cursor-pointer" 
-                onClick={() => setIsExpanded(!isExpanded)}
-            >
+        <section className="bg-surface-container-low border border-outline-variant/50 shadow-sm rounded-3xl mt-12 mb-8 overflow-hidden">
+            {/* Panel Header */}
+            <div className="px-6 py-5 border-b border-outline-variant/30 bg-surface-container-lowest/50">
                 <div className="flex items-center gap-3">
                     <Icon name="analytics" className="text-primary text-[24px]" />
-                    <span className="font-headline-md text-headline-md">Student Engagement</span>
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface">Student Engagement</h3>
                 </div>
-                <button 
-                    className={`w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'rotate-0'}`}
-                >
-                    <Icon name="expand_less" />
-                </button>
             </div>
 
             {/* Panel Content */}
-            <div 
-                className={`px-margin-mobile pb-margin-mobile space-y-6 transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
-            >
+            <div className="p-6 md:p-8 space-y-8">
                 {/* Bento Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {/* Progress Circle Card */}
-                    <div className="col-span-1 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 flex flex-col items-center justify-center text-center">
-                        <div className="relative w-16 h-16 mb-2">
+                    <div className="col-span-1 bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 flex flex-col items-center justify-center text-center shadow-sm">
+                        <div className="relative w-20 h-20 mb-3">
                             <svg className="w-full h-full -rotate-90 origin-center">
-                                <circle className="text-surface-container-high" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" strokeWidth="6"></circle>
-                                <circle className="text-secondary transition-all duration-500" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" strokeDasharray="175.9" strokeDashoffset={175.9 - (175.9 * stats.completionRate / 100)} strokeWidth="6"></circle>
+                                <circle className="text-surface-container-high" cx="40" cy="40" fill="transparent" r="36" stroke="currentColor" strokeWidth="8"></circle>
+                                <circle className="text-secondary transition-all duration-1000 ease-out" cx="40" cy="40" fill="transparent" r="36" stroke="currentColor" strokeDasharray="226.2" strokeDashoffset={226.2 - (226.2 * stats.completionRate / 100)} strokeWidth="8"></circle>
                             </svg>
-                            <div className="absolute inset-0 flex items-center justify-center font-label-md text-on-surface">{stats.completionRate}%</div>
+                            <div className="absolute inset-0 flex items-center justify-center font-title-md text-on-surface">{stats.completionRate}%</div>
                         </div>
-                        <div className="font-label-sm text-label-sm text-on-surface-variant">{stats.completedCount}/{stats.totalStudents} Students Completed</div>
+                        <div className="font-label-md text-label-md text-on-surface-variant">{stats.completedCount} / {stats.totalStudents} Students Completed</div>
                     </div>
 
                     {/* Metric Card: Time */}
-                    <div className="col-span-1 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 flex flex-col justify-between">
-                        <Icon name="timer" className="text-primary-container mb-2" />
+                    <div className="col-span-1 bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 flex flex-col justify-between shadow-sm">
+                        <Icon name="timer" className="text-primary-container mb-4 text-3xl" />
                         <div>
-                            <div className="font-headline-md text-headline-md">{stats.avgTime}m</div>
-                            <div className="font-label-sm text-label-sm text-on-surface-variant">Avg. Time Spent</div>
+                            <div className="font-headline-lg text-headline-lg text-on-surface">{stats.avgTime}m</div>
+                            <div className="font-label-md text-label-md text-on-surface-variant mt-1">Avg. Time Spent</div>
                         </div>
                     </div>
 
                     {/* Metric Card: Comprehension */}
-                    <div className="col-span-1 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 flex flex-col justify-between">
-                        <div className="flex gap-0.5 mb-2 text-tertiary-container">
+                    <div className="col-span-1 bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 flex flex-col justify-between shadow-sm">
+                        <div className="flex gap-1 mb-4 text-tertiary-container">
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <Icon key={star} name="star" className="!text-sm" filled={star <= Math.round(stats.comprehension)} />
+                                <Icon key={star} name="star" className="text-xl" filled={star <= Math.round(stats.comprehension)} />
                             ))}
                         </div>
                         <div>
-                            <div className="font-headline-md text-headline-md">{stats.comprehension}/5</div>
-                            <div className="font-label-sm text-label-sm text-on-surface-variant">Avg. Comprehension</div>
+                            <div className="font-headline-lg text-headline-lg text-on-surface">{stats.comprehension}/5</div>
+                            <div className="font-label-md text-label-md text-on-surface-variant mt-1">Avg. Comprehension</div>
                         </div>
                     </div>
 
                     {/* Metric Card: Quality */}
-                    <div className="col-span-1 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 flex flex-col justify-between">
-                        <Icon name="verified" className="text-secondary mb-2" />
+                    <div className="col-span-1 bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 flex flex-col justify-between shadow-sm">
+                        <Icon name="verified" className="text-secondary mb-4 text-3xl" />
                         <div>
-                            <div className="font-headline-md text-headline-md">{stats.quality}/5</div>
-                            <div className="font-label-sm text-label-sm text-on-surface-variant">Material Quality</div>
+                            <div className="font-headline-lg text-headline-lg text-on-surface">{stats.quality}/5</div>
+                            <div className="font-label-md text-label-md text-on-surface-variant mt-1">Material Quality</div>
                         </div>
                     </div>
                 </div>
 
-                {/* Emotions Distribution */}
-                <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30">
-                    <h4 className="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-tighter">Emotion Distribution</h4>
-                    <div className="flex items-center gap-6 overflow-x-auto pb-2 no-scrollbar">
-                        <div className="flex flex-col items-center gap-2 min-w-[64px]">
-                            <span className="text-2xl">😃</span>
-                            <div className="font-headline-md text-headline-md">{stats.emotions.happy}</div>
-                            <div className="w-full h-1 bg-secondary rounded-full"></div>
+                {/* View Full Report Toggle */}
+                <div className="flex justify-center pt-2">
+                    <button 
+                        onClick={() => setShowFullReport(!showFullReport)}
+                        className="bg-primary text-white font-label-md px-8 py-3 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm whitespace-nowrap flex items-center gap-2"
+                    >
+                        <Icon name={showFullReport ? "visibility_off" : "visibility"} />
+                        {showFullReport ? 'Hide Full Report' : 'View Full Report'}
+                    </button>
+                </div>
+
+                {/* Detailed Student Activities Table */}
+                {showFullReport && (
+                    <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden mt-6">
+                        <div className="px-6 py-5 border-b border-outline-variant/30 bg-surface-container-low/50">
+                            <h4 className="font-headline-sm text-headline-sm text-on-surface">Student Activity Detail</h4>
+                            <p className="text-on-surface-variant text-label-md mt-1">Detailed list of activities for every student with available data.</p>
                         </div>
-                        <div className="flex flex-col items-center gap-2 min-w-[64px]">
-                            <span className="text-2xl">🤔</span>
-                            <div className="font-headline-md text-headline-md">{stats.emotions.thinking}</div>
-                            <div className="w-full h-1 bg-primary-container rounded-full opacity-60"></div>
-                        </div>
-                        <div className="flex flex-col items-center gap-2 min-w-[64px]">
-                            <span className="text-2xl">🤩</span>
-                            <div className="font-headline-md text-headline-md">{stats.emotions.amazed}</div>
-                            <div className="w-full h-1 bg-tertiary-container rounded-full opacity-40"></div>
-                        </div>
-                        <div className="ml-auto">
-                            <button className="bg-primary text-white font-label-md px-6 py-3 rounded-xl hover:bg-primary-container active:scale-95 transition-all shadow-sm whitespace-nowrap">
-                                View Full Report
-                            </button>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-surface-container-lowest text-on-surface-variant font-label-md uppercase tracking-wider text-sm border-b border-outline-variant/30">
+                                        <th className="px-6 py-4">Student</th>
+                                        <th className="px-6 py-4">Status</th>
+                                        <th className="px-6 py-4">Last Access</th>
+                                        <th className="px-6 py-4">Time Spent</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-outline-variant/30">
+                                    {stats.activities && stats.activities.length > 0 ? (
+                                        stats.activities.map((activity) => (
+                                            <tr key={activity.id} className="hover:bg-surface-container-low/30 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30 bg-surface-container-high">
+                                                            {activity.picture ? (
+                                                                <img src={activity.picture} alt={activity.name} className="w-full h-full object-cover" />
+                                                            ) : (
+                                                                <div className="w-full h-full flex items-center justify-center text-primary font-bold">
+                                                                    {activity.name.charAt(0)}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <span className="font-title-sm text-on-surface font-medium">{activity.name}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {activity.is_completed ? (
+                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary font-label-sm">
+                                                            <Icon name="check_circle" className="text-[16px]" />
+                                                            Completed
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/30 text-on-primary-container font-label-sm">
+                                                            <Icon name="pending" className="text-[16px]" />
+                                                            In Progress
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className="px-6 py-4 text-on-surface-variant font-body-sm">
+                                                    {activity.last_access ? moment(activity.last_access).format('MMM D, YYYY HH:mm') : 'Never'}
+                                                </td>
+                                                <td className="px-6 py-4 text-on-surface-variant font-body-sm">
+                                                    {activity.duration_seconds > 0 ? `${Math.round(activity.duration_seconds / 60)} mins` : '-'}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="px-6 py-8 text-center text-on-surface-variant">
+                                                No student activity data available yet.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
-        </aside>
+        </section>
     );
 }

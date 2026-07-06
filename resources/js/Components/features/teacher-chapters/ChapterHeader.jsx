@@ -10,7 +10,7 @@ export default function ChapterHeader({ title, description, coverImage }) {
                         {description}
                     </p>
                 </div>
-                {coverImage && (
+                {/* {coverImage && (
                     <div className="hidden md:block w-32 h-32 rounded-xl overflow-hidden shadow-sm flex-shrink-0 ml-4">
                         <img 
                             className="w-full h-full object-cover" 
@@ -18,7 +18,7 @@ export default function ChapterHeader({ title, description, coverImage }) {
                             src={coverImage}
                         />
                     </div>
-                )}
+                )} */}
             </div>
         </section>
     );

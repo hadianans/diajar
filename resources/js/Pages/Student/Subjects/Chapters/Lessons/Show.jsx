@@ -65,7 +65,9 @@ export default function Show({
             isBookmarked: materialData.is_bookmarked,
             prevId: materialData.prev_material_id,
             nextId: materialData.next_material_id,
-            relatedAssessment: materialData.related_assessment
+            relatedAssessment: materialData.related_assessment,
+            fileType: materialData.file_type,
+            fileUrl: materialData.file_url
         };
     }, [materialData, subjectId, chapterId]);
 
@@ -184,12 +186,30 @@ export default function Show({
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-8 mt-4">
                 {/* Video & Primary Content */}
                 <div className="lg:col-span-8 space-y-stack-md">
-                    <VideoPlayer 
-                        title={lesson.title}
-                        duration={lesson.duration}
-                        progress={lesson.progress}
-                        // Assume video material types have a specific UI. The mockup uses a placeholder.
-                    />
+                    {lesson.fileType === 'video' && lesson.fileUrl && (
+                        <VideoPlayer 
+                            title={lesson.title}
+                            duration={lesson.duration}
+                            progress={lesson.progress}
+                            url={lesson.fileUrl}
+                        />
+                    )}
+                    
+                    {lesson.fileType === 'text' && lesson.fileUrl && !materialData?.content && (
+                        <div className="flex flex-col items-center justify-center p-8 bg-surface-container-low border border-outline-variant rounded-2xl">
+                            <Icon name="description" className="text-4xl text-primary mb-4" />
+                            <p className="text-body-lg text-on-surface mb-4">This lesson contains an attached document.</p>
+                            <a 
+                                href={lesson.fileUrl} 
+                                target="_blank" 
+                                rel="noreferrer"
+                                className="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:bg-primary/90 transition-colors flex items-center gap-2"
+                            >
+                                <Icon name="open_in_new" className="text-[18px]" />
+                                View Document
+                            </a>
+                        </div>
+                    )}
                     
                     <LessonTabs 
                         overviewContent={lesson.overview}

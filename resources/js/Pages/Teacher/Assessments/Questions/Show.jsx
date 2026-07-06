@@ -94,15 +94,7 @@ export default function Show({ questionId }) {
                     usageCount={question.usage_count || 0}
                 />
 
-                {/* Decorative Illustration */}
-                <div className="relative h-48 w-full rounded-xl overflow-hidden mt-stack-lg border border-outline-variant/30 group">
-                    <img 
-                        className="w-full h-full object-cover grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" 
-                        alt="Mitochondria cell organelle" 
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAys9Q3-b7hFufqYfchektPOs-su7QnFQH7ITsdGmE7Nq9RxifN_fi5rmcCEf40h6IwB2rEgCx4II1u7E4gryrSiuvej6O6hJaLtLM7wrRt5x9WKN1b2zhJe5DfhFI86nl2a5PCXFIiPlJ5btB1g_wFPfA2Gg97gQbD2EaZLQXUsw36SBxLc07OChyKrCSWxYYZaw3yqhD2ho_h6ghLT_w_QUGiRbpm3lFqpaGHCVronWQiGGEutWKMPxSpre8G84ID-cB189LOrrg"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
-                </div>
+
 
             </main>
         </div>

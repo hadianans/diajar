@@ -148,6 +148,7 @@ Route::prefix('teacher')->middleware(['auth:sanctum', 'role:teacher'])->group(fu
     Route::delete('/chapters/{chapterId}/subchapters/{id}', [TeacherSubchapterController::class, 'destroy']);
 
     // Materials
+    Route::post('/materials/upload-image', [TeacherMaterialController::class, 'uploadImage']);
     Route::patch('/materials/reorder', [TeacherMaterialController::class, 'reorder']);
     Route::post('/materials', [TeacherMaterialController::class, 'store']);
     Route::get('/materials/{id}', [TeacherMaterialController::class, 'show']);
@@ -168,6 +169,11 @@ Route::prefix('teacher')->middleware(['auth:sanctum', 'role:teacher'])->group(fu
     Route::put('/questions/{id}', [TeacherQuestionController::class, 'update']);
     Route::delete('/questions/{id}', [TeacherQuestionController::class, 'destroy']);
 
+    // Tags
+    Route::get('/tags', [TagController::class, 'index']);
+    Route::post('/tags', [TagController::class, 'store']);
+    Route::post('/tags/first-or-create', [TagController::class, 'firstOrCreate']);
+
     // Assignments
     Route::get('/assignments', [TeacherAssignmentController::class, 'index']);
     Route::post('/assignments', [TeacherAssignmentController::class, 'store']);
@@ -176,6 +182,10 @@ Route::prefix('teacher')->middleware(['auth:sanctum', 'role:teacher'])->group(fu
     Route::patch('/assignments/{id}/close', [TeacherAssignmentController::class, 'close']);
     Route::patch('/assignments/{id}/reopen', [TeacherAssignmentController::class, 'reopen']);
     Route::delete('/assignments/{id}', [TeacherAssignmentController::class, 'destroy']);
+
+    // Assignment Attachments
+    Route::post('/assignments/{assignmentId}/attachments', [\App\Http\Controllers\Teacher\TeacherAssignmentAttachmentController::class, 'store']);
+    Route::delete('/assignments/{assignmentId}/attachments/{id}', [\App\Http\Controllers\Teacher\TeacherAssignmentAttachmentController::class, 'destroy']);
 
     // Assignment Grading
     Route::get('/assignments/{assignmentId}/submissions/{studentId}', [GradingAssignmentController::class, 'show']);

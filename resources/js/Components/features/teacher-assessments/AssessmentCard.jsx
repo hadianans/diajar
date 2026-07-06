@@ -6,14 +6,15 @@ export default function AssessmentCard({
     id,
     title,
     chapter,
-    state, // 'completed', 'pending', 'active'
+    state, // 'completed', 'pending', 'active', 'scheduled'
     classAvg,
     participationCompleted,
     participationTotal,
     duration,
     questionsCount,
     timeRemaining,
-    progressPercentage
+    progressPercentage,
+    onDelete
 }) {
     // Determine styles based on state
     let accentColorClass = '';
@@ -36,6 +37,12 @@ export default function AssessmentCard({
         badgeClass = 'bg-error text-on-error animate-pulse';
         badgeText = 'Pending Review';
         borderColorClass = 'border-tertiary/20';
+    } else if (state === 'scheduled') {
+        accentColorClass = 'bg-outline';
+        iconName = 'schedule';
+        iconColorClass = 'text-outline';
+        badgeClass = 'bg-surface-container-highest text-on-surface-variant';
+        badgeText = 'Scheduled';
     } else if (state === 'active') {
         accentColorClass = 'bg-secondary-fixed-dim';
         iconName = 'bolt';
@@ -111,6 +118,18 @@ export default function AssessmentCard({
                 >
                     Grade Now
                 </button>
+            )}
+
+            {onDelete && (
+                <div className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(); }}
+                        className="p-1.5 rounded-full bg-white/90 hover:bg-error-container text-on-surface-variant hover:text-error shadow-sm transition-all"
+                        title="Delete assessment"
+                    >
+                        <Icon name="delete" className="text-[18px]" />
+                    </button>
+                </div>
             )}
         </div>
     );

@@ -130,9 +130,9 @@ export default function StudentShow({ assessmentId, studentId }) {
                         <AnswerReviewCard 
                             key={ans.id}
                             questionNumber={idx + 1}
-                            difficulty={`Level ${q?.levels || 1}`}
+                            difficulty={`Level ${parseInt(q?.levels || 0) + 1}`}
                             isCorrect={Boolean(ans.is_correct)}
-                            questionText={q?.question?.replace(/(<([^>]+)>)/gi, "") || 'Unknown Question'}
+                            questionText={q?.question || 'Unknown Question'}
                             studentAnswer={ans.selected_option?.option || 'No answer'}
                             correctAnswer={!ans.is_correct && correctOpt ? correctOpt.option : undefined}
                             explanation={q?.explanation}

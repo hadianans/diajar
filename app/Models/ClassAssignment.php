@@ -48,9 +48,14 @@ class ClassAssignment extends Model
         return $this->belongsTo(Material::class);
     }
 
-    public function submissions(): HasMany
+    public function submissions()
     {
-        return $this->hasMany(AssignmentSubmission::class);
+        return $this->hasMany(AssignmentSubmission::class, 'class_assignment_id');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(ClassAssignmentAttachment::class, 'class_assignment_id');
     }
 
     public function classRubrics(): HasMany
@@ -70,7 +75,7 @@ class ClassAssignment extends Model
 
     public function tags()
     {
-        return Tag::whereHas('taggables', fn ($q) => $q->where('taggable_id', $this->id)->where('taggable_type', self::class));
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function taggables(): HasMany

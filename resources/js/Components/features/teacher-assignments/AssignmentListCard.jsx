@@ -14,7 +14,9 @@ export default function AssignmentListCard({
     graded,
     average,
     initials,
-    maxPts
+    maxPts,
+    onDelete,
+    onEdit
 }) {
     return (
         <article className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_20px_-2px_rgba(15,23,42,0.08)] p-4 active:scale-[0.98] transition-transform duration-150">
@@ -89,6 +91,28 @@ export default function AssignmentListCard({
                     )}
                 </div>
             </Link>
+            {(onDelete || onEdit) && (
+                <div className="flex justify-end gap-4 pt-2 border-t border-outline-variant/30 mt-3">
+                    {onEdit && (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                            className="text-primary text-label-sm font-label-sm flex items-center gap-1 hover:underline active:scale-95 transition-transform"
+                        >
+                            <Icon name="edit" className="text-[14px]" />
+                            Edit
+                        </button>
+                    )}
+                    {onDelete && (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                            className="text-error text-label-sm font-label-sm flex items-center gap-1 hover:underline active:scale-95 transition-transform"
+                        >
+                            <Icon name="delete" className="text-[14px]" />
+                            Delete
+                        </button>
+                    )}
+                </div>
+            )}
         </article>
     );
 }

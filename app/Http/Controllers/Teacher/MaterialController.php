@@ -9,6 +9,8 @@ use App\Models\Material;
 use App\Models\Taggable;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MaterialController extends Controller
 {
@@ -23,11 +25,29 @@ class MaterialController extends Controller
     {
         $this->verifyChapterOwnership($request->chapter_id);
 
-        $material = Material::create($request->except('tag_ids'));
+        if ($request->filled('order')) {
+            $query = Material::where('chapter_id', $request->chapter_id);
+
+            if ($request->filled('subchapter_id')) {
+                $query->where('subchapter_id', $request->subchapter_id);
+            } else {
+                $query->whereNull('subchapter_id');
+            }
+
+            $query->where('order', '>=', $request->order)->increment('order');
+        }
+
+        if ($request->hasFile('core_file')) {
+            $path = $request->file('core_file')->store('materials/core', 'public');
+            $request->merge(['file_url' => asset('storage/' . $path)]);
+        }
+
+        $material = Material::create($request->except(['tag_ids', 'attachments', 'attachment_titles', 'core_file']));
 
         $this->syncTags($material, $request->input('tag_ids', []));
+        $this->handleAttachments($material, $request);
 
-        $material->load('tags');
+        $material->load('tags', 'attachments');
 
         return $this->created($material);
     }
@@ -52,6 +72,29 @@ class MaterialController extends Controller
               ->where('reflectable_type', 'App\\Models\\Material');
         })->avg('comprehension_level'), 1);
 
+        $material->activities = \App\Models\User::whereHas('materialCompletions', function($q) use ($material) {
+            $q->where('material_id', $material->id);
+        })->orWhereHas('materialAccessLogs', function($q) use ($material) {
+            $q->where('material_id', $material->id);
+        })->with(['materialCompletions' => function($q) use ($material) {
+            $q->where('material_id', $material->id);
+        }, 'materialAccessLogs' => function($q) use ($material) {
+            $q->where('material_id', $material->id)->latest('access_start');
+        }])->get()->map(function($student) {
+            $completion = $student->materialCompletions->first();
+            $log = $student->materialAccessLogs->first();
+            
+            return [
+                'id' => $student->id,
+                'name' => $student->full_name,
+                'picture' => $student->picture,
+                'is_completed' => $completion ? (bool) $completion->is_completed : false,
+                'completed_at' => $completion ? $completion->completed_at : null,
+                'last_access' => $log ? $log->access_start : null,
+                'duration_seconds' => $log ? $log->duration_seconds : 0,
+            ];
+        });
+
         return $this->success($material);
     }
 
@@ -60,10 +103,59 @@ class MaterialController extends Controller
         $material = Material::findOrFail($id);
         $this->verifyChapterOwnership($material->chapter_id);
 
-        $material->update($request->except('tag_ids'));
-        $this->syncTags($material, $request->input('tag_ids', []));
+        if ($request->filled('order')) {
+            $newOrder = $request->order;
+            $oldOrder = $material->order;
+            $newSubchapterId = $request->input('subchapter_id');
+            $oldSubchapterId = $material->subchapter_id;
+            $newChapterId = $request->input('chapter_id', $material->chapter_id);
 
-        $material->load('tags');
+            // Scope logic closures
+            $applyOldScope = fn($q) => $q->where('chapter_id', $material->chapter_id)
+                                         ->when($oldSubchapterId, fn($q2) => $q2->where('subchapter_id', $oldSubchapterId), fn($q2) => $q2->whereNull('subchapter_id'));
+            $applyNewScope = fn($q) => $q->where('chapter_id', $newChapterId)
+                                         ->when($newSubchapterId, fn($q2) => $q2->where('subchapter_id', $newSubchapterId), fn($q2) => $q2->whereNull('subchapter_id'));
+
+            if ($newSubchapterId != $oldSubchapterId || $newChapterId != $material->chapter_id) {
+                // Remove from old scope (decrement items after it)
+                Material::where($applyOldScope)
+                    ->where('order', '>', $oldOrder)
+                    ->decrement('order');
+
+                // Insert into new scope (increment items at or after it)
+                Material::where($applyNewScope)
+                    ->where('order', '>=', $newOrder)
+                    ->increment('order');
+            } else {
+                // Same scope
+                if ($newOrder != $oldOrder) {
+                    $query = Material::where($applyOldScope);
+
+                    if ($oldOrder > $newOrder) {
+                        // Moved up (e.g., 3 -> 2). Increment items in between.
+                        $query->where('order', '>=', $newOrder)
+                              ->where('order', '<', $oldOrder)
+                              ->increment('order');
+                    } else {
+                        // Moved down (e.g., 1 -> 4). Decrement items in between.
+                        $query->where('order', '>', $oldOrder)
+                              ->where('order', '<=', $newOrder)
+                              ->decrement('order');
+                    }
+                }
+            }
+        }
+
+        if ($request->hasFile('core_file')) {
+            $path = $request->file('core_file')->store('materials/core', 'public');
+            $request->merge(['file_url' => asset('storage/' . $path)]);
+        }
+
+        $material->update($request->except(['tag_ids', 'attachments', 'attachment_titles', 'core_file']));
+        $this->syncTags($material, $request->input('tag_ids', []));
+        $this->handleAttachments($material, $request);
+
+        $material->load('tags', 'attachments');
 
         return $this->success($material);
     }
@@ -116,6 +208,17 @@ class MaterialController extends Controller
         return $this->success(null, 'Reordered');
     }
 
+    public function uploadImage(Request $request): JsonResponse
+    {
+        $request->validate([
+            'image' => 'required|image|max:10240',
+        ]);
+
+        $path = $request->file('image')->store('materials/images', 'public');
+
+        return $this->success(['url' => asset('storage/' . $path)]);
+    }
+
     private function syncTags(Material $material, array $tagIds): void
     {
         Taggable::where('taggable_id', $material->id)
@@ -128,6 +231,25 @@ class MaterialController extends Controller
                 'taggable_id'   => $material->id,
                 'taggable_type' => 'App\\Models\\Material',
             ]);
+        }
+    }
+
+    private function handleAttachments(Material $material, Request $request): void
+    {
+        if ($request->hasFile('attachments')) {
+            $files = $request->file('attachments');
+            $titles = $request->input('attachment_titles', []);
+            
+            foreach ($files as $index => $file) {
+                $path = $file->store('materials/attachments', 'public');
+                $title = !empty($titles[$index]) ? $titles[$index] : $file->getClientOriginalName();
+                
+                $material->attachments()->create([
+                    'title' => $title,
+                    'file_url' => asset('storage/' . $path),
+                    'description' => null, // Or handle description if needed later
+                ]);
+            }
         }
     }
 }

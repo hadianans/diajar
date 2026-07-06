@@ -1,7 +1,6 @@
 import React from 'react';
 import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
-import FocusedMaterialLayout from '@/Components/shared/layout/FocusedMaterialLayout';
 import VideoPlayerOverlay from '@/Components/features/teacher-lessons/VideoPlayerOverlay';
 import AttachmentList from '@/Components/features/teacher-lessons/AttachmentList';
 import EngagementPanel from '@/Components/features/teacher-lessons/EngagementPanel';
@@ -43,24 +42,24 @@ export default function LessonShow({ chapterId, lessonId }) {
 
     if (loading) {
         return (
-            <FocusedMaterialLayout title="Loading..." onBack={handleBack} actions={<></>}>
+            <DashboardTemplate role="teacher" title="Loading..." showBack={true} onBack={handleBack}>
                 <div className="text-center py-12 text-on-surface-variant">Loading lesson...</div>
-            </FocusedMaterialLayout>
+            </DashboardTemplate>
         );
     }
 
     if (!material) {
         return (
-            <FocusedMaterialLayout title="Not Found" onBack={handleBack} actions={<></>}>
+            <DashboardTemplate role="teacher" title="Not Found" showBack={true} onBack={handleBack}>
                 <div className="text-center py-12 text-on-surface-variant">Lesson not found.</div>
-            </FocusedMaterialLayout>
+            </DashboardTemplate>
         );
     }
 
-    const mockStats = {
-        completionRate: material.completion_count ? Math.round((material.completion_count / 30) * 100) : 0, // Mock 30 students
+    const stats = {
+        completionRate: material.completion_count ? Math.round((material.completion_count / (material.chapter?.target_students_count || 1)) * 100) : 0, 
         completedCount: material.completion_count || 0,
-        totalStudents: 30,
+        totalStudents: material.chapter?.target_students_count || 'N/A',
         avgTime: material.avg_time_seconds ? Math.round(material.avg_time_seconds / 60) : 0,
         comprehension: material.avg_comprehension || 0,
         quality: material.avg_material_quality || 0,
@@ -68,7 +67,8 @@ export default function LessonShow({ chapterId, lessonId }) {
             happy: 10,
             thinking: 5,
             amazed: 2
-        }
+        },
+        activities: material.activities || []
     };
 
     const attachments = (material.attachments || []).map(att => ({
@@ -112,16 +112,19 @@ export default function LessonShow({ chapterId, lessonId }) {
     );
 
     return (
-        <FocusedMaterialLayout 
+        <DashboardTemplate 
+            role="teacher"
+            activeTab="chapters"
             title={material.chapter?.name || "Chapter View"} 
+            showBack={true}
             onBack={handleBack} 
             actions={actions}
         >
             <Head title={`${material.title} - Lesson View`} />
 
             {/* Video Player Section */}
-            {material.type === 'video' && material.video_url && (
-                <VideoPlayerOverlay title={material.title} url={material.video_url} />
+            {material.file_type === 'video' && material.file_url && (
+                <VideoPlayerOverlay title={material.title} url={material.file_url} />
             )}
 
             {/* Content & Attachments */}
@@ -130,8 +133,26 @@ export default function LessonShow({ chapterId, lessonId }) {
                     <div>
                         <h2 className="font-headline-md text-headline-md text-on-surface mb-2">{material.title}</h2>
                         
-                        {material.type === 'text' ? (
-                            <div className="font-body-md text-body-md text-on-surface-variant leading-relaxed" dangerouslySetInnerHTML={{ __html: material.text_content }} />
+                        {material.file_type === 'text' ? (
+                            material.content ? (
+                                <div className="font-body-md text-body-md text-on-surface-variant leading-relaxed" dangerouslySetInnerHTML={{ __html: material.content }} />
+                            ) : material.file_url ? (
+                                <div className="flex flex-col items-center justify-center p-8 bg-surface-container-low border border-outline-variant rounded-2xl">
+                                    <Icon name="description" className="text-4xl text-primary mb-4" />
+                                    <p className="text-body-lg text-on-surface mb-4">This lesson contains an attached document.</p>
+                                    <a 
+                                        href={material.file_url} 
+                                        target="_blank" 
+                                        rel="noreferrer"
+                                        className="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:bg-primary/90 transition-colors flex items-center gap-2"
+                                    >
+                                        <Icon name="open_in_new" className="text-[18px]" />
+                                        View Document
+                                    </a>
+                                </div>
+                            ) : (
+                                <p className="font-body-md text-body-md text-on-surface-variant italic">No content available.</p>
+                            )
                         ) : (
                             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
                                 {material.description || "No description provided."}
@@ -147,8 +168,8 @@ export default function LessonShow({ chapterId, lessonId }) {
             </div>
 
             {/* Engagement Panel */}
-            <EngagementPanel stats={mockStats} />
+            <EngagementPanel stats={stats} />
 
-        </FocusedMaterialLayout>
+        </DashboardTemplate>
     );
 }

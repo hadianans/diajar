@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function ChapterListCard({ chapterId, number, title, description, materialsCount, assignmentsCount, assessmentsCount, completionProgress, onEdit, onDelete }) {
+export default function ChapterListCard({ chapterId, number, title, description, tags, targetGroups, availableGroups, materialsCount, assignmentsCount, assessmentsCount, completionProgress, onEdit, onDelete }) {
     const [isHovered, setIsHovered] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
@@ -23,6 +23,22 @@ export default function ChapterListCard({ chapterId, number, title, description,
 
     const formattedNumber = number.toString().padStart(2, '0');
 
+    // Calculate visibility text
+    let visibilityLabel = null;
+    if (availableGroups && targetGroups) {
+        if (targetGroups.length === availableGroups.length || targetGroups.length === 0) {
+            visibilityLabel = 'Includes: All groups';
+        } else {
+            const included = availableGroups.filter(g => targetGroups.includes(g.id)).map(g => g.name);
+            const excluded = availableGroups.filter(g => !targetGroups.includes(g.id)).map(g => g.name);
+            
+            visibilityLabel = `Includes: ${included.join(', ')}`;
+            if (excluded.length > 0) {
+                visibilityLabel += `; Excludes: ${excluded.join(', ')}`;
+            }
+        }
+    }
+
     return (
         <div
             onClick={handleClick}
@@ -38,6 +54,23 @@ export default function ChapterListCard({ chapterId, number, title, description,
                     <div>
                         <h3 className="font-headline-md text-on-surface group-hover:text-primary transition-colors">{title}</h3>
                         <p className="text-on-surface-variant font-body-md line-clamp-2">{description}</p>
+                        
+                        {visibilityLabel && (
+                            <div className="flex items-center gap-1.5 mt-2 text-primary">
+                                <Icon name="visibility" className="text-[14px]" />
+                                <span className="text-xs font-medium">{visibilityLabel}</span>
+                            </div>
+                        )}
+
+                        {tags && tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {tags.map((tag, idx) => (
+                                    <span key={idx} className="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-xs font-medium">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="relative dropdown-container">

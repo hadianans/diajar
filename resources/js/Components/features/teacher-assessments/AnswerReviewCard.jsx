@@ -29,7 +29,7 @@ export default function AnswerReviewCard({
                     </div>
                 </div>
                 
-                <h3 className="font-body-lg text-body-lg text-on-background mb-4">"{questionText}"</h3>
+                <div className="font-body-lg text-body-lg text-on-background mb-4 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: questionText }} />
                 
                 {isCorrect ? (
                     <div className="p-4 bg-secondary-fixed/10 rounded-lg border-l-4 border-secondary mb-4">
@@ -52,7 +52,7 @@ export default function AnswerReviewCard({
                 {explanation && (
                     <div className="flex items-start gap-3 mt-4 text-on-surface-variant">
                         <Icon name="info" className="text-outline shrink-0" />
-                        <p className="font-label-sm text-label-sm leading-relaxed">{explanation}</p>
+                        <div className="font-label-sm text-label-sm leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: explanation }} />
                     </div>
                 )}
             </div>

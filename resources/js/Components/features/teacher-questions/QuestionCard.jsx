@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function QuestionCard({ id, title, level, levelClass, levelColorClass, points, tags }) {
+export default function QuestionCard({ id, title, level, levelClass, levelColorClass, points, tags, onDelete }) {
     return (
         <div className="group relative overflow-hidden bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-all flex flex-col md:flex-row gap-6">
             <div className={`absolute left-0 top-0 w-1 h-full ${levelColorClass}`}></div>
@@ -39,7 +39,7 @@ export default function QuestionCard({ id, title, level, levelClass, levelColorC
                 <button className="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
                     <Icon name="content_copy" />
                 </button>
-                <button className="p-2 rounded-full hover:bg-error-container hover:text-error transition-colors text-outline">
+                <button onClick={onDelete} className="p-2 rounded-full hover:bg-error-container hover:text-error transition-colors text-outline">
                     <Icon name="delete" />
                 </button>
             </div>

@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import AssessmentWizardLayout from '@/Components/shared/layout/AssessmentWizardLayout';
 import WizardStepBasicInfo from '@/Components/features/teacher-assessments/WizardStepBasicInfo';
 import WizardStepQuestionBank from '@/Components/features/teacher-assessments/WizardStepQuestionBank';
 import WizardStepReview from '@/Components/features/teacher-assessments/WizardStepReview';
+import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 
 export default function Create() {
+    const { data: classes } = useApiGet('/classes');
+    const { data: chapters } = useApiGet('/chapters');
+    const { data: questionsData, loading: questionsLoading } = useApiGet('/questions');
+
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
+    const [isSaving, setIsSaving] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    const allQuestions = [
-        { id: 9902, level: 'Analyze', levelColorClass: 'bg-tertiary-container/10 text-tertiary-container', pts: 20, category: 'Biology', text: 'Compare and contrast the structural differences between plant and animal cells during the process of cytokinesis.' },
-        { id: 8421, level: 'Remember', levelColorClass: 'bg-secondary-container text-on-secondary-container', pts: 10, category: 'Cytology', text: 'Which organelle is primarily responsible for protein synthesis within the cell?' },
-        { id: 7712, level: 'Understand', levelColorClass: 'bg-orange-100 text-orange-800', pts: 25, category: '', text: 'Explain how the phospholipid bilayer\'s structure contributes to the cell membrane\'s selective permeability.' },
-    ];
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        class_id: '',
+        chapter_id: '',
+        duration: 45,
+        max_attempts: 1,
+        pass_threshold: 70,
+        start_date: '',
+        due_date: '',
+    });
 
+    const allQuestions = questionsData?.data || questionsData || [];
     const selectedQuestions = allQuestions.filter(q => selectedQuestionIds.includes(q.id));
-    const totalPoints = selectedQuestions.reduce((sum, q) => sum + q.pts, 0);
+    const totalPoints = selectedQuestions.reduce((sum, q) => sum + (q.score || 0), 0);
 
     const handleBack = () => {
         router.visit(route('teacher.assessments.index'));
@@ -30,19 +45,63 @@ export default function Create() {
         }
     };
 
+    const handlePublish = async () => {
+        setIsSaving(true);
+        setErrors({});
+
+        try {
+            const payload = {
+                class_id: parseInt(formData.class_id) || undefined,
+                chapter_id: parseInt(formData.chapter_id) || undefined,
+                title: formData.title,
+                description: formData.description || null,
+                start_date: formData.start_date || null,
+                due_date: formData.due_date || null,
+                duration: parseInt(formData.duration),
+                max_attempts: parseInt(formData.max_attempts),
+                pass_threshold: parseFloat(formData.pass_threshold),
+                question_ids: selectedQuestionIds,
+            };
+
+            await api.post('/assessments', payload);
+            router.visit(route('teacher.assessments.index'));
+        } catch (err) {
+            if (err.response?.status === 422) {
+                setErrors(err.response.data.errors || {});
+                // Jump back to step 1 if basic info errors
+                const basicFields = ['class_id', 'chapter_id', 'title', 'duration', 'max_attempts', 'pass_threshold'];
+                const hasBasicError = Object.keys(err.response.data.errors || {}).some(k => basicFields.includes(k));
+                if (hasBasicError) setCurrentStep(1);
+            } else {
+                alert(err.response?.data?.message || 'Error creating assessment');
+            }
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     return (
         <AssessmentWizardLayout 
             title="Create Assessment"
             currentStep={currentStep}
             onStepChange={setCurrentStep}
             onBack={handleBack}
-            onPreview={() => {}}
+            onPreview={() => setCurrentStep(3)}
             selectedQuestionsCount={selectedQuestionIds.length}
             totalPoints={totalPoints}
             selectedQuestions={selectedQuestions}
         >
+            <Head title="Create Assessment | Diajar LMS" />
+
             {currentStep === 1 && (
-                <WizardStepBasicInfo onNext={() => setCurrentStep(2)} />
+                <WizardStepBasicInfo 
+                    onNext={() => setCurrentStep(2)} 
+                    formData={formData}
+                    onChange={setFormData}
+                    errors={errors}
+                    classes={classes || []}
+                    chapters={chapters || []}
+                />
             )}
             
             {currentStep === 2 && (
@@ -52,6 +111,7 @@ export default function Create() {
                     questions={allQuestions}
                     selectedIds={selectedQuestionIds}
                     onToggleSelect={handleToggleSelect}
+                    loading={questionsLoading}
                 />
             )}
             
@@ -59,8 +119,10 @@ export default function Create() {
                 <WizardStepReview 
                     onBack={() => setCurrentStep(2)} 
                     selectedQuestions={selectedQuestions}
-                    totalScore={totalPoints}
-                    totalTime={45}
+                    formData={formData}
+                    onPublish={handlePublish}
+                    isSaving={isSaving}
+                    errors={errors}
                 />
             )}
         </AssessmentWizardLayout>

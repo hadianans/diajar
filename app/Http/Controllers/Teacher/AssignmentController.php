@@ -103,6 +103,7 @@ class AssignmentController extends Controller
                 'classModel:id,subject_id,teacher_id',
                 'rubric.criteria.levels',
                 'tags',
+                'attachments',
                 'submissions' => fn ($q) => $q->with('student:id,full_name,username,picture')
                     ->orderByDesc('created_at'),
             ])

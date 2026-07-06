@@ -17,15 +17,25 @@ class ChapterRequest extends FormRequest
 
         return match ($action) {
             'store' => [
-                'subject_id'  => 'required|integer|exists:subjects,id',
-                'name'        => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'order'       => 'nullable|integer',
+                'subject_id'    => 'required|integer|exists:subjects,id',
+                'name'          => 'required|string|max:255',
+                'description'   => 'nullable|string',
+                'order'         => 'nullable|integer',
+                'target_grade'  => 'nullable|integer',
+                'target_groups' => 'nullable|array',
+                'target_groups.*' => 'integer',
+                'tags'          => 'nullable|array|max:3',
+                'tags.*'        => 'string|max:50',
             ],
             'update' => [
-                'name'        => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'order'       => 'nullable|integer',
+                'name'          => 'required|string|max:255',
+                'description'   => 'nullable|string',
+                'order'         => 'nullable|integer',
+                'target_grade'  => 'nullable|integer',
+                'target_groups' => 'nullable|array',
+                'target_groups.*' => 'integer',
+                'tags'          => 'nullable|array|max:3',
+                'tags.*'        => 'string|max:50',
             ],
             'reorder' => [
                 'orders'        => 'required|array|min:1',

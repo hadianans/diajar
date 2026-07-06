@@ -14,6 +14,14 @@ class Chapter extends Model
         'name',
         'description',
         'order',
+        'target_grade',
+        'target_groups',
+        'tags',
+    ];
+
+    protected $casts = [
+        'tags' => 'array',
+        'target_groups' => 'array',
     ];
 
     // ─── Relationships ────────────────────────────────────────────────────────

@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
+import Icon from '@/Components/shared/ui/Icon';
 
-export default function ChapterFilterBar({ filters = ['Class Average', 'Group A', 'Group B', 'Practical Lab', 'Advanced Theory'], onFilterChange }) {
-    const [activeFilter, setActiveFilter] = useState(filters[0]);
+export default function ChapterFilterBar({ onSearch }) {
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const handleFilterClick = (filter) => {
-        setActiveFilter(filter);
-        if (onFilterChange) onFilterChange(filter);
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+        if (onSearch) onSearch(value);
     };
 
     return (
-        <section className="mb-stack-lg overflow-x-auto no-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <div className="flex gap-2 pb-2">
-                {filters.map((filter, idx) => {
-                    const isActive = activeFilter === filter;
-                    return (
-                        <button 
-                            key={idx}
-                            onClick={() => handleFilterClick(filter)}
-                            className={`px-6 py-2 rounded-full font-label-md whitespace-nowrap transition-all ${
-                                isActive 
-                                    ? 'bg-primary text-white shadow-sm' 
-                                    : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
-                            }`}
-                        >
-                            {filter}
-                        </button>
-                    );
-                })}
+        <section className="mb-stack-lg flex justify-end">
+            <div className="relative w-full max-w-md">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Icon name="search" className="text-on-surface-variant" />
+                </div>
+                <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    placeholder="Search chapters by name or tags..."
+                    className="w-full bg-white border border-outline-variant rounded-full py-3 pl-12 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-on-surface placeholder:text-on-surface-variant hover:border-primary/50 shadow-sm hover:shadow-md"
+                />
             </div>
         </section>
     );

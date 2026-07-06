@@ -30,8 +30,8 @@ export default function DashboardTemplate({
                     <div className="mb-6">
                         <Breadcrumbs />
                     </div>
-                    {headerSection && <div className="mb-stack-lg">{headerSection}</div>}
-                    {statsSection && <div className="mb-stack-lg">{statsSection}</div>}
+                    {headerSection && <div className="mb-stack-md">{headerSection}</div>}
+                    {statsSection && <div className="mb-stack-md">{statsSection}</div>}
                     <div className="flex-grow">
                         {children}
                     </div>

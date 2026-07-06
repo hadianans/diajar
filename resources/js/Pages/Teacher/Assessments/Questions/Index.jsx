@@ -5,12 +5,23 @@ import Icon from '@/Components/shared/ui/Icon';
 import QuestionFilters from '@/Components/features/teacher-questions/QuestionFilters';
 import QuestionCard from '@/Components/features/teacher-questions/QuestionCard';
 import useApiGet from '@/hooks/useApiGet';
+import api from '@/utils/api';
 
 export default function Index() {
     const { data: response, loading } = useApiGet('/questions');
 
     const handleCreate = () => {
         router.visit(route('teacher.assessments.questions.create'));
+    };
+
+    const handleDelete = async (id) => {
+        if (!confirm('Are you sure you want to delete this question?')) return;
+        try {
+            await api.delete(`/questions/${id}`);
+            window.location.reload();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error deleting question');
+        }
     };
 
     const questionsData = response?.data || [];
@@ -24,7 +35,7 @@ export default function Index() {
     );
 
     const actions = (
-        <button 
+        <button
             onClick={handleCreate}
             className="bg-primary-container text-on-primary-container hover:bg-primary transition-colors px-6 py-2 rounded-full font-label-md text-label-md shadow-sm active:scale-95 flex items-center gap-2"
         >
@@ -49,7 +60,7 @@ export default function Index() {
 
     const questions = questionsData.map(q => ({
         id: q.id,
-        level: `Level ${q.levels}`,
+        level: `Level ${parseInt(q.levels) + 1}`,
         levelClass: getLevelClass(q.levels),
         levelColorClass: getLevelColorClass(q.levels),
         points: q.score,
@@ -57,10 +68,17 @@ export default function Index() {
         tags: (q.tags || []).map(t => t.name)
     }));
 
+    const headerSection = (
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            {customTitleSection}
+            {actions}
+        </div>
+    );
+
     return (
-        <DashboardTemplate role="teacher" activeTab="assessments" customTitle={customTitleSection} actions={actions}>
+        <DashboardTemplate role="teacher" activeTab="assessments" headerSection={headerSection}>
             <Head title="Question Bank | Diajar LMS" />
-            
+
             <div className="max-w-6xl mx-auto w-full pb-20 md:pb-0">
                 <QuestionFilters />
 
@@ -83,7 +101,7 @@ export default function Index() {
                     <div className="grid grid-cols-1 gap-4">
                         {questions.length > 0 ? (
                             questions.map((q) => (
-                                <QuestionCard key={q.id} {...q} />
+                                <QuestionCard key={q.id} {...q} onDelete={() => handleDelete(q.id)} />
                             ))
                         ) : (
                             <div className="p-8 text-center text-on-surface-variant bg-surface-container rounded-2xl">

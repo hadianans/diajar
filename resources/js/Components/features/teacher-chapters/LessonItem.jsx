@@ -2,7 +2,7 @@ import React from 'react';
 import { router } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function LessonItem({ chapterId, lessonId, title, type = 'text', onMoveUp, onMoveDown }) {
+export default function LessonItem({ chapterId, lessonId, title, type = 'text', onMoveUp, onMoveDown, onEdit, onDelete }) {
     const isVideo = type === 'video';
     const iconName = isVideo ? 'play_circle' : 'description';
     const iconColor = isVideo ? 'text-error' : 'text-secondary';
@@ -26,12 +26,24 @@ export default function LessonItem({ chapterId, lessonId, title, type = 'text', 
             </div>
             <Icon name={iconName} className={iconColor} />
             <span className="flex-grow font-body-md text-body-md text-on-surface truncate">{title}</span>
-            <button 
-                className="p-1 rounded hover:bg-surface-container-high transition-colors text-on-surface-variant -mr-1"
-                onClick={(e) => { e.stopPropagation(); }}
-            >
-                <Icon name="more_vert" />
-            </button>
+            {onEdit && (
+                <button 
+                    className="p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95"
+                    onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                    title="Edit Material"
+                >
+                    <Icon name="edit" className="text-[18px]" />
+                </button>
+            )}
+            {onDelete && (
+                <button 
+                    className="p-2 rounded-full hover:bg-error-container/20 transition-colors text-error active:scale-95 -mr-1"
+                    onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                    title="Delete Material"
+                >
+                    <Icon name="delete" className="text-[18px]" />
+                </button>
+            )}
         </div>
     );
 }

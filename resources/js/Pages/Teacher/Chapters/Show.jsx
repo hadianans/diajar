@@ -50,6 +50,20 @@ export default function Show({ chapterId }) {
         }
     };
 
+    const handleEditMaterial = (lessonId) => {
+        router.visit(route('teacher.chapters.lessons.edit', { lessonId }));
+    };
+
+    const handleDeleteMaterial = async (lessonId) => {
+        if (!confirm('Are you sure you want to delete this material?')) return;
+        try {
+            await api.delete(`/materials/${lessonId}`);
+            refetch();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Error deleting material');
+        }
+    };
+
     const handleReorderSubchapter = async (subchaptersList, index, direction) => {
         if ((direction === -1 && index === 0) || (direction === 1 && index === subchaptersList.length - 1)) return;
         const newOrder = [...subchaptersList];
@@ -179,16 +193,18 @@ export default function Show({ chapterId }) {
                 <div className="space-y-4">
                     {/* Uncategorized Materials */}
                     {chapter.materials && chapter.materials.length > 0 && (
-                        <CurriculumAccordion title="General Materials" materialsCount={chapter.materials.length} defaultOpen={true}>
+                        <CurriculumAccordion title="Chapter Introduction & Ungrouped Materials" materialsCount={chapter.materials.length} defaultOpen={true}>
                             {chapter.materials.map((mat, idx) => (
                                 <LessonItem
                                     key={mat.id}
                                     chapterId={chapterId}
                                     lessonId={mat.id}
                                     title={mat.title}
-                                    type={mat.type}
+                                    type={mat.file_type}
                                     onMoveUp={idx > 0 ? () => handleReorderMaterial(chapter.materials, idx, -1) : undefined}
                                     onMoveDown={idx < chapter.materials.length - 1 ? () => handleReorderMaterial(chapter.materials, idx, 1) : undefined}
+                                    onEdit={() => handleEditMaterial(mat.id)}
+                                    onDelete={() => handleDeleteMaterial(mat.id)}
                                 />
                             ))}
                         </CurriculumAccordion>
@@ -205,6 +221,7 @@ export default function Show({ chapterId }) {
                             onDelete={() => handleDeleteSubchapter(sub.id)}
                             onMoveUp={sIdx > 0 ? () => handleReorderSubchapter(chapter.subchapters, sIdx, -1) : undefined}
                             onMoveDown={sIdx < chapter.subchapters.length - 1 ? () => handleReorderSubchapter(chapter.subchapters, sIdx, 1) : undefined}
+                            onAddMaterial={() => router.visit(`/teacher/chapters/${chapterId}/lessons/create?subchapter_id=${sub.id}`)}
                         >
                             {sub.materials?.map((mat, mIdx) => (
                                 <LessonItem
@@ -212,9 +229,11 @@ export default function Show({ chapterId }) {
                                     chapterId={chapterId}
                                     lessonId={mat.id}
                                     title={mat.title}
-                                    type={mat.type}
+                                    type={mat.file_type}
                                     onMoveUp={mIdx > 0 ? () => handleReorderMaterial(sub.materials, mIdx, -1) : undefined}
                                     onMoveDown={mIdx < sub.materials.length - 1 ? () => handleReorderMaterial(sub.materials, mIdx, 1) : undefined}
+                                    onEdit={() => handleEditMaterial(mat.id)}
+                                    onDelete={() => handleDeleteMaterial(mat.id)}
                                 />
                             ))}
                         </CurriculumAccordion>

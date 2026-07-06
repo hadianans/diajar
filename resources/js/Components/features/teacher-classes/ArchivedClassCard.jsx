@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function ArchivedClassCard({ id, groupId, title, year, studentsCount }) {
+export default function ArchivedClassCard({ id, groupId, title, subject, year, studentsCount }) {
     return (
         <Link 
             href={`/teacher/classes/${id}${groupId ? `?group_id=${groupId}` : ''}`}
@@ -15,7 +15,8 @@ export default function ArchivedClassCard({ id, groupId, title, year, studentsCo
                     <h4 className="text-label-md font-label-md text-on-surface truncate">{title}</h4>
                     <span className="px-2 py-0.5 rounded bg-outline-variant text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Archived</span>
                 </div>
-                <p className="text-label-sm font-label-sm text-on-surface-variant">{year} • {studentsCount} Students</p>
+                <p className="text-label-sm font-label-sm text-on-surface-variant font-medium mt-0.5">{subject}</p>
+                <p className="text-label-sm font-label-sm text-on-surface-variant opacity-80 mt-1">{year} • {studentsCount} Students</p>
             </div>
             <button className="p-2 rounded-full hover:bg-surface-container-high transition-colors">
                 <Icon name="chevron_right" className="text-outline" />
