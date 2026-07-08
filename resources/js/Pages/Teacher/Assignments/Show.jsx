@@ -76,7 +76,8 @@ export default function Show({ assignmentId }) {
         title: c.title,
         description: c.description || '',
         weight: c.weight,
-        weightStr: `${c.weight}%`
+        weightStr: `${c.weight}%`,
+        levels: c.levels || []
     })) || [];
 
     const attachments = (assignment.attachments || []).map(att => ({
@@ -102,23 +103,22 @@ export default function Show({ assignmentId }) {
         <div className="flex items-center gap-2">
             <button
                 onClick={handleToggleStatus}
-                className={`hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full font-label-md transition-colors active:scale-95 ${
-                    assignment.status === 'open' 
-                        ? 'bg-error-container text-error' 
-                        : 'bg-primary-container text-on-primary-container'
-                }`}
+                className={`hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full font-label-md transition-colors active:scale-95 ${assignment.status === 'open'
+                    ? 'bg-error-container text-error'
+                    : 'bg-primary-container text-on-primary-container'
+                    }`}
             >
                 <Icon name={assignment.status === 'open' ? 'lock' : 'lock_open'} className="text-[18px]" />
                 {assignment.status === 'open' ? 'Close' : 'Reopen'}
             </button>
-            <button 
+            <button
                 onClick={handleEdit}
                 className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high"
                 title="Edit Assignment"
             >
                 <Icon name="edit" className="text-primary" />
             </button>
-            <button 
+            <button
                 onClick={handleDelete}
                 className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20"
                 title="Delete Assignment"
@@ -129,10 +129,10 @@ export default function Show({ assignmentId }) {
     );
 
     return (
-        <DashboardTemplate 
-            role="teacher" 
-            activeTab="assignments" 
-            title="Assignment Details" 
+        <DashboardTemplate
+            role="teacher"
+            activeTab="assignments"
+            title="Assignment Details"
             showBack={true}
             onBack={handleBack}
             actions={actions}
@@ -152,14 +152,13 @@ export default function Show({ assignmentId }) {
                             <span className="font-label-md text-label-md">Max Grade: {assignment.grade} pts</span>
                         </div>
                         {assignment.due_date && (
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container/20 text-on-primary-container">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-on-primary-container">
                                 <Icon name="schedule" className="text-sm" />
                                 <span className="font-label-md text-label-md">Due: {moment(assignment.due_date).format('MMM D, YYYY HH:mm')}</span>
                             </div>
                         )}
-                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${
-                            assignment.status === 'open' ? 'bg-secondary-container/20 text-secondary' : 'bg-error-container/20 text-error'
-                        }`}>
+                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${assignment.status === 'open' ? 'bg-secondary-container/20 text-secondary' : 'bg-error-container/20 text-error'
+                            }`}>
                             <Icon name={assignment.status === 'open' ? 'lock_open' : 'lock'} className="text-sm" />
                             <span className="font-label-md text-label-md capitalize">{assignment.status}</span>
                         </div>
@@ -168,7 +167,7 @@ export default function Show({ assignmentId }) {
                         <div className="font-body-md text-on-surface-variant leading-relaxed mt-2" dangerouslySetInnerHTML={{ __html: assignment.description }} />
                     )}
                 </section>
-                
+
                 {attachments.length > 0 && (
                     <section className="space-y-stack-sm">
                         <h3 className="font-headline-sm text-on-surface">Attachments</h3>
@@ -176,7 +175,7 @@ export default function Show({ assignmentId }) {
                     </section>
                 )}
 
-                <AssignmentMetricsBento  
+                <AssignmentMetricsBento
                     submissions={assignment.total_submissions || 0}
                     totalStudents={30}
                     pendingCount={assignment.ungraded_count || 0}
@@ -187,9 +186,9 @@ export default function Show({ assignmentId }) {
                 />
 
                 {chartData.length > 0 && <GradeDistributionChart data={chartData} />}
-                
+
                 {rubricCriteria.length > 0 && <CollapsibleRubric criteria={rubricCriteria} />}
-                
+
                 <SubmissionRoster assignmentId={assignment.id} students={students} />
             </div>
 

@@ -109,34 +109,103 @@ class DashboardController extends Controller
     {
         $studentId = auth()->id();
 
-        $plans = Plan::where('student_id', $studentId)
-            ->with('planables')
+        // 1. Planning Snapshot: "Up Next" (Immediate upcoming plans)
+        $upcomingPlans = Plan::where('student_id', $studentId)
+            ->whereNull('completed_at')
+            ->where('target_date', '>=', now()->startOfDay())
             ->orderBy('target_date')
+            ->limit(5)
+            ->with('planables.planable')
             ->get();
 
-        // Calendar data for current month
-        $calendarDates = Plan::where('student_id', $studentId)
-            ->whereMonth('target_date', now()->month)
-            ->whereYear('target_date', now()->year)
-            ->pluck('target_date');
+        // 2. Monitoring Snapshot: Weekly Stats
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+        
+        $weeklyPlansTotal = Plan::where('student_id', $studentId)
+            ->whereBetween('target_date', [$startOfWeek, $endOfWeek])
+            ->count();
+            
+        $weeklyPlansCompleted = Plan::where('student_id', $studentId)
+            ->whereBetween('target_date', [$startOfWeek, $endOfWeek])
+            ->whereNotNull('completed_at')
+            ->count();
+            
+        $weeklyProgress = $weeklyPlansTotal > 0 ? round(($weeklyPlansCompleted / $weeklyPlansTotal) * 100) : 0;
 
-        // Comprehension distribution
         $comprehension = Reflection::where('student_id', $studentId)
             ->selectRaw('comprehension_level, COUNT(*) as count')
             ->groupBy('comprehension_level')
             ->pluck('count', 'comprehension_level');
 
-        // Reflections
-        $reflections = Reflection::where('student_id', $studentId)
-            ->with('reflectables')
-            ->orderByDesc('created_at')
-            ->get();
+        // LMS Progress Stats
+        $classIds = $this->getStudentClassIds($studentId);
+
+        $totalPublished = \App\Models\Material::where('status', 'published')
+            ->whereHas('chapter.subject.classes', fn ($q) => $q->whereIn('classes.id', $classIds)->whereNull('classes.deleted_at'))
+            ->count() ?: 1;
+        $materialCompleted = MaterialCompletion::where('student_id', $studentId)->where('is_completed', true)->count();
+
+        $totalAssignments = ClassAssignment::whereIn('class_id', $classIds)->whereNull('deleted_at')->where('status', 'open')->count() ?: 1;
+        $submittedAssignments = AssignmentSubmission::where('student_id', $studentId)
+            ->whereHas('classAssignment', fn ($q) => $q->whereIn('class_id', $classIds)->whereNull('deleted_at'))->count();
+
+        $totalAssessments = ClassAssessment::whereIn('class_id', $classIds)->whereNull('deleted_at')->count() ?: 1;
+        $submittedAssessments = AssessmentAttempt::where('student_id', $studentId)
+            ->whereIn('status', ['submitted', 'graded'])
+            ->whereHas('classAssessment', fn ($q) => $q->whereIn('class_id', $classIds)->whereNull('deleted_at'))->count();
+
+        $lmsProgress = [
+            'material' => round(($materialCompleted / $totalPublished) * 100),
+            'assignment' => round(($submittedAssignments / $totalAssignments) * 100),
+            'assessment' => round(($submittedAssessments / $totalAssessments) * 100),
+        ];
+
+        // 3. Reflection Prompts: Recently completed but un-reflected tasks
+        $completedAssessmentIds = AssessmentAttempt::where('student_id', $studentId)
+            ->whereIn('status', ['submitted', 'graded'])
+            ->pluck('class_assessment_id');
+
+        $reflectedAssessmentIds = \App\Models\Reflectable::where('reflectable_type', ClassAssessment::class)
+            ->whereHas('reflection', fn($q) => $q->where('student_id', $studentId))
+            ->pluck('reflectable_id');
+
+        $pendingAssessments = ClassAssessment::whereIn('id', $completedAssessmentIds)
+            ->whereNotIn('id', $reflectedAssessmentIds)
+            ->get(['id', 'title'])->map(fn($a) => [
+                'id' => $a->id,
+                'title' => $a->title,
+                'type' => 'assessment'
+            ]);
+
+        $completedAssignmentIds = AssignmentSubmission::where('student_id', $studentId)
+            ->whereIn('status', ['submitted', 'graded'])
+            ->pluck('class_assignment_id');
+
+        $reflectedAssignmentIds = \App\Models\Reflectable::where('reflectable_type', ClassAssignment::class)
+            ->whereHas('reflection', fn($q) => $q->where('student_id', $studentId))
+            ->pluck('reflectable_id');
+
+        $pendingAssignments = ClassAssignment::whereIn('id', $completedAssignmentIds)
+            ->whereNotIn('id', $reflectedAssignmentIds)
+            ->get(['id', 'title'])->map(fn($a) => [
+                'id' => $a->id,
+                'title' => $a->title,
+                'type' => 'assignment'
+            ]);
+
+        $pendingReflections = collect($pendingAssessments)->merge($pendingAssignments)->take(3);
 
         return $this->success([
-            'plans'                      => $plans,
-            'calendar_dates'             => $calendarDates,
+            'upcoming_plans'             => $upcomingPlans,
+            'weekly_stats'               => [
+                'total'     => $weeklyPlansTotal,
+                'completed' => $weeklyPlansCompleted,
+                'progress'  => $weeklyProgress,
+            ],
+            'lms_progress'               => $lmsProgress,
             'comprehension_distribution' => $comprehension,
-            'reflections'                => $reflections,
+            'pending_reflections'        => $pendingReflections,
         ]);
     }
 
@@ -144,7 +213,7 @@ class DashboardController extends Controller
     {
         $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id');
 
-        return ClassModel::whereIn('group_years_id', $groupYearIds)
+        return ClassModel::whereHas('groupYears', fn($q) => $q->whereIn('group_years.id', $groupYearIds))
             ->whereNull('deleted_at')
             ->pluck('id')
             ->toArray();

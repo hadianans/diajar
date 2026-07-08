@@ -15,7 +15,7 @@ export default function Index() {
         title: item.subject?.subject_name || item.subject?.name || 'Subject',
         teacher: item.teacher?.full_name || 'Instructor',
         schedule: item.schedule_time ? `${item.schedule_day || ''} ${item.schedule_time}` : 'TBA',
-        progress: item.progress || 0,
+        progress: item.material_completion || 0,
         icon: 'menu_book',
         iconColorClass: 'text-primary',
         iconBgClass: 'bg-primary-fixed',

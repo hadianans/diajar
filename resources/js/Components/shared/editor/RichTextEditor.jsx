@@ -100,6 +100,7 @@ export default function RichTextEditor({
     uploadUrl = '/materials/upload-image',
     placeholder = 'Start typing your educational content here...',
     error,
+    disableMedia = false,
 }) {
     const fileInputRef = useRef(null);
     const [uploading, setUploading] = useState(false);
@@ -109,10 +110,6 @@ export default function RichTextEditor({
         extensions: [
             StarterKit.configure({
                 heading: { levels: [1, 2, 3] },
-            }),
-            CustomImage.configure({
-                allowBase64: true,
-                HTMLAttributes: { class: 'rounded-sm max-w-full' },
             }),
             Link.configure({
                 openOnClick: false,
@@ -125,11 +122,17 @@ export default function RichTextEditor({
             FontFamily,
             Superscript,
             FontSize,
-            Youtube.configure({
-                HTMLAttributes: { class: 'w-full aspect-video rounded-lg' },
-                controls: false,
-                nocookie: true,
-            }),
+            ...(disableMedia ? [] : [
+                CustomImage.configure({
+                    allowBase64: true,
+                    HTMLAttributes: { class: 'rounded-sm max-w-full' },
+                }),
+                Youtube.configure({
+                    HTMLAttributes: { class: 'w-full aspect-video rounded-lg' },
+                    controls: false,
+                    nocookie: true,
+                })
+            ]),
         ],
         content: content || '',
         onUpdate: ({ editor: ed }) => onChange?.(ed.getHTML()),
@@ -354,28 +357,32 @@ export default function RichTextEditor({
 
                 <Separator />
 
-                {/* Media (Image & Embed) */}
-                <MenuButton onClick={() => fileInputRef.current?.click()} title="Insert Image" disabled={uploading}>
-                    {uploading ? (
-                        <Icon name="progress_activity" className="animate-spin" style={{ fontSize: '20px' }} />
-                    ) : (
-                        <Icon name="image" style={{ fontSize: '20px' }} />
-                    )}
-                </MenuButton>
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                {!disableMedia && (
+                    <>
+                        {/* Media (Image & Embed) */}
+                        <MenuButton onClick={() => fileInputRef.current?.click()} title="Insert Image" disabled={uploading}>
+                            {uploading ? (
+                                <Icon name="progress_activity" className="animate-spin" style={{ fontSize: '20px' }} />
+                            ) : (
+                                <Icon name="image" style={{ fontSize: '20px' }} />
+                            )}
+                        </MenuButton>
+                        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
 
-                <MenuButton onClick={() => {
-                    const url = window.prompt('Enter YouTube URL to Embed:');
-                    if (url) {
-                        editor.chain().focus().setYoutubeVideo({
-                            src: url,
-                        }).run();
-                    }
-                }} title="Embed YouTube Video">
-                    <Icon name="smart_display" style={{ fontSize: '20px' }} />
-                </MenuButton>
+                        <MenuButton onClick={() => {
+                            const url = window.prompt('Enter YouTube URL to Embed:');
+                            if (url) {
+                                editor.chain().focus().setYoutubeVideo({
+                                    src: url,
+                                }).run();
+                            }
+                        }} title="Embed YouTube Video">
+                            <Icon name="smart_display" style={{ fontSize: '20px' }} />
+                        </MenuButton>
 
-                <Separator />
+                        <Separator />
+                    </>
+                )}
 
                 {/* Undo / Redo */}
                 <MenuButton onClick={() => editor.chain().focus().undo().run()} title="Undo">

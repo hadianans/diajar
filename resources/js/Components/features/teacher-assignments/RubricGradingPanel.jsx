@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function RubricGradingPanel({ criteria, feedback, onLevelSelect, onFeedbackChange, grade, maxGrade }) {
+export default function RubricGradingPanel({ criteria, feedback, onLevelSelect, onFeedbackChange, grade, maxGrade, readOnly }) {
     const [openIndex, setOpenIndex] = useState(0);
 
     return (
@@ -10,11 +10,13 @@ export default function RubricGradingPanel({ criteria, feedback, onLevelSelect, 
             <div className="bg-primary-container text-on-primary-container p-4 rounded-xl flex items-center justify-between border border-primary/20 shadow-md">
                 <div className="flex flex-col">
                     <span className="text-label-sm font-label-sm opacity-80">Current Grade</span>
-                    <span className="text-headline-md font-headline-md">{grade}/{maxGrade} ({maxGrade ? Math.round((grade/maxGrade)*100) : 0}%)</span>
+                    <span className="text-headline-md font-headline-md">{grade} / 100</span>
                 </div>
-                <div className="bg-on-primary-container/20 px-3 py-1 rounded-full border border-on-primary-container/10">
-                    <span className="text-label-sm font-label-sm">Live Sync</span>
-                </div>
+                {!readOnly && (
+                    <div className="bg-on-primary-container/20 px-3 py-1 rounded-full border border-on-primary-container/10">
+                        <span className="text-label-sm font-label-sm">Live Sync</span>
+                    </div>
+                )}
             </div>
 
             {/* Rubric Panel */}
@@ -49,12 +51,13 @@ export default function RubricGradingPanel({ criteria, feedback, onLevelSelect, 
                                         return (
                                             <button 
                                                 key={lidx}
+                                                disabled={readOnly}
                                                 onClick={() => onLevelSelect(criterion.id, lvl.id)}
-                                                className={`flex flex-col items-start p-3 rounded-lg text-left transition-all active:scale-[0.98] ${
+                                                className={`flex flex-col items-start p-3 rounded-lg text-left transition-all ${!readOnly && 'active:scale-[0.98]'} ${
                                                     isSelected 
                                                     ? 'border-2 border-primary bg-primary-container/10' 
-                                                    : 'border border-outline-variant hover:bg-surface-container-low'
-                                                }`}
+                                                    : `border border-outline-variant ${!readOnly && 'hover:bg-surface-container-low'}`
+                                                } ${readOnly && !isSelected ? 'opacity-50' : ''}`}
                                             >
                                                 <div className="flex justify-between w-full">
                                                     <span className={`text-label-md font-label-md ${isSelected ? 'text-primary' : 'text-on-surface'}`}>
@@ -80,14 +83,20 @@ export default function RubricGradingPanel({ criteria, feedback, onLevelSelect, 
             {/* Feedback Section */}
             <div className="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-3">
                 <label className="text-label-md font-label-md text-on-surface-variant" htmlFor="feedback">Feedback for Student</label>
-                <textarea 
-                    id="feedback"
-                    className="w-full bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-body-md font-body-md placeholder:text-outline" 
-                    placeholder="Type qualitative feedback here..." 
-                    rows="4"
-                    value={feedback || ''}
-                    onChange={(e) => onFeedbackChange(e.target.value)}
-                ></textarea>
+                {readOnly ? (
+                    <div className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-body-md font-body-md min-h-[100px] whitespace-pre-wrap">
+                        {feedback || <span className="text-outline italic">No feedback provided.</span>}
+                    </div>
+                ) : (
+                    <textarea 
+                        id="feedback"
+                        className="w-full bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary text-body-md font-body-md placeholder:text-outline" 
+                        placeholder="Type qualitative feedback here..." 
+                        rows="4"
+                        value={feedback || ''}
+                        onChange={(e) => onFeedbackChange(e.target.value)}
+                    ></textarea>
+                )}
             </div>
         </section>
     );

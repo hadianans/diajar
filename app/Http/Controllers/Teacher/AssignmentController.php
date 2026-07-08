@@ -146,7 +146,69 @@ class AssignmentController extends Controller
 
         $assignment->update($request->only('title', 'description', 'due_date', 'grade', 'status'));
         $this->syncTags($assignment->id, $request->input('tag_ids', []));
-        $assignment->load('tags');
+
+        if ($request->has('rubric')) {
+            $rubricData = $request->input('rubric');
+            
+            if (empty($rubricData)) {
+                // If rubric array is explicitly empty, we should delete the rubric
+                $rubric = \App\Models\ClassRubric::where('class_assignment_id', $assignment->id)->first();
+                if ($rubric) {
+                    $rubric->criteria()->each(function ($criterion) {
+                        $criterion->levels()->delete();
+                        $criterion->delete();
+                    });
+                    $rubric->delete();
+                }
+            } else {
+                $rubric = \App\Models\ClassRubric::updateOrCreate(
+                    ['class_assignment_id' => $assignment->id],
+                    [
+                        'title'       => $rubricData['title'],
+                        'description' => $rubricData['description'] ?? null,
+                    ]
+                );
+
+                $providedCriteriaIds = array_filter(array_column($rubricData['criteria'] ?? [], 'id'));
+                $rubric->criteria()->whereNotIn('id', $providedCriteriaIds)->each(function ($criterion) {
+                    $criterion->levels()->delete();
+                    $criterion->delete();
+                });
+
+                foreach ($rubricData['criteria'] ?? [] as $criterionData) {
+                    $criterion = \App\Models\ClassRubricCriterion::updateOrCreate(
+                        [
+                            'id' => $criterionData['id'] ?? null,
+                            'class_rubric_id' => $rubric->id
+                        ],
+                        [
+                            'title'       => $criterionData['title'],
+                            'description' => $criterionData['description'] ?? null,
+                            'weight'      => $criterionData['weight'],
+                        ]
+                    );
+
+                    $providedLevelIds = array_filter(array_column($criterionData['levels'] ?? [], 'id'));
+                    $criterion->levels()->whereNotIn('id', $providedLevelIds)->delete();
+
+                    foreach ($criterionData['levels'] ?? [] as $levelData) {
+                        \App\Models\ClassRubricLevel::updateOrCreate(
+                            [
+                                'id' => $levelData['id'] ?? null,
+                                'class_criterion_id' => $criterion->id
+                            ],
+                            [
+                                'label'       => $levelData['label'],
+                                'score'       => $levelData['score'],
+                                'description' => $levelData['description'] ?? null,
+                            ]
+                        );
+                    }
+                }
+            }
+        }
+
+        $assignment->load('tags', 'rubric.criteria.levels');
 
         return $this->success($assignment);
     }
@@ -170,7 +232,8 @@ class AssignmentController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $assignment = ClassAssignment::whereNull('deleted_at')->findOrFail($id);
-        $assignment->update(['deleted_at' => now()]);
+        $assignment->deleted_at = now();
+        $assignment->save();
 
         return $this->success(null, 'Assignment deleted');
     }

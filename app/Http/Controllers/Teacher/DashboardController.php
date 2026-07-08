@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
         $activeClassIds = ClassModel::where('teacher_id', $teacherId)
             ->whereNull('deleted_at')
-            ->when($activeYearId, fn($q) => $q->whereHas('groupYear', fn($q2) => $q2->where('year_id', $activeYearId)))
+            ->when($activeYearId, fn($q) => $q->whereHas('groupYears', fn($q2) => $q2->where('year_id', $activeYearId)))
             ->pluck('id');
 
         return $this->success([
@@ -84,7 +84,7 @@ class DashboardController extends Controller
     private function getSrlSnapshot(Collection $activeClassIds): array
     {
         $activePlans = Plan::whereHas('student.studentGroups.groupYear.classes', fn($q) => $q->whereIn('classes.id', $activeClassIds))
-            ->where('completed_at', '0000-00-00 00:00:00')
+            ->whereNull('completed_at')
             ->count();
 
         $newReflections = Reflection::whereHas('student.studentGroups.groupYear.classes', fn($q) => $q->whereIn('classes.id', $activeClassIds))

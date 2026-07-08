@@ -4,7 +4,7 @@ import Icon from '@/Components/shared/ui/Icon';
 const emptyLevel = () => ({ label: '', score: 0, description: '' });
 const emptyCriterion = () => ({ title: '', description: '', weight: 0, levels: [emptyLevel()] });
 
-export default function RubricBuilder({ rubric, onChange }) {
+export default function RubricBuilder({ rubric, onChange, onClear }) {
     const [expandedCriterion, setExpandedCriterion] = useState(0);
 
     const handleRubricField = (field, value) => {
@@ -67,6 +67,16 @@ export default function RubricBuilder({ rubric, onChange }) {
                     <Icon name={totalWeight === 100 ? "check_circle" : "warning"} className="text-[16px]" filled />
                     <span>Total Weight: {totalWeight}%</span>
                 </div>
+                {onClear && (
+                    <button 
+                        type="button" 
+                        onClick={onClear}
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-error text-error hover:bg-error-container hover:text-on-error-container transition-colors font-label-sm text-label-sm"
+                    >
+                        <Icon name="delete" className="text-[16px]" />
+                        <span>Clear Rubric</span>
+                    </button>
+                )}
             </div>
 
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-6">

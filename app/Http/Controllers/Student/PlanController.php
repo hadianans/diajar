@@ -26,6 +26,10 @@ class PlanController extends Controller
         if ($request->filled('chapter_id')) {
             $query->where('chapter_id', $request->chapter_id);
         }
+        if ($request->filled('search')) {
+            $query->where(fn($q) => $q->where('title', 'like', '%' . $request->search . '%')
+                ->orWhere('description', 'like', '%' . $request->search . '%'));
+        }
 
         $plans = $query->get();
 

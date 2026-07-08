@@ -27,6 +27,20 @@ class RubricController extends Controller
         return $this->success($rubric);
     }
 
+    public function destroyRubric(int $assignmentId): JsonResponse
+    {
+        $rubric = ClassRubric::where('class_assignment_id', $assignmentId)->first();
+        if ($rubric) {
+            $rubric->criteria()->each(function ($criterion) {
+                $criterion->levels()->delete();
+                $criterion->delete();
+            });
+            $rubric->delete();
+        }
+
+        return $this->success(null, 'Rubric deleted');
+    }
+
     public function storeCriterion(Request $request, int $rubricId): JsonResponse
     {
         $request->validate([

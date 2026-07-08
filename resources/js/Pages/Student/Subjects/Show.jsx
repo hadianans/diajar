@@ -35,7 +35,7 @@ export default function Show({ subjectId }) {
             id: ch.id,
             chapterNumber: ch.order || (idx + 1),
             title: ch.name || ch.title,
-            status: ch.completion === 100 ? 'completed' : (ch.completion > 0 ? 'in_progress' : 'locked'),
+            status: ch.is_locked ? 'locked' : (ch.completion === 100 ? 'completed' : 'in_progress'),
             progress: ch.completion || 0,
             description: ch.description,
             tags: [],

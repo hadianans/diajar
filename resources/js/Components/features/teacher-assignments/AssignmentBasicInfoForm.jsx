@@ -40,6 +40,7 @@ export default function AssignmentBasicInfoForm({ formData, onChange, errors = {
                         onChange={html => handleChange('description', html)}
                         placeholder="Describe the assignment expectations..."
                         error={errors.description}
+                        disableMedia={true}
                     />
                     {errors.description && <p className="text-error text-label-sm">{errors.description}</p>}
                 </div>

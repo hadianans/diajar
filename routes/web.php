@@ -67,9 +67,9 @@ Route::middleware(['auth', 'verified', 'role:student'])->prefix('student')->name
         return Inertia::render('Student/Assessments/Attempt', ['assessmentId' => $assessmentId]);
     })->name('assessments.attempt');
 
-    Route::get('/assessments/{assessmentId}/result', function ($assessmentId) {
-        return Inertia::render('Student/Assessments/Result', ['assessmentId' => $assessmentId]);
-    })->name('assessments.result');
+    Route::get('/attempts/{attemptId}/result', function ($attemptId) {
+        return Inertia::render('Student/Assessments/Result', ['attemptId' => $attemptId]);
+    })->name('attempts.result');
 
     Route::get('/gradebook', function () {
         return Inertia::render('Student/Gradebook/Index');
@@ -78,6 +78,23 @@ Route::middleware(['auth', 'verified', 'role:student'])->prefix('student')->name
     Route::get('/gradebook/{subjectId}', function ($subjectId) {
         return Inertia::render('Student/Gradebook/Show', ['subjectId' => $subjectId]);
     })->name('gradebook.show');
+
+    // SRL Deep-Dives
+    Route::get('/planner', function () {
+        return Inertia::render('Student/SRL/Planner');
+    })->name('srl.plan');
+
+    Route::get('/reflect', function () {
+        return Inertia::render('Student/SRL/ReflectionModal');
+    })->name('srl.reflect');
+
+    Route::get('/plans', function () {
+        return Inertia::render('Student/SRL/Plans/Index');
+    })->name('srl.plans.index');
+
+    Route::get('/reflections', function () {
+        return Inertia::render('Student/SRL/Reflections/Index');
+    })->name('srl.reflections.index');
 });
 
 // ============================================================

@@ -97,7 +97,7 @@ class ClassController extends Controller
                 'schoolYear:id,name',
                 'groupYears.group:id,name',
                 'groupYears.schoolYear:id,name,status',
-                'groupYears.studentGroups' => fn ($q) => $q->with('student:id,full_name,username,picture')->limit(8),
+                'groupYears.studentGroups' => fn ($q) => $q->with('student:id,full_name,username,picture'),
             ])
             ->findOrFail($id);
 

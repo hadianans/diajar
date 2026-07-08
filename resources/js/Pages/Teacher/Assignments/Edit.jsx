@@ -36,13 +36,16 @@ export default function Edit({ assignmentId }) {
             // Pre-populate rubric if exists
             if (assignment.rubric) {
                 setRubric({
+                    id: assignment.rubric.id,
                     title: assignment.rubric.title || '',
                     description: assignment.rubric.description || '',
                     criteria: (assignment.rubric.criteria || []).map(c => ({
+                        id: c.id,
                         title: c.title || '',
                         description: c.description || '',
                         weight: c.weight || 0,
                         levels: (c.levels || []).map(l => ({
+                            id: l.id,
                             label: l.label || '',
                             score: l.score || 0,
                             description: l.description || '',
@@ -61,9 +64,12 @@ export default function Edit({ assignmentId }) {
         setIsSaving(true);
         setErrors({});
         try {
-            await api.put(`/assignments/${assignmentId}`, {
-                ...formData,
-            });
+            const payload = { ...formData };
+            if (rubric && rubric.criteria && rubric.criteria.length > 0) {
+                payload.rubric = rubric;
+            }
+
+            await api.put(`/assignments/${assignmentId}`, payload);
 
             const newAttachments = attachments.filter(a => a.isNew);
             if (newAttachments.length > 0) {
@@ -145,6 +151,17 @@ export default function Edit({ assignmentId }) {
                 <RubricBuilder 
                     rubric={rubric}
                     onChange={setRubric}
+                    onClear={async () => {
+                        if (!confirm("Are you sure you want to completely clear and delete this rubric?")) return;
+                        try {
+                            if (assignment.rubric) {
+                                await api.delete(`/assignments/${assignmentId}/rubric`);
+                            }
+                            setRubric({ title: '', description: '', criteria: [] });
+                        } catch (err) {
+                            alert(err.response?.data?.message || 'Error deleting rubric');
+                        }
+                    }}
                 />
                 
                 <AssignmentAttachmentForm 

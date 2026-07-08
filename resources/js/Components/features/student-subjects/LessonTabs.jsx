@@ -48,18 +48,24 @@ export default function LessonTabs({ overviewContent, resources }) {
                 {activeTab === 'resources' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {resources.map((resource, idx) => (
-                            <div key={idx} className="p-4 border border-outline-variant rounded-xl flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer group">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${resource.bgClass} ${resource.textClass}`}>
+                            <a 
+                                key={idx} 
+                                href={resource.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-4 border border-outline-variant rounded-xl flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer group"
+                            >
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                    <div className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center ${resource.bgClass} ${resource.textClass}`}>
                                         <Icon name={resource.icon} />
                                     </div>
-                                    <div>
-                                        <div className="font-label-md text-label-md">{resource.title}</div>
+                                    <div className="overflow-hidden">
+                                        <div className="font-label-md text-label-md truncate" title={resource.title}>{resource.title}</div>
                                         <div className="text-[10px] text-outline uppercase font-bold">{resource.meta}</div>
                                     </div>
                                 </div>
-                                <Icon name={resource.actionIcon} className="text-outline group-hover:text-primary transition-colors" />
-                            </div>
+                                <Icon name={resource.actionIcon} className="shrink-0 text-outline group-hover:text-primary transition-colors" />
+                            </a>
                         ))}
                     </div>
                 )}

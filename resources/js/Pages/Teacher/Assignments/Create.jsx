@@ -45,7 +45,7 @@ export default function Create() {
             }
 
             const response = await api.post('/assignments', payload);
-            const assignmentId = response.data.data.id;
+            const assignmentId = response.id;
 
             if (attachments.length > 0) {
                 const uploadData = new FormData();
@@ -107,8 +107,13 @@ export default function Create() {
                     chapters={chapters || []}
                 />
                 <RubricBuilder 
-                    rubric={rubric}
-                    onChange={setRubric}
+                    rubric={rubric} 
+                    onChange={setRubric} 
+                    onClear={() => {
+                        if (confirm("Are you sure you want to clear the rubric?")) {
+                            setRubric({ title: '', description: '', criteria: [] });
+                        }
+                    }}
                 />
                 
                 <AssignmentAttachmentForm 

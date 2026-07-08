@@ -49,7 +49,7 @@ export default function Index() {
                         <div className="text-center py-8 text-on-surface-variant">Loading assignments...</div>
                     ) : filteredAssignments.length > 0 ? (
                         filteredAssignments.map(assignment => (
-                            <div key={assignment.id} onClick={() => router.visit(`/student/assignments/${assignment.id}`)} className="cursor-pointer">
+                            <div key={assignment.id}>
                                 <AssignmentCard 
                                     {...assignment} 
                                     onAddToList={() => console.log('Added to list', assignment.id)}

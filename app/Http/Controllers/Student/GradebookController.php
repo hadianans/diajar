@@ -21,7 +21,7 @@ class GradebookController extends Controller
         $studentId = auth()->id();
         $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id');
 
-        $classes = ClassModel::whereIn('group_years_id', $groupYearIds)
+        $classes = ClassModel::whereHas('groupYears', fn($q) => $q->whereIn('group_years.id', $groupYearIds))
             ->whereNull('deleted_at')
             ->with(['subject:id,subject_name,subject_code'])
             ->get();

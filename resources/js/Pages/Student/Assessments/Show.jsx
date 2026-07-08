@@ -3,7 +3,6 @@ import { Head, Link } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import AssessmentStatsGrid from '@/Components/features/student-assessments/AssessmentStatsGrid';
-import AssessmentReflection from '@/Components/features/student-assessments/AssessmentReflection';
 import useApiGet from '@/hooks/useApiGet';
 
 export default function Show({ assessmentId }) {
@@ -11,9 +10,9 @@ export default function Show({ assessmentId }) {
 
     const assessmentData = useMemo(() => {
         if (!responseData || !responseData.assessment) return null;
-        
+
         const { assessment, attempts_used, latest_attempt } = responseData;
-        
+
         let status = 'Upcoming';
         if (latest_attempt) {
             status = latest_attempt.status === 'progress' ? 'In Progress' : 'Completed';
@@ -60,7 +59,7 @@ export default function Show({ assessmentId }) {
     }
 
     return (
-        <DashboardTemplate 
+        <DashboardTemplate
             activeTab="tasks"
             title="Diajar"
             showBack={true}
@@ -87,14 +86,14 @@ export default function Show({ assessmentId }) {
                 </section>
 
                 {/* Visual Anchor (Atmospheric Banner) */}
-                <div className="relative w-full h-40 rounded-xl overflow-hidden shadow-sm">
+                {/* <div className="relative w-full h-40 rounded-xl overflow-hidden shadow-sm">
                     <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
                     <div className="absolute inset-0 flex items-center p-6">
                         <div className="p-3 bg-white/90 backdrop-blur rounded-lg shadow-sm border border-white/40">
                             <Icon name="science" className="text-primary scale-125" style={{ fontVariationSettings: "'FILL' 1" }} />
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Description Section */}
                 <section className="bg-surface-container-low p-5 rounded-xl border border-outline-variant/30">
@@ -104,31 +103,21 @@ export default function Show({ assessmentId }) {
                 {/* Assessment Details Grid */}
                 <AssessmentStatsGrid stats={assessmentData.stats} />
 
-                {/* Pre-Assessment Reflection Card */}
-                {assessmentData.canStart && (
-                    <AssessmentReflection 
-                        goals={assessmentData.reflectionGoals} 
-                        onSelect={(goal) => console.log('Goal selected:', goal)} 
-                    />
-                )}
-
-                {/* Sticky Bottom Actions */}
-                <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/20 p-4 md:px-margin-desktop z-40">
-                    <div className="max-w-3xl mx-auto flex items-center gap-4">
-                        {assessmentData.canStart ? (
-                            <Link 
-                                href={route('student.assessments.attempt', { assessmentId })}
-                                className="flex-1 bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
-                            >
-                                <span>Start Assessment</span>
-                                <Icon name="play_arrow" className="text-[20px]" />
-                            </Link>
-                        ) : (
-                            <div className="flex-1 bg-surface-container text-on-surface-variant py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 text-center opacity-70">
-                                <span>Assessment Unavailable</span>
-                            </div>
-                        )}
-                    </div>
+                {/* Page-integrated Actions */}
+                <div className="pt-4 flex items-center gap-4">
+                    {assessmentData.canStart ? (
+                        <Link
+                            href={route('student.assessments.attempt', { assessmentId })}
+                            className="w-full bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                        >
+                            <span>Start Assessment</span>
+                            <Icon name="play_arrow" className="text-[20px]" />
+                        </Link>
+                    ) : (
+                        <div className="w-full bg-surface-container text-on-surface-variant py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 text-center opacity-70">
+                            <span>Assessment Unavailable</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </DashboardTemplate>

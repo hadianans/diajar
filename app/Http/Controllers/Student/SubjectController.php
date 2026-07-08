@@ -22,7 +22,7 @@ class SubjectController extends Controller
         $studentId = auth()->id();
         $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id');
 
-        $classes = ClassModel::whereIn('group_years_id', $groupYearIds)
+        $classes = ClassModel::whereHas('groupYears', fn($q) => $q->whereIn('group_years.id', $groupYearIds))
             ->whereNull('deleted_at')
             ->with([
                 'subject:id,subject_name',
@@ -58,6 +58,7 @@ class SubjectController extends Controller
     public function chapters(int $subjectId): JsonResponse
     {
         $studentId = auth()->id();
+        $groupYearIds = \App\Models\StudentGroup::where('student_id', $studentId)->pluck('group_year_id')->toArray();
 
         $chapters = \App\Models\Chapter::where('subject_id', $subjectId)
             ->orderBy('order')
@@ -69,7 +70,13 @@ class SubjectController extends Controller
             ])
             ->get();
 
-        $chapters->each(function ($ch) use ($studentId) {
+        $chapters = $chapters->filter(function ($ch) use ($groupYearIds) {
+            $targetGroups = $ch->target_groups;
+            if (empty($targetGroups)) return true;
+            return count(array_intersect($groupYearIds, $targetGroups)) > 0;
+        })->values();
+
+        $chapters->each(function ($ch) use ($studentId, $groupYearIds) {
             $total = $ch->total_materials ?: 1;
             $completed = MaterialCompletion::where('student_id', $studentId)
                 ->where('is_completed', true)
@@ -77,6 +84,7 @@ class SubjectController extends Controller
                 ->count();
 
             $ch->completion = round(($completed / $total) * 100, 1);
+            $ch->is_locked = false;
         });
 
         return $this->success($chapters);

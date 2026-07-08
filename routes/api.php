@@ -194,6 +194,7 @@ Route::prefix('teacher')->middleware(['auth:sanctum', 'role:teacher'])->group(fu
 
     // Rubrics
     Route::put('/assignments/{assignmentId}/rubric', [TeacherRubricController::class, 'updateRubric']);
+    Route::delete('/assignments/{assignmentId}/rubric', [TeacherRubricController::class, 'destroyRubric']);
     Route::post('/rubrics/{rubricId}/criteria', [TeacherRubricController::class, 'storeCriterion']);
     Route::put('/rubrics/{rubricId}/criteria/{criterionId}', [TeacherRubricController::class, 'updateCriterion']);
     Route::delete('/rubrics/{rubricId}/criteria/{criterionId}', [TeacherRubricController::class, 'destroyCriterion']);

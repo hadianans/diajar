@@ -151,7 +151,11 @@ class MaterialController extends Controller
             $request->merge(['file_url' => asset('storage/' . $path)]);
         }
 
-        $material->update($request->except(['tag_ids', 'attachments', 'attachment_titles', 'core_file']));
+        if ($request->filled('deleted_attachments')) {
+            $material->attachments()->whereIn('id', $request->input('deleted_attachments'))->delete();
+        }
+
+        $material->update($request->except(['tag_ids', 'attachments', 'attachment_titles', 'core_file', 'deleted_attachments']));
         $this->syncTags($material, $request->input('tag_ids', []));
         $this->handleAttachments($material, $request);
 

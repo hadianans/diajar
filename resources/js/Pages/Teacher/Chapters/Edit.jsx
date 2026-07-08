@@ -30,7 +30,9 @@ export default function Edit({ lessonId }) {
                 content: material.content || '',
                 order: material.order || 1,
                 duration_minutes: material.duration_seconds ? Math.floor(material.duration_seconds / 60) : 15,
-                attachments: [] // We don't preload existing attachments as File objects for simplicity right now
+                attachments: [], // We don't preload existing attachments as File objects for simplicity right now
+                existing_attachments: material.attachments || [],
+                deleted_attachments: []
             });
         }
     }, [material, formData]);
@@ -73,6 +75,13 @@ export default function Edit({ lessonId }) {
                 formData.attachments.forEach((item) => {
                     formDataPayload.append('attachments[]', item.file);
                     formDataPayload.append('attachment_titles[]', item.title || '');
+                });
+            }
+
+            // Append deleted attachments
+            if (formData.deleted_attachments && formData.deleted_attachments.length > 0) {
+                formData.deleted_attachments.forEach((id) => {
+                    formDataPayload.append('deleted_attachments[]', id);
                 });
             }
 

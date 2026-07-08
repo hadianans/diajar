@@ -25,6 +25,18 @@ class ReflectionController extends Controller
                 ->orWhere('content', 'like', '%' . $request->search . '%'));
         }
 
+        if ($request->filled('type')) {
+            $typeClass = match ($request->type) {
+                'assessment' => \App\Models\ClassAssessment::class,
+                'assignment' => \App\Models\ClassAssignment::class,
+                'material'   => \App\Models\Material::class,
+                default      => null,
+            };
+            if ($typeClass) {
+                $query->whereHas('reflectables', fn($q) => $q->where('reflectable_type', $typeClass));
+            }
+        }
+
         return $this->success($query->get());
     }
 
@@ -32,9 +44,9 @@ class ReflectionController extends Controller
     {
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
             'comprehension_level' => 'required|integer|between:1,5',
-            'emotions' => 'required|array',
+            'emotions' => 'nullable|array',
             'reflectable_id' => 'required|integer',
             'reflectable_type' => 'required|string',
         ]);
@@ -44,7 +56,7 @@ class ReflectionController extends Controller
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'comprehension_level' => $request->input('comprehension_level'),
-            'emotions' => json_encode($request->input('emotions')),
+            'emotions' => json_encode($request->input('emotions', [])),
         ]);
 
         Reflectable::create([
@@ -71,9 +83,9 @@ class ReflectionController extends Controller
     {
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
             'comprehension_level' => 'required|integer|between:1,5',
-            'emotions' => 'required|array',
+            'emotions' => 'nullable|array',
         ]);
 
         $reflection = Reflection::where('student_id', auth()->id())->findOrFail($id);
@@ -82,7 +94,7 @@ class ReflectionController extends Controller
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'comprehension_level' => $request->input('comprehension_level'),
-            'emotions' => json_encode($request->input('emotions')),
+            'emotions' => json_encode($request->input('emotions', [])),
         ]);
 
         return $this->success($reflection);

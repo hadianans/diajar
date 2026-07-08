@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import Icon from '@/Components/shared/ui/Icon';
 
 export default function ChapterCard({ 
@@ -119,7 +119,13 @@ export default function ChapterCard({
                     <Icon name="chevron_right" className="text-primary group-hover:translate-x-1 transition-transform" />
                 )}
                 {isInProgress && (
-                    <button className="bg-primary text-on-primary px-4 py-2 rounded-full font-label-md text-label-md shadow-sm active:scale-95 transition-transform" onClick={(e) => { e.preventDefault(); console.log("Resume chapter", id); }}>
+                    <button 
+                        className="bg-primary text-on-primary px-4 py-2 rounded-full font-label-md text-label-md shadow-sm active:scale-95 transition-transform" 
+                        onClick={(e) => { 
+                            e.preventDefault(); 
+                            router.visit(route('student.subjects.chapters.show', { subjectId: subjectId, chapterId: id }));
+                        }}
+                    >
                         Resume
                     </button>
                 )}

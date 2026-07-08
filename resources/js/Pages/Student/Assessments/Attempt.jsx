@@ -23,8 +23,8 @@ export default function Attempt({ assessmentId }) {
             try {
                 // First get assessment details
                 const detailsRes = await api.get(`/assessments/${assessmentId}`);
-                if (detailsRes.data?.success) {
-                    const assessment = detailsRes.data.data.assessment;
+                if (detailsRes && detailsRes.assessment) {
+                    const assessment = detailsRes.assessment;
                     setAssessmentDetails({
                         title: assessment.title,
                         totalQuestions: assessment.question_count || 0,
@@ -34,18 +34,18 @@ export default function Attempt({ assessmentId }) {
 
                 // Then start the attempt
                 const res = await api.post(`/assessments/${assessmentId}/attempt`);
-                if (res.data?.success) {
-                    setAttemptId(res.data.data.attempt_id);
-                    setQuestions(res.data.data.questions || []);
+                if (res && res.attempt_id) {
+                    setAttemptId(res.attempt_id);
+                    setQuestions(res.questions || []);
                     
                     // Initialize answers state
                     const initialAnswers = {};
-                    (res.data.data.questions || []).forEach((q, idx) => {
-                        initialAnswers[idx] = null; // null means unanswered
+                    (res.questions || []).forEach((q, idx) => {
+                        initialAnswers[idx] = { status: null, selectedOptionId: null }; 
                     });
                     setAnswersState(initialAnswers);
                 } else {
-                    alert('Could not start assessment: ' + (res.data?.message || 'Unknown error'));
+                    alert('Could not start assessment: Unknown error');
                     router.visit(`/student/assessments/${assessmentId}`);
                 }
             } catch (error) {
@@ -61,14 +61,15 @@ export default function Attempt({ assessmentId }) {
     }, [assessmentId]);
 
     const currentQuestion = questions[currentIndex];
-    const isMarkedForReview = answersState[currentIndex] === 'flagged';
+    const isMarkedForReview = answersState[currentIndex]?.status === 'flagged';
 
     const handleToggleReview = async () => {
-        const newState = answersState[currentIndex] === 'flagged' ? 'answered' : 'flagged'; // simplified logic
-        setAnswersState(prev => ({ ...prev, [currentIndex]: newState }));
-        
-        // Find if they selected an option before (we don't store selected option locally easily without extra state, so we just toggle UI for now)
-        // A real app would need to track `selectedOptionId` locally.
+        const current = answersState[currentIndex];
+        const newState = current?.status === 'flagged' ? 'answered' : 'flagged';
+        setAnswersState(prev => ({ 
+            ...prev, 
+            [currentIndex]: { ...current, status: newState } 
+        }));
     };
 
     const handleOptionSelect = async (optionId) => {
@@ -82,7 +83,11 @@ export default function Attempt({ assessmentId }) {
             
             setAnswersState(prev => ({
                 ...prev,
-                [currentIndex]: isMarkedForReview ? 'flagged' : 'answered'
+                [currentIndex]: {
+                    ...prev[currentIndex],
+                    status: isMarkedForReview ? 'flagged' : 'answered',
+                    selectedOptionId: optionId
+                }
             }));
         } catch (error) {
             console.error('Error saving answer:', error);
@@ -102,7 +107,7 @@ export default function Attempt({ assessmentId }) {
     };
 
     const handleSubmit = async () => {
-        const unansweredCount = questions.length - Object.values(answersState).filter(s => s === 'answered' || s === 'flagged').length;
+        const unansweredCount = questions.length - Object.values(answersState).filter(s => (s?.status === 'answered' || s?.status === 'flagged') && s?.selectedOptionId != null).length;
         if (confirm(`Are you sure you want to finish the attempt? You still have ${unansweredCount} unanswered questions.`)) {
             try {
                 await api.patch(`/attempts/${attemptId}/submit`);
@@ -116,7 +121,7 @@ export default function Attempt({ assessmentId }) {
     };
 
     // Calculate progress based on answered questions
-    const answeredCount = Object.values(answersState).filter(s => s === 'answered' || s === 'flagged').length;
+    const answeredCount = Object.values(answersState).filter(s => (s?.status === 'answered' || s?.status === 'flagged') && s?.selectedOptionId != null).length;
     const progressPercentage = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
 
     if (loading) {
@@ -175,24 +180,27 @@ export default function Attempt({ assessmentId }) {
                     </div>
 
                     <div className="space-y-3">
-                        {currentQuestion.options?.map((option, idx) => (
-                            <label 
-                                key={option.id}
-                                className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
-                                    false // In a real app we'd track selectedOptionId to highlight it
-                                    ? 'bg-primary-container/20 border-primary shadow-sm' 
-                                    : 'bg-surface-container-lowest border-outline-variant/40 hover:bg-surface-container-low hover:border-outline-variant'
-                                }`}
-                                onClick={() => handleOptionSelect(option.id)}
-                            >
-                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                                    false ? 'border-primary' : 'border-outline-variant'
-                                }`}>
-                                    {false && <div className="w-3 h-3 bg-primary rounded-full" />}
-                                </div>
-                                <div className="font-body-md text-on-surface-variant leading-relaxed" dangerouslySetInnerHTML={{ __html: option.option }} />
-                            </label>
-                        ))}
+                        {currentQuestion.options?.map((option, idx) => {
+                            const isSelected = answersState[currentIndex]?.selectedOptionId === option.id;
+                            return (
+                                <label 
+                                    key={option.id}
+                                    className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+                                        isSelected
+                                        ? 'bg-primary-container/20 border-primary shadow-sm' 
+                                        : 'bg-surface-container-lowest border-outline-variant/40 hover:bg-surface-container-low hover:border-outline-variant'
+                                    }`}
+                                    onClick={() => handleOptionSelect(option.id)}
+                                >
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                        isSelected ? 'border-primary' : 'border-outline-variant'
+                                    }`}>
+                                        {isSelected && <div className="w-3 h-3 bg-primary rounded-full" />}
+                                    </div>
+                                    <div className="font-body-md text-on-surface-variant leading-relaxed" dangerouslySetInnerHTML={{ __html: option.option }} />
+                                </label>
+                            );
+                        })}
                     </div>
                 </div>
 

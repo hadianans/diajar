@@ -34,6 +34,8 @@ class MaterialRequest extends FormRequest
                 'attachments.*'    => 'file|max:8192',
                 'attachment_titles'   => 'nullable|array|max:3',
                 'attachment_titles.*' => 'nullable|string|max:255',
+                'deleted_attachments'   => 'nullable|array',
+                'deleted_attachments.*' => 'integer|exists:attachments,id',
             ],
             'reorder' => [
                 'orders'         => 'required|array|min:1',

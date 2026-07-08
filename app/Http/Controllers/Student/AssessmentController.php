@@ -23,7 +23,7 @@ class AssessmentController extends Controller
     {
         $groupYearIds = StudentGroup::where('student_id', auth()->id())->pluck('group_year_id');
 
-        return ClassModel::whereIn('group_years_id', $groupYearIds)
+        return ClassModel::whereHas('groupYears', fn($q) => $q->whereIn('group_years.id', $groupYearIds))
             ->whereNull('deleted_at')
             ->pluck('id')
             ->toArray();
@@ -36,7 +36,7 @@ class AssessmentController extends Controller
 
         $query = ClassAssessment::whereIn('class_id', $classIds)
             ->whereNull('deleted_at')
-            ->with(['chapter:id,name', 'classModel.subject:id,subject_name', 'tags'])
+            ->with(['chapter:id,name,target_groups', 'classModel.subject:id,subject_name', 'tags'])
             ->withCount('questions as question_count');
 
         if ($request->filled('subject_id')) {
@@ -46,7 +46,11 @@ class AssessmentController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $assessments = $query->get();
+        $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id')->toArray();
+        $assessments = $query->get()->filter(function ($a) use ($groupYearIds) {
+            if (!$a->chapter || empty($a->chapter->target_groups)) return true;
+            return count(array_intersect($groupYearIds, $a->chapter->target_groups)) > 0;
+        })->values();
 
         $assessments->each(function ($a) use ($studentId) {
             $attempt = AssessmentAttempt::where('class_assessment_id', $a->id)
@@ -73,7 +77,15 @@ class AssessmentController extends Controller
 
         $assessment = ClassAssessment::whereIn('class_id', $classIds)
             ->whereNull('deleted_at')
+            ->with(['chapter:id,name,target_groups'])
             ->findOrFail($id);
+
+        $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id')->toArray();
+        if ($assessment->chapter && !empty($assessment->chapter->target_groups)) {
+            if (count(array_intersect($groupYearIds, $assessment->chapter->target_groups)) === 0) {
+                return $this->error('You do not have access to this assessment.', 403);
+            }
+        }
 
         $attemptCount = AssessmentAttempt::where('class_assessment_id', $id)
             ->where('student_id', $studentId)
@@ -101,7 +113,15 @@ class AssessmentController extends Controller
 
         $assessment = ClassAssessment::whereIn('class_id', $classIds)
             ->whereNull('deleted_at')
+            ->with(['chapter:id,name,target_groups'])
             ->findOrFail($id);
+
+        $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id')->toArray();
+        if ($assessment->chapter && !empty($assessment->chapter->target_groups)) {
+            if (count(array_intersect($groupYearIds, $assessment->chapter->target_groups)) === 0) {
+                return $this->error('You do not have access to this assessment.', 403);
+            }
+        }
 
         // Check max attempts
         $attemptCount = AssessmentAttempt::where('class_assessment_id', $id)
@@ -203,11 +223,17 @@ class AssessmentController extends Controller
             ->join('class_questions', 'assessment_answers.question_id', '=', 'class_questions.id')
             ->sum('class_questions.score');
 
+        $maxPossibleScore = ClassAssessmentQuestion::where('class_assessment_id', $attempt->class_assessment_id)
+            ->join('class_questions', 'class_assessment_questions.class_question_id', '=', 'class_questions.id')
+            ->sum('class_questions.score');
+
+        $finalGrade = $maxPossibleScore > 0 ? round(($totalScore / $maxPossibleScore) * 100, 1) : 0;
+
         $attempt->update([
             'submit_time'        => $now,
             'end_time'           => $now,
             'time_spent_seconds' => $attempt->start_time ? $now->diffInSeconds($attempt->start_time) : 0,
-            'grade'              => $totalScore,
+            'grade'              => $finalGrade,
             'status'             => 'submitted',
         ]);
 

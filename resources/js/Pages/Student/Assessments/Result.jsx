@@ -12,8 +12,8 @@ export default function Result({ attemptId }) {
         const fetchResult = async () => {
             try {
                 const res = await api.get(`/attempts/${attemptId}/result`);
-                if (res.data?.success) {
-                    setResultData(res.data.data);
+                if (res && res.attempt) {
+                    setResultData(res);
                 }
             } catch (error) {
                 console.error('Error fetching result:', error);

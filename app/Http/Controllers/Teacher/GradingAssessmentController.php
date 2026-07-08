@@ -64,8 +64,14 @@ class GradingAssessmentController extends Controller
             ->join('class_questions', 'assessment_answers.question_id', '=', 'class_questions.id')
             ->sum('class_questions.score');
 
+        $maxPossibleScore = \App\Models\ClassAssessmentQuestion::where('class_assessment_id', $attempt->class_assessment_id)
+            ->join('class_questions', 'class_assessment_questions.class_question_id', '=', 'class_questions.id')
+            ->sum('class_questions.score');
+
+        $finalGrade = $maxPossibleScore > 0 ? round(($totalScore / $maxPossibleScore) * 100, 1) : 0;
+
         $attempt->update([
-            'grade'    => $totalScore,
+            'grade'    => $finalGrade,
             'status'   => 'graded',
             'grade_by' => auth()->id(),
         ]);

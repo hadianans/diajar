@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import RichTextEditor from '@/Components/shared/editor/RichTextEditor';
+import { getFileDetails } from '@/utils/getFileDetails';
 
 const getYoutubeEmbedUrl = (url) => {
     if (!url) return null;
@@ -20,7 +21,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
         const files = Array.from(e.target.files);
         if (!files.length) return;
         
-        const currentCount = formData.attachments?.length || 0;
+        const currentCount = (formData.attachments?.length || 0) + (formData.existing_attachments?.length || 0);
         if (currentCount + files.length > 3) {
             alert("Maximum 3 attachments allowed.");
             return;
@@ -356,33 +357,68 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
             <section className="mt-stack-lg space-y-stack-md">
                 <h3 className="font-headline-md text-headline-md text-on-surface">Supporting Materials</h3>
                 <div className="space-y-stack-sm">
-                    {formData.attachments && formData.attachments.map((item, idx) => (
-                        <div key={idx} className="flex items-center gap-4 p-4 bg-white border border-outline-variant rounded-2xl shadow-sm">
-                            <div className="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center text-primary">
-                                <Icon name="description" />
+                    {/* Existing Attachments */}
+                    {formData.existing_attachments && formData.existing_attachments.map((item) => {
+                        const details = getFileDetails(item.file_url);
+                        return (
+                            <div key={`existing-${item.id}`} className="flex items-center gap-4 p-4 bg-surface border border-outline-variant rounded-2xl shadow-sm">
+                                <div className={`w-12 h-12 ${details.bgClass} rounded-xl flex items-center justify-center ${details.textClass} shrink-0`}>
+                                    <Icon name={details.icon} />
+                                </div>
+                                <div className="flex-1 flex flex-col gap-1 min-w-0">
+                                <p className="font-label-md text-label-md text-on-surface truncate" title={item.title || 'Attachment'}>{item.title || 'Attachment'}</p>
+                                <a href={item.file_url} target="_blank" rel="noreferrer" className="text-label-sm font-label-sm text-primary hover:underline flex items-center gap-1 w-max">
+                                    <Icon name="open_in_new" className="text-[12px]" />
+                                    View File
+                                </a>
                             </div>
-                            <div className="flex-1 flex flex-col gap-1">
-                                <input
-                                    type="text"
-                                    placeholder="Enter a friendly title for this file..."
-                                    value={item.title}
-                                    onChange={(e) => handleAttachmentTitleChange(idx, e.target.value)}
-                                    className="bg-transparent border-b border-outline-variant/50 focus:border-primary focus:ring-0 px-0 py-1 font-label-md text-label-md text-on-surface"
-                                />
-                                <p className="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-2">
-                                    <span className="truncate max-w-[150px] md:max-w-xs">{item.file.name}</span>
-                                    <span>&bull;</span>
-                                    <span>{item.file.size ? (item.file.size / (1024 * 1024)).toFixed(2) + ' MB' : ''}</span>
-                                </p>
-                            </div>
-                            <button type="button" onClick={() => removeAttachment(idx)} className="p-2 text-error hover:bg-error-container/20 rounded-full transition-colors">
+                            <button 
+                                type="button" 
+                                onClick={() => {
+                                    const newExisting = formData.existing_attachments.filter(a => a.id !== item.id);
+                                    const newDeleted = [...(formData.deleted_attachments || []), item.id];
+                                    onChange({ ...formData, existing_attachments: newExisting, deleted_attachments: newDeleted });
+                                }} 
+                                className="p-2 text-error hover:bg-error-container/20 rounded-full transition-colors shrink-0"
+                                title="Delete existing attachment"
+                            >
                                 <Icon name="delete" />
                             </button>
                         </div>
-                    ))}
+                        );
+                    })}
+
+                    {/* New Attachments */}
+                    {formData.attachments && formData.attachments.map((item, idx) => {
+                        const details = getFileDetails(item.file.name);
+                        return (
+                            <div key={`new-${idx}`} className="flex items-center gap-4 p-4 bg-surface border border-outline-variant rounded-2xl shadow-sm">
+                                <div className={`w-12 h-12 ${details.bgClass} rounded-xl flex items-center justify-center ${details.textClass} shrink-0`}>
+                                    <Icon name={details.icon} />
+                                </div>
+                                <div className="flex-1 flex flex-col gap-1 min-w-0">
+                                    <input
+                                        type="text"
+                                        placeholder="Enter a friendly title for this file..."
+                                        value={item.title}
+                                        onChange={(e) => handleAttachmentTitleChange(idx, e.target.value)}
+                                        className="bg-transparent border-b border-outline-variant/50 focus:border-primary focus:ring-0 px-0 py-1 font-label-md text-label-md text-on-surface w-full"
+                                    />
+                                    <p className="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-2">
+                                        <span className="truncate max-w-[150px] md:max-w-xs">{item.file.name}</span>
+                                        <span>&bull;</span>
+                                        <span>{item.file.size ? (item.file.size / (1024 * 1024)).toFixed(2) + ' MB' : ''}</span>
+                                    </p>
+                                </div>
+                                <button type="button" onClick={() => removeAttachment(idx)} className="p-2 text-error hover:bg-error-container/20 rounded-full transition-colors shrink-0">
+                                    <Icon name="delete" />
+                                </button>
+                            </div>
+                        );
+                    })}
 
                     {/* Add Attachment Trigger */}
-                    {(!formData.attachments || formData.attachments.length < 3) && (
+                    {((formData.attachments?.length || 0) + (formData.existing_attachments?.length || 0) < 3) && (
                         <div 
                             onClick={() => fileInputRef.current?.click()}
                             className="border-2 border-dashed border-outline-variant rounded-2xl p-8 flex flex-col items-center justify-center gap-3 hover:bg-surface-container-low transition-all cursor-pointer group"
