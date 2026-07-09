@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Head, router } from '@inertiajs/react';
+import { Head, router, Link } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import moment from 'moment';
 import api from '@/utils/api';
 import Pagination from '@/Components/shared/ui/Pagination';
+import ReflectionForm from '@/Components/features/reflections/ReflectionForm';
 
 export default function ReflectionsIndex() {
     const [search, setSearch] = useState('');
@@ -13,6 +14,7 @@ export default function ReflectionsIndex() {
     const [typeFilter, setTypeFilter] = useState('');
     const [subjectFilter, setSubjectFilter] = useState('');
     const [page, setPage] = useState(1);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const { data: subjectsData } = useApiGet('/subjects');
     const subjects = subjectsData || [];
@@ -54,6 +56,43 @@ export default function ReflectionsIndex() {
         }
     };
 
+    const handleUpdate = async (data) => {
+        if (!selectedRef) return;
+        setIsUpdating(true);
+        try {
+            await api.put(`/reflections/${selectedRef.id}`, {
+                title: selectedRef.title,
+                content: data.content,
+                comprehension_level: data.comprehension_level,
+                material_quality: data.material_quality,
+                emotions: data.emotions,
+            });
+            alert('Reflection updated successfully!');
+            refetch();
+            setSelectedRef(null);
+        } catch (err) {
+            console.error(err);
+            alert('Failed to update reflection.');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const getTargetLink = (reflectable) => {
+        if (!reflectable) return '#';
+        if (reflectable.reflectable_type.includes('Material')) {
+            const mat = reflectable.reflectable;
+            return `/student/subjects/${mat?.chapter?.subject_id || 1}/${mat?.chapter_id || 1}/${mat?.id || reflectable.reflectable_id}`;
+        }
+        if (reflectable.reflectable_type.includes('Assignment')) {
+            return `/student/assignments/${reflectable.reflectable_id}`;
+        }
+        if (reflectable.reflectable_type.includes('Assessment')) {
+            return `/student/assessments/${reflectable.reflectable_id}`;
+        }
+        return '#';
+    };
+
     const headerSection = (
         <section className="flex flex-col gap-stack-sm pt-4">
             <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Growth Journal</h2>
@@ -87,8 +126,8 @@ export default function ReflectionsIndex() {
                         <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">Reflection Details</h3>
                         
                         {selectedRef ? (
-                            <div className="flex flex-col gap-6">
-                                <div className="flex justify-between items-start border-b border-outline-variant/50 pb-4">
+                            <div className="flex flex-col gap-6 animate-fadeIn">
+                                <div className="border-b border-outline-variant/50 pb-4 flex justify-between items-start gap-4">
                                     <div>
                                         <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Target Task</p>
                                         <p className="text-headline-sm font-headline-sm mt-1">{selectedRef.reflectables?.[0]?.reflectable?.title || selectedRef.title || 'Untitled'}</p>
@@ -97,20 +136,10 @@ export default function ReflectionsIndex() {
                                             {moment(selectedRef.created_at).format('MMMM D, YYYY h:mm A')}
                                         </p>
                                     </div>
-                                    <div className={`w-14 h-14 rounded-full flex flex-col items-center justify-center font-bold shadow-sm ${compColors[selectedRef.comprehension_level] || 'bg-surface border border-outline-variant text-on-surface-variant'}`}>
-                                        <span className="text-xl leading-none">{selectedRef.comprehension_level}</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <span className="text-label-md font-label-md text-on-surface-variant block mb-2">Your Reflection</span>
-                                    <div className="text-body-md text-on-surface bg-surface border border-outline-variant/30 p-4 rounded-xl whitespace-pre-wrap leading-relaxed">
-                                        {selectedRef.content || <span className="italic opacity-50">No notes provided.</span>}
-                                    </div>
                                 </div>
 
                                 {selectedRef.teacher_comment && (
-                                    <div>
+                                    <div className="mb-4">
                                         <span className="text-label-md font-label-md text-primary block mb-2 flex items-center gap-2">
                                             <Icon name="forum" className="text-[18px]" />
                                             Teacher Feedback
@@ -120,16 +149,33 @@ export default function ReflectionsIndex() {
                                         </div>
                                     </div>
                                 )}
-                                
-                                <div className="mt-4 pt-4 border-t border-outline-variant/50 flex justify-end">
-                                    <button 
-                                        onClick={(e) => handleDelete(selectedRef.id, e)}
-                                        className="flex items-center gap-2 px-5 py-2.5 bg-error-container text-on-error-container rounded-full text-label-md font-label-md hover:opacity-90 transition-opacity"
-                                    >
-                                        <Icon name="delete" className="text-[18px]" />
-                                        Delete
-                                    </button>
-                                </div>
+
+                                <ReflectionForm 
+                                    initialData={{
+                                        ...selectedRef,
+                                        emotions: typeof selectedRef.emotions === 'string' ? JSON.parse(selectedRef.emotions) : (selectedRef.emotions || [])
+                                    }}
+                                    onSubmit={handleUpdate}
+                                    onCancel={() => setSelectedRef(null)}
+                                    loading={isUpdating}
+                                    showQuality={selectedRef.reflectables?.[0]?.reflectable_type?.includes('Material') || false}
+                                    extraActions={
+                                        <>
+                                            <Link href={getTargetLink(selectedRef.reflectables?.[0])} className="flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-on-secondary-container rounded-full text-label-md font-label-md hover:opacity-90 transition-opacity">
+                                                <Icon name="arrow_forward" className="text-[18px]" />
+                                                View Task
+                                            </Link>
+                                            <button 
+                                                onClick={(e) => handleDelete(selectedRef.id, e)}
+                                                className="flex items-center gap-2 px-5 py-2.5 bg-error-container text-on-error-container rounded-full text-label-md font-label-md hover:opacity-90 transition-opacity"
+                                                type="button"
+                                            >
+                                                <Icon name="delete" className="text-[18px]" />
+                                                Delete
+                                            </button>
+                                        </>
+                                    }
+                                />
                             </div>
                         ) : (
                             <div className="h-full flex flex-col items-center justify-center text-center p-6 text-on-surface-variant opacity-70 mt-12">

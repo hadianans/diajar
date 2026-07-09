@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function ReflectionForm({ 
-    initialData = null, 
-    onSubmit, 
-    onCancel, 
-    loading = false 
+export default function ReflectionForm({
+    initialData = null,
+    onSubmit,
+    onCancel,
+    loading = false,
+    showQuality = true,
+    extraActions = null
 }) {
     const [comprehension, setComprehension] = useState(initialData?.comprehension_level || 0);
     const [quality, setQuality] = useState(initialData?.material_quality || 0);
@@ -95,47 +97,49 @@ export default function ReflectionForm({
             </div>
 
             {/* Quality rating (optional) */}
-            <div>
-                <label className="block font-title-sm text-title-sm text-on-surface mb-4 font-semibold tracking-wide flex items-center gap-2">
-                    <span>Material Quality</span>
-                    <span className="text-on-surface-variant/50 text-[12px] font-normal px-2 py-0.5 rounded-md border border-outline-variant/20">Optional</span>
-                </label>
+            {showQuality && (
+                <div>
+                    <label className="block font-title-sm text-title-sm text-on-surface mb-4 font-semibold tracking-wide flex items-center gap-2">
+                        <span>Material Quality</span>
+                        <span className="text-on-surface-variant/50 text-[12px] font-normal px-2 py-0.5 rounded-md border border-outline-variant/20">Optional</span>
+                    </label>
 
-                <div className="flex gap-2.5 items-center group/rating">
-                    {[1, 2, 3, 4, 5].map((val) => {
-                        const isSelected = val <= quality;
-                        return (
-                            <button
-                                key={val}
-                                type="button"
-                                onClick={() => setQuality(val)}
-                                className="relative text-[34px] focus:outline-none transition-all duration-200 hover:scale-125 active:scale-95 ease-out [&:hover~button]:opacity-40"
-                            >
-                                <span className="relative block transition-all duration-300">
-                                    <Icon
-                                        name="star"
-                                        className={`transition-all duration-300 ${isSelected
-                                            ? 'text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)] scale-105'
-                                            : 'text-outline-variant/30 group-hover/rating:text-amber-500/40 [&:hover]:text-amber-500'
-                                            } ${quality === val ? 'animate-[bounce_0.3s_ease-in-out_1]' : ''}`}
-                                        style={{ fontVariationSettings: isSelected ? "'FILL' 1, 'wght' 500" : "'FILL' 0, 'wght' 400" }}
-                                    />
-                                </span>
-                            </button>
-                        );
-                    })}
+                    <div className="flex gap-2.5 items-center group/rating">
+                        {[1, 2, 3, 4, 5].map((val) => {
+                            const isSelected = val <= quality;
+                            return (
+                                <button
+                                    key={val}
+                                    type="button"
+                                    onClick={() => setQuality(val)}
+                                    className="relative text-[34px] focus:outline-none transition-all duration-200 hover:scale-125 active:scale-95 ease-out [&:hover~button]:opacity-40"
+                                >
+                                    <span className="relative block transition-all duration-300">
+                                        <Icon
+                                            name="star"
+                                            className={`transition-all duration-300 ${isSelected
+                                                ? 'text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)] scale-105'
+                                                : 'text-outline-variant/30 group-hover/rating:text-amber-500/40 [&:hover]:text-amber-500'
+                                                } ${quality === val ? 'animate-[bounce_0.3s_ease-in-out_1]' : ''}`}
+                                            style={{ fontVariationSettings: isSelected ? "'FILL' 1, 'wght' 500" : "'FILL' 0, 'wght' 400" }}
+                                        />
+                                    </span>
+                                </button>
+                            );
+                        })}
 
-                    {quality > 0 && (
-                        <span className="ml-2 text-[14px] font-bold text-amber-600 tracking-wide animate-[fadeIn_0.2s_ease-out]">
-                            {quality === 1 && 'Buruk'}
-                            {quality === 2 && 'Cukup'}
-                            {quality === 3 && 'Bagus'}
-                            {quality === 4 && 'Sangat Bagus'}
-                            {quality === 5 && 'Sempurna!'}
-                        </span>
-                    )}
+                        {quality > 0 && (
+                            <span className="ml-2 text-[14px] font-bold text-amber-600 tracking-wide animate-[fadeIn_0.2s_ease-out]">
+                                {quality === 1 && 'Buruk'}
+                                {quality === 2 && 'Cukup'}
+                                {quality === 3 && 'Bagus'}
+                                {quality === 4 && 'Sangat Bagus'}
+                                {quality === 5 && 'Sempurna!'}
+                            </span>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Emoji emotions selection (optional) */}
             <div>
@@ -189,24 +193,29 @@ export default function ReflectionForm({
                 </div>
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-outline-variant/30">
-                {onCancel && (
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-outline-variant/30">
+                <div className="flex gap-2">
+                    {extraActions}
+                </div>
+                <div className="flex flex-1 sm:flex-none justify-end gap-2">
+                    {onCancel && (
+                        <button
+                            type="button"
+                            onClick={onCancel}
+                            disabled={loading}
+                            className="px-6 py-2.5 border border-outline-variant text-on-surface-variant rounded-full font-label-lg hover:bg-surface-container transition-colors disabled:opacity-50"
+                        >
+                            Cancel
+                        </button>
+                    )}
                     <button
-                        type="button"
-                        onClick={onCancel}
+                        type="submit"
                         disabled={loading}
-                        className="px-6 py-2.5 border border-outline-variant text-on-surface-variant rounded-full font-label-lg hover:bg-surface-container transition-colors disabled:opacity-50"
+                        className="py-2.5 px-6 bg-primary text-on-primary rounded-full font-label-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        Cancel
+                        {loading ? 'Saving...' : (initialData ? 'Update' : 'Save')}
                     </button>
-                )}
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-1 py-2.5 bg-primary text-on-primary rounded-full font-label-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                    {loading ? 'Saving...' : (initialData ? 'Update Reflection' : 'Save Reflection')}
-                </button>
+                </div>
             </div>
         </form>
     );

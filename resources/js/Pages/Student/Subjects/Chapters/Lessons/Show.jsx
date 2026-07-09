@@ -35,14 +35,16 @@ export default function Show({
 
     const existingReflection = useMemo(() => {
         if (!reflectionsData) return null;
-        return reflectionsData.find(ref =>
+        const reflectionsArray = Array.isArray(reflectionsData) ? reflectionsData : (reflectionsData.data || []);
+        return reflectionsArray.find(ref =>
             ref.reflectables?.some(r => r.reflectable_type === 'App\\Models\\Material' && r.reflectable_id === parseInt(lessonId))
         );
     }, [reflectionsData, lessonId]);
 
     const existingPlan = useMemo(() => {
         if (!plansData) return null;
-        return plansData.find(plan =>
+        const plansArray = Array.isArray(plansData) ? plansData : (plansData.data || []);
+        return plansArray.find(plan =>
             plan.planables?.some(p => p.planable_type === 'App\\Models\\Material' && p.planable_id === parseInt(lessonId))
         );
     }, [plansData, lessonId]);

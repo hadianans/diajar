@@ -19,7 +19,8 @@ export default function Show({ assignmentId }) {
 
     const existingReflection = useMemo(() => {
         if (!reflectionsData) return null;
-        return reflectionsData.find(ref =>
+        const reflectionsArray = Array.isArray(reflectionsData) ? reflectionsData : (reflectionsData.data || []);
+        return reflectionsArray.find(ref =>
             ref.reflectables?.some(r => r.reflectable_type === 'App\\Models\\ClassAssignment' && r.reflectable_id === parseInt(assignmentId))
         );
     }, [reflectionsData, assignmentId]);
@@ -186,6 +187,7 @@ export default function Show({ assignmentId }) {
                             reflectionInitialData={reflectionInitialData}
                             onSaveReflection={handleSaveReflection}
                             isSavingReflection={isSavingReflection}
+                            showQuality={false}
                         />
                     </div>
                 </div>

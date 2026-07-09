@@ -86,7 +86,7 @@ class AssignmentController extends Controller
             ->first();
 
         if ($submission && $submission->status === 'graded') {
-            $submission->load('rubricPoints');
+            $submission->setRelation('rubricPoints', $submission->rubricPoints()->get());
         }
 
         return $this->success([

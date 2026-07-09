@@ -10,7 +10,8 @@ export default function SubmissionCard({
     loading,
     reflectionInitialData,
     onSaveReflection,
-    isSavingReflection
+    isSavingReflection,
+    showQuality = true
 }) {
     const { auth } = usePage().props;
     const user = auth?.user;
@@ -208,6 +209,7 @@ export default function SubmissionCard({
                             initialData={reflectionInitialData}
                             onSubmit={onSaveReflection}
                             loading={isSavingReflection}
+                            showQuality={showQuality}
                         />
                     </div>
                 )}

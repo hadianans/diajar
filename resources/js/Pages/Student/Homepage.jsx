@@ -139,7 +139,7 @@ export default function Homepage() {
                                 title={lastAccessed.material.title}
                                 type={lastAccessed.material.file_type || 'Material'}
                                 progress={progress.material_completion || 0}
-                                onContinueClick={() => router.visit(`/student/subjects/${lastAccessed.material.chapter?.subject_id || 1}/chapters/${lastAccessed.material.chapter_id}/lessons/${lastAccessed.material_id}`)}
+                                onContinueClick={() => router.visit(`/student/subjects/${lastAccessed.material.chapter?.subject_id || 1}/${lastAccessed.material.chapter_id}/${lastAccessed.material_id}`)}
                             />
                         ) : (
                             <div className="bg-surface-container-low rounded-[24px] p-6 border border-outline-variant text-center">

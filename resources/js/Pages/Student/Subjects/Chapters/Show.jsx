@@ -94,10 +94,11 @@ export default function Show({ subjectId, chapterId }) {
         setSelectedItemTypeForPlan(type);
 
         let foundPlan = null;
-        if (plansData) {
-            foundPlan = Array.isArray(plansData) ? plansData.find(plan =>
+        const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
+        if (plansArray.length > 0) {
+            foundPlan = plansArray.find(plan =>
                 plan.planables?.some(p => p.planable_type === type && p.planable_id === id)
-            ) : null;
+            ) || null;
         }
 
         setSelectedExistingPlan(foundPlan);
@@ -218,7 +219,8 @@ export default function Show({ subjectId, chapterId }) {
                                 <h2 className="font-headline-md text-headline-md text-on-surface mb-stack-md">{subchapter.title}</h2>
                                 <div className="space-y-stack-sm">
                                     {subchapter.lessons.map((lesson, idx) => {
-                                        const hasPlan = Array.isArray(plansData) && plansData.some(plan => 
+                                        const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
+                                        const hasPlan = plansArray.some(plan => 
                                             plan.planables?.some(p => p.planable_type === 'App\\Models\\Material' && p.planable_id === lesson.id)
                                         );
                                         return (
@@ -243,7 +245,8 @@ export default function Show({ subjectId, chapterId }) {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {chapterAssignments.map(a => {
-                                    const hasPlan = Array.isArray(plansData) && plansData.some(plan => 
+                                    const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
+                                    const hasPlan = plansArray.some(plan => 
                                         plan.planables?.some(p => p.planable_type === 'App\\Models\\ClassAssignment' && p.planable_id === a.id)
                                     );
                                     return (
@@ -269,7 +272,8 @@ export default function Show({ subjectId, chapterId }) {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {chapterAssessments.map(a => {
-                                    const hasPlan = Array.isArray(plansData) && plansData.some(plan => 
+                                    const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
+                                    const hasPlan = plansArray.some(plan => 
                                         plan.planables?.some(p => p.planable_type === 'App\\Models\\ClassAssessment' && p.planable_id === a.id)
                                     );
                                     return (
