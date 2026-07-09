@@ -17,7 +17,7 @@ class ReflectionController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Reflection::where('student_id', auth()->id())
-            ->with('reflectables')
+            ->with(['reflectables.reflectable'])
             ->orderByDesc('created_at');
 
         if ($request->filled('search')) {
@@ -29,7 +29,7 @@ class ReflectionController extends Controller
             $typeClass = match ($request->type) {
                 'assessment' => \App\Models\ClassAssessment::class,
                 'assignment' => \App\Models\ClassAssignment::class,
-                'material'   => \App\Models\Material::class,
+                'material', 'lesson' => \App\Models\Material::class,
                 default      => null,
             };
             if ($typeClass) {
@@ -37,7 +37,41 @@ class ReflectionController extends Controller
             }
         }
 
-        return $this->success($query->get());
+        if ($request->filled('subject_id')) {
+            $query->whereHas('reflectables', function ($q) use ($request) {
+                $q->where(function ($q2) use ($request) {
+                    $q2->whereHasMorph('reflectable', [\App\Models\Material::class], function ($q3) use ($request) {
+                        $q3->whereHas('chapter', fn($q4) => $q4->where('subject_id', $request->subject_id));
+                    })->orWhereHasMorph('reflectable', [\App\Models\ClassAssignment::class, \App\Models\ClassAssessment::class], function ($q3) use ($request) {
+                        $q3->whereHas('class', fn($q4) => $q4->where('subject_id', $request->subject_id));
+                    });
+                });
+            });
+        }
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [
+                \Carbon\Carbon::parse($request->start_date)->startOfDay(),
+                \Carbon\Carbon::parse($request->end_date)->endOfDay()
+            ]);
+        }
+
+        $perPage = $request->input('per_page', 5);
+        $paginated = $query->paginate($perPage);
+
+        // Map relation paths so frontend gets consistent data structure
+        $paginated->getCollection()->transform(function ($reflection) {
+            $reflection->reflectables->each(function ($reflectable) {
+                if ($reflectable->reflectable_type === \App\Models\Material::class && $reflectable->reflectable) {
+                    $reflectable->reflectable->load('chapter.subject');
+                } elseif (in_array($reflectable->reflectable_type, [\App\Models\ClassAssignment::class, \App\Models\ClassAssessment::class]) && $reflectable->reflectable) {
+                    $reflectable->reflectable->load('class.subject');
+                }
+            });
+            return $reflection;
+        });
+
+        return $this->success($paginated);
     }
 
     public function store(Request $request): JsonResponse

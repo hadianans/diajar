@@ -109,14 +109,7 @@ class DashboardController extends Controller
     {
         $studentId = auth()->id();
 
-        // 1. Planning Snapshot: "Up Next" (Immediate upcoming plans)
-        $upcomingPlans = Plan::where('student_id', $studentId)
-            ->whereNull('completed_at')
-            ->where('target_date', '>=', now()->startOfDay())
-            ->orderBy('target_date')
-            ->limit(5)
-            ->with('planables.planable')
-            ->get();
+        // 1. Planning Snapshot: Removed (handled via separate paginated endpoint)
 
         // 2. Monitoring Snapshot: Weekly Stats
         $startOfWeek = now()->startOfWeek();
@@ -161,43 +154,9 @@ class DashboardController extends Controller
             'assessment' => round(($submittedAssessments / $totalAssessments) * 100),
         ];
 
-        // 3. Reflection Prompts: Recently completed but un-reflected tasks
-        $completedAssessmentIds = AssessmentAttempt::where('student_id', $studentId)
-            ->whereIn('status', ['submitted', 'graded'])
-            ->pluck('class_assessment_id');
-
-        $reflectedAssessmentIds = \App\Models\Reflectable::where('reflectable_type', ClassAssessment::class)
-            ->whereHas('reflection', fn($q) => $q->where('student_id', $studentId))
-            ->pluck('reflectable_id');
-
-        $pendingAssessments = ClassAssessment::whereIn('id', $completedAssessmentIds)
-            ->whereNotIn('id', $reflectedAssessmentIds)
-            ->get(['id', 'title'])->map(fn($a) => [
-                'id' => $a->id,
-                'title' => $a->title,
-                'type' => 'assessment'
-            ]);
-
-        $completedAssignmentIds = AssignmentSubmission::where('student_id', $studentId)
-            ->whereIn('status', ['submitted', 'graded'])
-            ->pluck('class_assignment_id');
-
-        $reflectedAssignmentIds = \App\Models\Reflectable::where('reflectable_type', ClassAssignment::class)
-            ->whereHas('reflection', fn($q) => $q->where('student_id', $studentId))
-            ->pluck('reflectable_id');
-
-        $pendingAssignments = ClassAssignment::whereIn('id', $completedAssignmentIds)
-            ->whereNotIn('id', $reflectedAssignmentIds)
-            ->get(['id', 'title'])->map(fn($a) => [
-                'id' => $a->id,
-                'title' => $a->title,
-                'type' => 'assignment'
-            ]);
-
-        $pendingReflections = collect($pendingAssessments)->merge($pendingAssignments)->take(3);
+        // 3. Reflection Prompts: Removed (handled via separate paginated endpoint)
 
         return $this->success([
-            'upcoming_plans'             => $upcomingPlans,
             'weekly_stats'               => [
                 'total'     => $weeklyPlansTotal,
                 'completed' => $weeklyPlansCompleted,
@@ -205,7 +164,6 @@ class DashboardController extends Controller
             ],
             'lms_progress'               => $lmsProgress,
             'comprehension_distribution' => $comprehension,
-            'pending_reflections'        => $pendingReflections,
         ]);
     }
 

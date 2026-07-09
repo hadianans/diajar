@@ -1,19 +1,292 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import moment from 'moment';
+import api from '@/utils/api';
+import Modal from '@/Components/shared/ui/Modal';
+import Pagination from '@/Components/shared/ui/Pagination';
+
+// Helper component for Planning Widget
+function PlanWidget() {
+    const [page, setPage] = useState(1);
+    const [type, setType] = useState('');
+    const [subjectId, setSubjectId] = useState('');
+    const { data: response, loading, refetch } = useApiGet(`/plans?page=${page}&per_page=5&type=${type}&subject_id=${subjectId}`);
+    
+    // Also fetch subjects for the filter drop down
+    const { data: subjectsData } = useApiGet('/subjects');
+    const subjects = subjectsData || [];
+
+    const plans = response?.data || [];
+    const total = response?.total || 0;
+
+    const [selectedPlan, setSelectedPlan] = useState(null);
+
+    const handleComplete = async (plan, e) => {
+        e.stopPropagation();
+        try {
+            const newProgress = plan.progress >= 1 ? 0 : 1;
+            await api.patch(`/plans/${plan.id}/progress`, { progress: newProgress });
+            refetch();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <div className="flex flex-col gap-stack-md">
+            <div className="flex items-center justify-between">
+                <h3 className="text-headline-md font-headline-md text-on-surface">Up Next</h3>
+                <div className="flex gap-3 items-center">
+                    <button 
+                        onClick={() => router.visit('/student/plans')}
+                        className="text-primary font-label-md hover:underline"
+                    >
+                        View All
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex gap-2 mb-2">
+                <select 
+                    value={subjectId} 
+                    onChange={(e) => { setSubjectId(e.target.value); setPage(1); }}
+                    className="bg-surface-container border border-outline-variant rounded-md text-xs py-1"
+                >
+                    <option value="">All Subjects</option>
+                    {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
+                <select 
+                    value={type} 
+                    onChange={(e) => { setType(e.target.value); setPage(1); }}
+                    className="bg-surface-container border border-outline-variant rounded-md text-xs py-1"
+                >
+                    <option value="">All Types</option>
+                    <option value="lesson">Lesson</option>
+                    <option value="assignment">Assignment</option>
+                    <option value="assessment">Assessment</option>
+                </select>
+            </div>
+            
+            <div className="flex flex-col gap-3 min-h-[300px]">
+                {loading ? (
+                    <div className="flex justify-center p-6 text-on-surface-variant">Loading...</div>
+                ) : plans.length > 0 ? (
+                    plans.map(plan => {
+                        const planable = plan.planables?.[0]?.planable;
+                        const subjectName = plan.class?.subject?.name || plan.chapter?.subject?.name || 'Unknown Subject';
+                        let typeLabel = 'Unknown';
+                        if (plan.planables?.[0]?.planable_type?.includes('Material')) typeLabel = 'Lesson';
+                        if (plan.planables?.[0]?.planable_type?.includes('Assignment')) typeLabel = 'Assignment';
+                        if (plan.planables?.[0]?.planable_type?.includes('Assessment')) typeLabel = 'Assessment';
+
+                        return (
+                            <div 
+                                key={plan.id} 
+                                className="bg-surface-container-low p-4 rounded-xl flex justify-between items-center border border-outline-variant/30 group hover:border-primary/30 transition-all cursor-pointer"
+                                onClick={() => setSelectedPlan(plan)}
+                            >
+                                <div className="flex gap-3 items-start">
+                                    <input 
+                                        type="checkbox" 
+                                        className="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer"
+                                        checked={plan.progress >= 1}
+                                        onChange={(e) => handleComplete(plan, e)}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                    <div>
+                                        <h4 className={`font-headline-sm text-headline-sm ${plan.progress >= 1 ? 'line-through text-on-surface-variant' : 'text-on-surface'}`}>
+                                            {plan.title}
+                                        </h4>
+                                        <div className="text-label-sm text-on-surface-variant mt-1 flex flex-wrap gap-2 items-center">
+                                            <span className="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-xs">{typeLabel}</span>
+                                            <span>{subjectName}</span>
+                                            {planable?.title && <span>&bull; {planable.title}</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <div className="text-on-surface-variant text-body-md p-6 bg-surface-container-low rounded-xl text-center border border-outline-variant/30">
+                        No upcoming plans found.
+                    </div>
+                )}
+            </div>
+
+            {total > 5 && (
+                <Pagination
+                    currentPage={page}
+                    totalItems={total}
+                    itemsPerPage={5}
+                    onPageChange={setPage}
+                    onItemsPerPageChange={() => {}}
+                    itemsPerPageOptions={[5]}
+                />
+            )}
+
+            <Modal show={!!selectedPlan} onClose={() => setSelectedPlan(null)}>
+                {selectedPlan && (
+                    <div className="p-6">
+                        <h3 className="text-title-lg mb-4">{selectedPlan.title}</h3>
+                        <div className="flex flex-col gap-2">
+                            <p><strong>Target Date:</strong> {moment(selectedPlan.target_date).format('MMM D, YYYY')}</p>
+                            <p><strong>Description:</strong> {selectedPlan.description || 'No description'}</p>
+                            <p><strong>Status:</strong> {selectedPlan.progress >= 1 ? 'Completed' : 'Pending'}</p>
+                        </div>
+                        <div className="mt-6 flex justify-end">
+                            <button className="px-4 py-2 bg-surface-container rounded border border-outline-variant" onClick={() => setSelectedPlan(null)}>Close</button>
+                        </div>
+                    </div>
+                )}
+            </Modal>
+        </div>
+    );
+}
+
+// Helper component for Reflection Widget
+function ReflectionWidget() {
+    const [page, setPage] = useState(1);
+    const [type, setType] = useState('');
+    const [subjectId, setSubjectId] = useState('');
+    const { data: response, loading } = useApiGet(`/reflections?page=${page}&per_page=5&type=${type}&subject_id=${subjectId}`);
+    
+    const { data: subjectsData } = useApiGet('/subjects');
+    const subjects = subjectsData || [];
+
+    const reflections = response?.data || [];
+    const total = response?.total || 0;
+
+    const [selectedRef, setSelectedRef] = useState(null);
+
+    return (
+        <div className="flex flex-col gap-stack-md xl:col-span-1 md:col-span-2">
+            <div className="flex items-center justify-between">
+                <h3 className="text-headline-md font-headline-md text-on-surface">Completed Reflections</h3>
+                <button 
+                    onClick={() => router.visit('/student/reflections')}
+                    className="text-primary font-label-md hover:underline"
+                >
+                    View All
+                </button>
+            </div>
+
+            <div className="flex gap-2 mb-2">
+                <select 
+                    value={subjectId} 
+                    onChange={(e) => { setSubjectId(e.target.value); setPage(1); }}
+                    className="bg-surface-container border border-outline-variant rounded-md text-xs py-1"
+                >
+                    <option value="">All Subjects</option>
+                    {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
+                <select 
+                    value={type} 
+                    onChange={(e) => { setType(e.target.value); setPage(1); }}
+                    className="bg-surface-container border border-outline-variant rounded-md text-xs py-1"
+                >
+                    <option value="">All Types</option>
+                    <option value="lesson">Lesson</option>
+                    <option value="assignment">Assignment</option>
+                    <option value="assessment">Assessment</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col gap-3 min-h-[300px]">
+                {loading ? (
+                    <div className="flex justify-center p-6 text-on-surface-variant">Loading...</div>
+                ) : reflections.length > 0 ? (
+                    reflections.map(ref => {
+                        const reflectable = ref.reflectables?.[0]?.reflectable;
+                        const subjectName = reflectable?.class?.subject?.name || reflectable?.chapter?.subject?.name || 'Unknown Subject';
+                        let typeLabel = 'Unknown';
+                        if (ref.reflectables?.[0]?.reflectable_type?.includes('Material')) typeLabel = 'Lesson';
+                        if (ref.reflectables?.[0]?.reflectable_type?.includes('Assignment')) typeLabel = 'Assignment';
+                        if (ref.reflectables?.[0]?.reflectable_type?.includes('Assessment')) typeLabel = 'Assessment';
+                        
+                        const compColors = {
+                            5: 'bg-success',
+                            4: 'bg-success',
+                            3: 'bg-primary',
+                            2: 'bg-tertiary',
+                            1: 'bg-error'
+                        };
+
+                        return (
+                            <div 
+                                key={ref.id} 
+                                className="bg-secondary-container/20 p-4 rounded-xl flex flex-col gap-2 border border-secondary-container cursor-pointer hover:border-primary/50 transition-colors"
+                                onClick={() => setSelectedRef(ref)}
+                            >
+                                <div>
+                                    <h4 className="font-headline-sm text-headline-sm text-on-surface">{reflectable?.title || 'Unknown Target'}</h4>
+                                    <div className="text-label-sm text-on-surface-variant mt-1 flex flex-wrap gap-2 items-center">
+                                        <span className="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-xs">{typeLabel}</span>
+                                        <span>{subjectName}</span>
+                                        <span className={`w-2 h-2 rounded-full ${compColors[ref.comprehension_level] || 'bg-gray-400'}`} title={`Comprehension: ${ref.comprehension_level}/5`}></span>
+                                    </div>
+                                </div>
+                                {ref.content && (
+                                    <p className="text-body-sm text-on-surface-variant line-clamp-2 italic border-l-2 border-outline-variant pl-2">
+                                        "{ref.content}"
+                                    </p>
+                                )}
+                            </div>
+                        );
+                    })
+                ) : (
+                    <div className="text-on-surface-variant text-body-md p-6 bg-surface-container-low rounded-xl text-center border border-outline-variant/30 flex flex-col items-center gap-2">
+                        <Icon name="done_all" className="text-primary text-[32px]" />
+                        No reflections found.
+                    </div>
+                )}
+            </div>
+
+            {total > 5 && (
+                <Pagination
+                    currentPage={page}
+                    totalItems={total}
+                    itemsPerPage={5}
+                    onPageChange={setPage}
+                    onItemsPerPageChange={() => {}}
+                    itemsPerPageOptions={[5]}
+                />
+            )}
+
+            <Modal show={!!selectedRef} onClose={() => setSelectedRef(null)}>
+                {selectedRef && (
+                    <div className="p-6">
+                        <h3 className="text-title-lg mb-4">Reflection Details</h3>
+                        <div className="flex flex-col gap-2">
+                            <p><strong>Title:</strong> {selectedRef.title || 'Untitled'}</p>
+                            <p><strong>Comprehension:</strong> {selectedRef.comprehension_level} / 5</p>
+                            <p><strong>Note:</strong> {selectedRef.content || 'No notes'}</p>
+                            {selectedRef.teacher_comment && (
+                                <div className="mt-4 p-4 bg-tertiary-container rounded border border-outline-variant">
+                                    <p className="text-sm font-semibold mb-1">Teacher Comment:</p>
+                                    <p>{selectedRef.teacher_comment}</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-6 flex justify-end">
+                            <button className="px-4 py-2 bg-surface-container rounded border border-outline-variant" onClick={() => setSelectedRef(null)}>Close</button>
+                        </div>
+                    </div>
+                )}
+            </Modal>
+        </div>
+    );
+}
 
 export default function Dashboard() {
     const { data, loading } = useApiGet('/dashboard');
 
-    const upcomingPlans = data?.upcoming_plans || [];
     const stats = data?.weekly_stats || { total: 0, completed: 0, progress: 0 };
-    const pendingReflections = data?.pending_reflections || [];
     const lmsProgress = data?.lms_progress || { material: 0, assignment: 0, assessment: 0 };
     
-    // Process comprehension distribution
     const comprehension = useMemo(() => {
         const dist = data?.comprehension_distribution || {};
         let total = 0;
@@ -67,18 +340,14 @@ export default function Dashboard() {
         >
             <Head title="Student Hub - Diajar" />
 
-            {/* CSS Grid for Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter pb-12 items-start">
                 
-                {/* COLUMN 1: Monitoring Snapshot */}
                 <div className="flex flex-col gap-stack-md">
                     <div className="flex items-center justify-between">
                         <h3 className="text-headline-md font-headline-md text-on-surface">Monitoring Snapshot</h3>
                     </div>
 
                     <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30 flex flex-col gap-6">
-                        
-                        {/* Weekly Plans Progress */}
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-label-md font-label-md text-on-surface-variant mb-1">Weekly Plan Progress</p>
@@ -99,7 +368,6 @@ export default function Dashboard() {
 
                         <hr className="border-outline-variant/30" />
 
-                        {/* Overall Completion */}
                         <div className="flex flex-col gap-3">
                             <p className="text-label-md font-label-md text-on-surface-variant">LMS Completion Rate</p>
                             <div className="flex flex-col gap-2">
@@ -129,7 +397,6 @@ export default function Dashboard() {
 
                         <hr className="border-outline-variant/30" />
 
-                        {/* Comprehension Distribution */}
                         <div className="flex flex-col gap-3">
                             <p className="text-label-md font-label-md text-on-surface-variant">Average Comprehension Stats</p>
                             {comprehension.total > 0 ? (
@@ -149,86 +416,11 @@ export default function Dashboard() {
                                 <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-error"></span> Needs Work</div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                {/* COLUMN 2: Planning Snapshot */}
-                <div className="flex flex-col gap-stack-md">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-headline-md font-headline-md text-on-surface">Up Next</h3>
-                        <div className="flex gap-3">
-                            <button 
-                                onClick={() => router.visit('/student/plans')}
-                                className="text-primary font-label-md hover:underline"
-                            >
-                                View All
-                            </button>
-                            <button 
-                                onClick={() => router.visit('/student/planner')}
-                                className="text-primary font-label-md hover:underline"
-                            >
-                                + New
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div className="flex flex-col gap-3">
-                        {upcomingPlans.length > 0 ? upcomingPlans.map(plan => (
-                            <div key={plan.id} className="bg-surface-container-low p-4 rounded-xl flex justify-between items-center border border-outline-variant/30 group hover:border-primary/30 transition-all cursor-pointer" onClick={() => router.visit('/student/planner')}>
-                                <div>
-                                    <h4 className="font-headline-sm text-headline-sm text-on-surface">{plan.title}</h4>
-                                    <p className="text-label-md text-on-surface-variant flex items-center gap-1 mt-1">
-                                        <Icon name="event" className="text-[16px]" />
-                                        {moment(plan.target_date).format('MMM D, YYYY')}
-                                    </p>
-                                </div>
-                                <button className="opacity-0 group-hover:opacity-100 p-2 text-primary hover:bg-primary-container rounded-full transition-all">
-                                    <Icon name="edit" />
-                                </button>
-                            </div>
-                        )) : (
-                            <div className="text-on-surface-variant text-body-md p-6 bg-surface-container-low rounded-xl text-center border border-outline-variant/30">
-                                Your schedule is clear. Take some time to plan your upcoming studies!
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* COLUMN 3: Reflection Prompts */}
-                <div className="flex flex-col gap-stack-md xl:col-span-1 md:col-span-2">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-headline-md font-headline-md text-on-surface">Reflection Queue</h3>
-                        <button 
-                            onClick={() => router.visit('/student/reflections')}
-                            className="text-primary font-label-md hover:underline"
-                        >
-                            History
-                        </button>
-                    </div>
-
-                    <div className="flex flex-col gap-3">
-                        {pendingReflections.length > 0 ? pendingReflections.map((ref, idx) => (
-                            <div key={`${ref.type}-${ref.id}-${idx}`} className="bg-secondary-container/20 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-secondary-container">
-                                <div>
-                                    <h4 className="font-headline-sm text-headline-sm text-on-surface">How did you do on "{ref.title}"?</h4>
-                                    <p className="text-label-md text-on-surface-variant mt-1">You recently completed this {ref.type}. Take a moment to reflect on your strategy and confidence.</p>
-                                </div>
-                                <button 
-                                    onClick={() => router.visit(`/student/reflect?type=${ref.type}&id=${ref.id}`)}
-                                    className="bg-secondary text-on-secondary px-6 py-2 rounded-full font-label-md text-label-md hover:bg-secondary-container hover:text-on-secondary-container transition-colors whitespace-nowrap shadow-sm"
-                                >
-                                    Reflect
-                                </button>
-                            </div>
-                        )) : (
-                            <div className="text-on-surface-variant text-body-md p-6 bg-surface-container-low rounded-xl text-center border border-outline-variant/30 flex flex-col items-center gap-2">
-                                <Icon name="done_all" className="text-primary text-[32px]" />
-                                All caught up! No pending reflections.
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <PlanWidget />
+                <ReflectionWidget />
 
             </div>
         </DashboardTemplate>
