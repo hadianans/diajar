@@ -13,7 +13,7 @@ import ChapterModal from '@/Components/features/teacher-chapters/modals/ChapterM
 import SubchapterModal from '@/Components/features/teacher-chapters/modals/SubchapterModal';
 
 export default function Show({ chapterId }) {
-    const { data: chapter, loading, refetch } = useApiGet(`/chapters/${chapterId}`);
+    const { data: chapter, loading, refetch, setData } = useApiGet(`/chapters/${chapterId}`);
     const [showEditModal, setShowEditModal] = useState(false);
 
     // Subchapter states
@@ -70,27 +70,46 @@ export default function Show({ chapterId }) {
         const temp = newOrder[index];
         newOrder[index] = newOrder[index + direction];
         newOrder[index + direction] = temp;
+        
+        // Optimistic UI update
+        setData({ ...chapter, subchapters: newOrder });
+
         const orders = newOrder.map((item, idx) => ({ id: item.id, order: idx + 1 }));
         try {
             await api.patch(`/chapters/${chapterId}/subchapters/reorder`, { orders });
             refetch();
         } catch (err) {
-            console.error('Failed to reorder', err);
+            console.error('Failed to reorder subchapters', err);
+            alert(err.response?.data?.message || 'Failed to reorder subchapters');
+            refetch(); // Revert on failure
         }
     };
 
-    const handleReorderMaterial = async (materialsList, index, direction) => {
+    const handleReorderMaterial = async (materialsList, index, direction, subchapterId = null) => {
         if ((direction === -1 && index === 0) || (direction === 1 && index === materialsList.length - 1)) return;
         const newOrder = [...materialsList];
         const temp = newOrder[index];
         newOrder[index] = newOrder[index + direction];
         newOrder[index + direction] = temp;
+
+        // Optimistic UI update
+        if (subchapterId) {
+            const newSubchapters = chapter.subchapters.map(sub => 
+                sub.id === subchapterId ? { ...sub, materials: newOrder } : sub
+            );
+            setData({ ...chapter, subchapters: newSubchapters });
+        } else {
+            setData({ ...chapter, materials: newOrder });
+        }
+
         const orders = newOrder.map((item, idx) => ({ id: item.id, order: idx + 1 }));
         try {
             await api.patch(`/materials/reorder`, { orders });
             refetch();
         } catch (err) {
-            console.error('Failed to reorder', err);
+            console.error('Failed to reorder materials', err);
+            alert(err.response?.data?.message || 'Failed to reorder materials');
+            refetch(); // Revert on failure
         }
     };
 
@@ -230,8 +249,8 @@ export default function Show({ chapterId }) {
                                     lessonId={mat.id}
                                     title={mat.title}
                                     type={mat.file_type}
-                                    onMoveUp={mIdx > 0 ? () => handleReorderMaterial(sub.materials, mIdx, -1) : undefined}
-                                    onMoveDown={mIdx < sub.materials.length - 1 ? () => handleReorderMaterial(sub.materials, mIdx, 1) : undefined}
+                                    onMoveUp={mIdx > 0 ? () => handleReorderMaterial(sub.materials, mIdx, -1, sub.id) : undefined}
+                                    onMoveDown={mIdx < sub.materials.length - 1 ? () => handleReorderMaterial(sub.materials, mIdx, 1, sub.id) : undefined}
                                     onEdit={() => handleEditMaterial(mat.id)}
                                     onDelete={() => handleDeleteMaterial(mat.id)}
                                 />

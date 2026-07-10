@@ -136,12 +136,14 @@ class ChapterController extends Controller
     {
         $chapter = Chapter::where('teacher_id', auth()->id())->findOrFail($id);
 
+        // Check if there are any materials, assignments, or assessments (including soft-deleted ones)
+        // We cannot delete the chapter if it has soft-deleted dependents due to DB foreign key constraints.
         $hasDependents = $chapter->materials()->exists()
-            || $chapter->classAssignments()->whereNull('deleted_at')->exists()
-            || $chapter->classAssessments()->whereNull('deleted_at')->exists();
+            || $chapter->classAssignments()->exists()
+            || $chapter->classAssessments()->exists();
 
         if ($hasDependents) {
-            return $this->conflict('Cannot delete chapter with existing materials, assignments, or assessments.');
+            return $this->conflict('Cannot delete chapter with existing materials, assignments, or assessments (including deleted ones).');
         }
 
         $chapter->delete();

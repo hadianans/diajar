@@ -10,13 +10,20 @@ export default function RecommendedCard({ subject, title, duration, imageUrl, on
             onClick={onClick}
             className="min-w-[240px] w-60 bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer flex-shrink-0 group"
         >
-            <div className="h-32 bg-surface-container overflow-hidden">
-                {imageUrl && (
+            <div className="h-32 bg-surface-container overflow-hidden flex items-center justify-center group">
+                {imageUrl ? (
                     <img
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         src={imageUrl}
                         alt={title}
                     />
+                ) : (
+                    // Menggunakan Gradasi + Emoji Sistem yang Presisi
+                    <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                        <span className="text-4xl filter drop-shadow-sm group-hover:scale-110 transition-transform duration-300 select-none">
+                            🎓
+                        </span>
+                    </div>
                 )}
             </div>
             <div className="p-4">

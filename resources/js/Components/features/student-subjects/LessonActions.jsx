@@ -11,7 +11,8 @@ export default function LessonActions({
     onAddStudyPlan, 
     onWriteReflection, 
     onTakeQuiz,
-    hasQuiz 
+    hasQuiz,
+    hasPlan 
 }) {
     return (
         <div className="bg-white border border-outline-variant rounded-3xl p-6 shadow-sm">
@@ -51,8 +52,8 @@ export default function LessonActions({
                         className="w-full py-3 px-4 flex items-center justify-between text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-colors group"
                     >
                         <div className="flex items-center gap-3">
-                            <Icon name="calendar_add_on" className="text-primary" />
-                            <span className="font-label-md text-label-md">Add to Study Plan</span>
+                            <Icon name={hasPlan ? "edit_calendar" : "calendar_add_on"} className={hasPlan ? "text-secondary" : "text-primary"} />
+                            <span className="font-label-md text-label-md">{hasPlan ? 'Edit Study Plan' : 'Add to Study Plan'}</span>
                         </div>
                         <Icon name="chevron_right" className="opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>

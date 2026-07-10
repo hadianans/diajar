@@ -193,29 +193,25 @@ export default function ReflectionForm({
                 </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-outline-variant/30">
-                <div className="flex gap-2">
-                    {extraActions}
-                </div>
-                <div className="flex flex-1 sm:flex-none justify-end gap-2">
-                    {onCancel && (
-                        <button
-                            type="button"
-                            onClick={onCancel}
-                            disabled={loading}
-                            className="px-6 py-2.5 border border-outline-variant text-on-surface-variant rounded-full font-label-lg hover:bg-surface-container transition-colors disabled:opacity-50"
-                        >
-                            Cancel
-                        </button>
-                    )}
+            <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-outline-variant/30">
+                {extraActions}
+                {onCancel && (
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={onCancel}
                         disabled={loading}
-                        className="py-2.5 px-6 bg-primary text-on-primary rounded-full font-label-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="px-6 py-2.5 border border-outline-variant text-on-surface-variant rounded-full font-label-lg hover:bg-surface-container transition-colors disabled:opacity-50"
                     >
-                        {loading ? 'Saving...' : (initialData ? 'Update' : 'Save')}
+                        Cancel
                     </button>
-                </div>
+                )}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="py-2.5 px-6 bg-primary text-on-primary rounded-full font-label-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                    {loading ? 'Saving...' : (initialData ? 'Update' : 'Save')}
+                </button>
             </div>
         </form>
     );

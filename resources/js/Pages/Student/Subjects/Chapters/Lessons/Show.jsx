@@ -413,6 +413,7 @@ export default function Show({
                         }}
                         hasNext={!!lesson.nextId}
                         hasPrev={!!lesson.prevId}
+                        hasPlan={!!existingPlan}
                         onAddStudyPlan={() => setActiveAction(activeAction === 'plan' ? null : 'plan')}
                         onWriteReflection={() => setActiveAction(activeAction === 'reflection' ? null : 'reflection')}
                         onTakeQuiz={() => {

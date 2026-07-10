@@ -170,7 +170,8 @@ class AssessmentController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $assessment = ClassAssessment::whereNull('deleted_at')->findOrFail($id);
-        $assessment->update(['deleted_at' => now()]);
+        $assessment->deleted_at = now();
+        $assessment->save();
 
         return $this->success(null, 'Assessment deleted');
     }

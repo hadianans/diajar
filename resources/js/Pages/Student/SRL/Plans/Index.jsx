@@ -265,7 +265,7 @@ export default function PlansIndex() {
                                             className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
                                         >
                                             <option value="" disabled>Select Subject</option>
-                                            {subjects.map(s => <option key={s.id} value={s.id}>{s.subject?.name || s.name}</option>)}
+                                            {subjects.map(s => <option key={s.id} value={s.id}>{s.subject?.subject_name || s.subject_name || s.name}</option>)}
                                         </select>
                                     </div>
 

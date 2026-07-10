@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 
-export default function LessonTabs({ overviewContent, resources }) {
-    const [activeTab, setActiveTab] = useState('overview');
+export default function LessonTabs({ overviewContent, resources, content }) {
+    const [activeTab, setActiveTab] = useState(content ? 'content' : 'overview');
 
     return (
         <div className="bg-white border border-outline-variant rounded-2xl overflow-hidden">
             <div className="flex border-b border-outline-variant">
+                {content && (
+                    <button 
+                        className={`px-6 py-4 font-label-md text-label-md transition-colors border-b-2 ${
+                            activeTab === 'content' ? 'border-primary text-primary' : 'border-transparent text-outline hover:text-on-surface'
+                        }`}
+                        onClick={() => setActiveTab('content')}
+                    >
+                        Content
+                    </button>
+                )}
                 <button 
                     className={`px-6 py-4 font-label-md text-label-md transition-colors border-b-2 ${
                         activeTab === 'overview' ? 'border-primary text-primary' : 'border-transparent text-outline hover:text-on-surface'
@@ -26,6 +36,13 @@ export default function LessonTabs({ overviewContent, resources }) {
             </div>
             
             <div className="p-6">
+                {activeTab === 'content' && content && (
+                    <div 
+                        className="prose max-w-none text-on-surface-variant font-body-md"
+                        dangerouslySetInnerHTML={{ __html: content }}
+                    />
+                )}
+
                 {activeTab === 'overview' && (
                     <div className="block">
                         <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-4">
