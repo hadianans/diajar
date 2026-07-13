@@ -28,7 +28,7 @@ export default function Index() {
                         <div className="text-center py-8 text-on-surface-variant">Loading grades...</div>
                     ) : gradeData && gradeData.length > 0 ? (
                         gradeData.map((grade) => (
-                            <div key={grade.class_id} className="bg-white border border-outline-variant/50 rounded-2xl p-6 shadow-sm flex items-center justify-between">
+                            <div key={grade.class_id} className="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 shadow-sm flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 bg-secondary-container rounded-xl flex items-center justify-center text-on-secondary-container">
                                         <Icon name="school" />

@@ -82,12 +82,12 @@ export default function GroupYearSelectionModal({ show, onClose, onApply, groupY
                                     placeholder="Search cohorts..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full bg-[#F1F5F9] border-none rounded-xl py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md shadow-sm"
+                                    className="w-full bg-[#F1F5F9] border-none rounded-xl py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md shadow-sm"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-4 bg-white">
+                        <div className="flex-1 overflow-y-auto p-4 bg-surface-container-lowest">
                             {filteredGroupYears.length === 0 ? (
                                 <div className="flex justify-center py-8 text-on-surface-variant text-sm">
                                     {groupYears.length === 0 ? 'No cohorts available.' : 'No cohorts match your search.'}
@@ -154,7 +154,7 @@ export default function GroupYearSelectionModal({ show, onClose, onApply, groupY
                             ) : (
                                 <div className="flex flex-wrap gap-2">
                                     {selectedGroups.map(group => (
-                                        <div key={group.id} className="flex items-center gap-2 bg-white border border-outline-variant/60 rounded-lg px-3 py-1.5 shadow-sm max-w-full">
+                                        <div key={group.id} className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/60 rounded-lg px-3 py-1.5 shadow-sm max-w-full">
                                             <span className="text-sm font-medium text-on-surface truncate">{group.group_name}</span>
                                             <button 
                                                 onClick={() => handleRemoveSelected(group.id)}
@@ -170,7 +170,7 @@ export default function GroupYearSelectionModal({ show, onClose, onApply, groupY
                             )}
                         </div>
                         {selectedGroups.length > 0 && (
-                            <div className="p-4 border-t border-outline-variant/30 bg-white flex justify-end">
+                            <div className="p-4 border-t border-outline-variant/30 bg-surface-container-lowest flex justify-end">
                                 <button
                                     onClick={() => setSelectedGroups([])}
                                     className="text-error text-sm font-medium hover:underline px-2 py-1"

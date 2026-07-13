@@ -6,6 +6,7 @@ import ChapterListCard from '@/Components/features/teacher-chapters/ChapterListC
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import ChapterModal from '@/Components/features/teacher-chapters/modals/ChapterModal';
 
 export default function Index() {
@@ -88,12 +89,13 @@ export default function Index() {
     };
 
     const handleDeleteChapter = async (chapterId) => {
-        if (!confirm('Are you sure you want to delete this chapter?')) return;
+        const confirmed = await confirmDelete('Delete Chapter?', 'This will permanently remove this chapter.');
+        if (!confirmed) return;
         try {
             await api.delete(`/chapters/${chapterId}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting chapter');
+            showError('Error', err.response?.data?.message || 'Error deleting chapter');
         }
     };
 

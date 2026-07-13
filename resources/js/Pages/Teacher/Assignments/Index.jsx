@@ -7,6 +7,7 @@ import AssignmentListCard from '@/Components/features/teacher-assignments/Assign
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 
 export default function Index() {
     const { data: assignments, loading, refetch } = useApiGet('/assignments');
@@ -49,12 +50,13 @@ export default function Index() {
     }, [assignments, activeFilter, selectedChapterId]);
 
     const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this assignment?')) return;
+        const confirmed = await confirmDelete('Delete Assignment?', 'This will permanently remove this assignment.');
+        if (!confirmed) return;
         try {
             await api.delete(`/assignments/${id}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting assignment');
+            showError('Error', err.response?.data?.message || 'Error deleting assignment');
         }
     };
 

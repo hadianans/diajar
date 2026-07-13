@@ -65,7 +65,7 @@ export default function AssessmentWizardLayout({
             </div>
 
             {/* Persistent Bottom Panel (Mobile Focused) */}
-            <div className={`fixed bottom-0 left-0 md:left-72 inset-x-0 bg-white/80 backdrop-blur-md border-t border-outline-variant p-4 z-40 transition-transform duration-500 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] ${currentStep === 1 ? 'translate-y-full' : 'translate-y-0'}`}>
+            <div className={`fixed bottom-0 left-0 md:left-72 inset-x-0 bg-surface-container-lowest/80 backdrop-blur-md border-t border-outline-variant p-4 z-40 transition-transform duration-500 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] ${currentStep === 1 ? 'translate-y-full' : 'translate-y-0'}`}>
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <div className="flex flex-col cursor-pointer select-none" onClick={() => setDrawerOpen(!drawerOpen)}>
                         <div className="flex items-center gap-2">

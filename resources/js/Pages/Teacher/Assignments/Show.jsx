@@ -9,6 +9,7 @@ import AttachmentList from '@/Components/features/teacher-lessons/AttachmentList
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import moment from 'moment';
 
 export default function Show({ assignmentId }) {
@@ -23,12 +24,13 @@ export default function Show({ assignmentId }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm('Are you sure you want to delete this assignment? This cannot be undone.')) return;
+        const confirmed = await confirmDelete('Delete Assignment?', 'This cannot be undone.');
+        if (!confirmed) return;
         try {
             await api.delete(`/assignments/${assignmentId}`);
             router.visit(route('teacher.assignments.index'));
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting assignment');
+            showError('Error', err.response?.data?.message || 'Error deleting assignment');
         }
     };
 
@@ -38,7 +40,7 @@ export default function Show({ assignmentId }) {
             await api.patch(`/assignments/${assignmentId}/${action}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || `Error trying to ${action} assignment`);
+            showError('Error', err.response?.data?.message || `Error trying to ${action} assignment`);
         }
     };
 

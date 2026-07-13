@@ -8,6 +8,7 @@ import TeacherModal from '@/Components/features/academic/modals/TeacherModal';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError, showInfo, confirmDelete } from '@/utils/swal';
 
 const previewImageUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDCbqlx1v1t2GV9BBmKKmVSMMU4KpSOUdKake4dHr9dWoiVWFh-q0En3iYsIjcoOIOXzP2KoEh39sgSwXoqTxMx_G0cQWQG40ZhkyO20hr7F58uUIu5_FjO28NcyP3B-zZesO2A4fTja7Y-F-9rLAmwe5Ie1ff6Yjd3JLHWQST6ZlKHclHr_jHu7RqG5Kn4UtlOqGt8h2Q_RgTaZ6xhlc7OA2I7pQtNEdhlBbPcKs9wwXM_yp9zx5BPks3Bwsz6S7kJQszJ6sDPinM';
 
@@ -23,30 +24,32 @@ export default function Show({ subjectId }) {
         if (actionName === 'Link Teacher') {
             setIsTeacherModalOpen(true);
         } else {
-            alert(`Initiated action: ${actionName} flow...`);
+            showInfo('Action Initiated', `${actionName} flow...`);
         }
     };
 
     const handleUnlinkTeacher = async (teacher) => {
-        if (confirm(`Are you sure you want to unlink ${teacher.name}?`)) {
+        const confirmed = await confirmDelete('Unlink Teacher?', `Are you sure you want to unlink ${teacher.name}?`);
+        if (confirmed) {
             try {
                 await api.delete(`/subjects/${subjectId}/teachers/${teacher.id}`);
-                alert('Teacher unlinked successfully.');
+                showSuccess('Teacher unlinked successfully.');
                 refetch();
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to unlink teacher.');
+                showError('Error', err.response?.data?.message || 'Failed to unlink teacher.');
             }
         }
     };
 
     const handleDeleteSubject = async () => {
-        if (confirm(`Are you sure you want to delete this subject?`)) {
+        const confirmed = await confirmDelete('Delete Subject?', 'This will permanently remove this subject.');
+        if (confirmed) {
             try {
                 await api.delete(`/subjects/${subjectId}`);
-                alert('Subject deleted successfully.');
+                showSuccess('Subject deleted successfully.');
                 router.visit('/admin/academic');
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to delete subject.');
+                showError('Error', err.response?.data?.message || 'Failed to delete subject.');
             }
         }
     };

@@ -144,7 +144,7 @@ export default function RubricBuilder({ rubric, onChange, onClear }) {
                             </div>
                             
                             {/* Criterion Body */}
-                            <div className={`p-5 space-y-6 bg-white border-t border-outline-variant ${expandedCriterion === cIdx ? 'block' : 'hidden'}`}>
+                            <div className={`p-5 space-y-6 bg-surface-container-lowest border-t border-outline-variant ${expandedCriterion === cIdx ? 'block' : 'hidden'}`}>
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                     <div className="md:col-span-3 space-y-2">
                                         <label className="font-label-sm text-label-sm text-outline">Criterion Title</label>
@@ -195,7 +195,7 @@ export default function RubricBuilder({ rubric, onChange, onClear }) {
                                                     <input 
                                                         type="number"
                                                         min="1"
-                                                        className="bg-white rounded px-1 w-14 shrink-0 text-center text-label-sm font-bold border-none" 
+                                                        className="bg-surface-container-lowest rounded px-1 w-14 shrink-0 text-center text-label-sm font-bold border-none" 
                                                         value={level.score}
                                                         onChange={e => {
                                                             let val = parseInt(e.target.value);

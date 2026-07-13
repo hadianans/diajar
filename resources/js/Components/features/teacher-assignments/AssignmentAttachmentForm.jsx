@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
+import { showWarning } from '@/utils/swal';
 
 export default function AssignmentAttachmentForm({ attachments = [], onChange, onRemoveExisting }) {
     const fileInputRef = useRef(null);
@@ -10,13 +11,13 @@ export default function AssignmentAttachmentForm({ attachments = [], onChange, o
         
         const currentCount = attachments.length;
         if (currentCount + files.length > 5) {
-            alert("Maximum 5 attachments allowed.");
+            showWarning('Limit Reached', "Maximum 5 attachments allowed.");
             return;
         }
         
         const validFiles = files.filter(f => f.size <= 8 * 1024 * 1024).map(f => ({ file: f, title: '', isNew: true }));
         if (validFiles.length < files.length) {
-            alert("Some files exceed the 8 MB size limit and were not added.");
+            showWarning('File Too Large', "Some files exceed the 8 MB size limit and were not added.");
         }
         
         onChange([...attachments, ...validFiles]);
@@ -50,7 +51,7 @@ export default function AssignmentAttachmentForm({ attachments = [], onChange, o
             
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-4">
                 {attachments.map((item, idx) => (
-                    <div key={item.id || idx} className="flex items-center gap-4 p-4 bg-white border border-outline-variant rounded-2xl shadow-sm">
+                    <div key={item.id || idx} className="flex items-center gap-4 p-4 bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm">
                         <div className="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center text-primary shrink-0">
                             <Icon name="description" />
                         </div>

@@ -4,11 +4,11 @@ import RoleNavbar from '@/Components/shared/layout/RoleNavbar';
 import Breadcrumbs from '@/Components/shared/ui/Breadcrumbs';
 
 export default function DashboardTemplate({
-    role = 'admin',
+    role,
     activeTab,
     onTabChange,
     title = 'Diajar LMS',
-    viewLabel = 'Admin View',
+    viewLabel,
     showBack = false,
     onBack,
     headerSection,

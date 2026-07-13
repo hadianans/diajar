@@ -80,7 +80,7 @@ export default function Homepage() {
                         </p>
                     </div>
                 </div>
-                <div className="z-10 flex items-center gap-3 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full w-fit">
+                <div className="z-10 flex items-center gap-3 bg-surface-container-lowest/20 backdrop-blur-md px-4 py-2 rounded-full w-fit">
                     <div className="w-2.5 h-2.5 bg-secondary-fixed rounded-full animate-pulse"></div>
                     <span className="font-label-md text-label-md font-bold tracking-wide">
                         {summaryData?.active_year?.status === 'active' ? 'System Active' : 'System Offline'}
@@ -93,28 +93,28 @@ export default function Homepage() {
     // Metrics grid section
     const metricsSection = (
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-gutter mb-6">
-            <div className="bg-white border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="group" className="text-primary text-2xl" />
                 <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Total Students</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
                     {summaryLoading ? '...' : summaryData?.student_count || 0}
                 </p>
             </div>
-            <div className="bg-white border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="school" className="text-secondary text-2xl" />
                 <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Active Teachers</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
                     {summaryLoading ? '...' : summaryData?.teacher_count || 0}
                 </p>
             </div>
-            <div className="bg-white border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="menu_book" className="text-tertiary text-2xl" />
                 <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Active Subjects</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
                     {summaryLoading ? '...' : summaryData?.subject_count || 0}
                 </p>
             </div>
-            <div className="bg-white border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="event" className="text-primary-container text-2xl" />
                 <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Academic Year</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
@@ -130,7 +130,7 @@ export default function Homepage() {
 
             <DashboardTemplate
                 activeTab="Dashboard"
-                title="Lumen Admin"
+                title="Diajar Admin"
                 viewLabel="Admin View"
                 showBack={false}
                 headerSection={bannerHeader}
@@ -141,14 +141,14 @@ export default function Homepage() {
                     <div className="lg:col-span-8 flex flex-col gap-8">
                         <section className="flex flex-col gap-4">
                             {checklistLoading ? (
-                                <div className="bg-white p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
+                                <div className="bg-surface-container-lowest p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
                             ) : (
                                 <SetupChecklist items={checklistSteps} />
                             )}
                         </section>
                         <section className="flex flex-col gap-4">
                             {activitiesLoading ? (
-                                <div className="bg-white p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
+                                <div className="bg-surface-container-lowest p-6 rounded-2xl animate-pulse h-64 border border-outline-variant shadow-sm"></div>
                             ) : (
                                 <RecentActivity
                                     activities={recentActivities}

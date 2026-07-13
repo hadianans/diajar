@@ -9,6 +9,7 @@ import AssessmentSummaryCard from '@/Components/features/teacher-chapters/Assess
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import ChapterModal from '@/Components/features/teacher-chapters/modals/ChapterModal';
 import SubchapterModal from '@/Components/features/teacher-chapters/modals/SubchapterModal';
 
@@ -21,12 +22,13 @@ export default function Show({ chapterId }) {
     const [editingSubchapter, setEditingSubchapter] = useState(null);
 
     const handleDeleteChapter = async () => {
-        if (!confirm('Are you sure you want to delete this chapter?')) return;
+        const confirmed = await confirmDelete('Delete Chapter?', 'This will permanently remove this chapter.');
+        if (!confirmed) return;
         try {
             await api.delete(`/chapters/${chapterId}`);
             router.visit('/teacher/chapters');
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting chapter');
+            showError('Error', err.response?.data?.message || 'Error deleting chapter');
         }
     };
 
@@ -41,12 +43,13 @@ export default function Show({ chapterId }) {
     };
 
     const handleDeleteSubchapter = async (subId) => {
-        if (!confirm('Are you sure you want to delete this subchapter?')) return;
+        const confirmed = await confirmDelete('Delete Subchapter?', 'This will permanently remove this subchapter.');
+        if (!confirmed) return;
         try {
             await api.delete(`/chapters/${chapterId}/subchapters/${subId}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting subchapter');
+            showError('Error', err.response?.data?.message || 'Error deleting subchapter');
         }
     };
 
@@ -55,12 +58,13 @@ export default function Show({ chapterId }) {
     };
 
     const handleDeleteMaterial = async (lessonId) => {
-        if (!confirm('Are you sure you want to delete this material?')) return;
+        const confirmed = await confirmDelete('Delete Material?', 'This will permanently remove this material.');
+        if (!confirmed) return;
         try {
             await api.delete(`/materials/${lessonId}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting material');
+            showError('Error', err.response?.data?.message || 'Error deleting material');
         }
     };
 
@@ -80,7 +84,7 @@ export default function Show({ chapterId }) {
             refetch();
         } catch (err) {
             console.error('Failed to reorder subchapters', err);
-            alert(err.response?.data?.message || 'Failed to reorder subchapters');
+            showError('Error', err.response?.data?.message || 'Failed to reorder subchapters');
             refetch(); // Revert on failure
         }
     };
@@ -108,7 +112,7 @@ export default function Show({ chapterId }) {
             refetch();
         } catch (err) {
             console.error('Failed to reorder materials', err);
-            alert(err.response?.data?.message || 'Failed to reorder materials');
+            showError('Error', err.response?.data?.message || 'Failed to reorder materials');
             refetch(); // Revert on failure
         }
     };

@@ -21,7 +21,7 @@ export default function ChapterFilterBar({ onSearch }) {
                     value={searchQuery}
                     onChange={handleSearch}
                     placeholder="Search chapters by name or tags..."
-                    className="w-full bg-white border border-outline-variant rounded-full py-3 pl-12 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-on-surface placeholder:text-on-surface-variant hover:border-primary/50 shadow-sm hover:shadow-md"
+                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-full py-3 pl-12 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-on-surface placeholder:text-on-surface-variant hover:border-primary/50 shadow-sm hover:shadow-md"
                 />
             </div>
         </section>

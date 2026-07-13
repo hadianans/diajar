@@ -158,7 +158,7 @@ export default function StudentShow({ assessmentId, studentId }) {
                                 Final recorded score for this attempt.
                             </p>
                         </div>
-                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-inner text-center">
+                        <div className="w-24 h-24 bg-surface-container-lowest rounded-full flex items-center justify-center shadow-inner text-center">
                             <span className="text-headline-md font-headline-md text-primary">{attempt.grade || 0}%</span>
                         </div>
                     </div>

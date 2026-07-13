@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import Avatar from '@/Components/shared/ui/Avatar';
+import { confirmAction } from '@/utils/swal';
 
 const colorBgs = [
     'bg-primary-fixed text-on-primary-fixed',
@@ -18,13 +19,14 @@ export default function StudentTable({ initialStudents = [], onUnlink }) {
         setStudents(initialStudents);
     }, [initialStudents]);
 
-    const handleUnlink = (id) => {
+    const handleUnlink = async (id) => {
         if (onUnlink) {
             onUnlink(id);
             return;
         }
         // Fallback for demo
-        if (confirm('Are you sure you want to unlink this student?')) {
+        const confirmed = await confirmAction('Unlink Student?', 'Are you sure you want to unlink this student?');
+        if (confirmed) {
             setUnlinkingIds(prev => [...prev, id]);
 
             setTimeout(() => {

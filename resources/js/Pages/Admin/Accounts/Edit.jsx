@@ -4,6 +4,7 @@ import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import AccountForm from '@/Components/features/accounts/AccountForm';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, confirmAction } from '@/utils/swal';
 
 export default function Edit({ accountId }) {
     const { data: user, loading } = useApiGet(`/users/${accountId}`);
@@ -20,11 +21,12 @@ export default function Edit({ accountId }) {
             }
             
             await api.put(`/users/${accountId}`, payload);
-            alert('Account updated successfully!');
+            showSuccess('Account updated successfully!');
             router.visit(`/admin/accounts/${accountId}`);
         } catch (err) {
             if (err.response?.status === 422 && err.response.data.message === 'Role change requires role_change_confirmed: true') {
-                if (confirm('You are changing the role of this user. This might affect their permissions and linked data. Continue?')) {
+                const confirmed = await confirmAction('Change Role?', 'This might affect their permissions and linked data. Continue?');
+                if (confirmed) {
                     return handleFormSubmit(formData, true);
                 }
             } else {

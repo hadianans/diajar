@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function GroupModal({ show, onClose, onSuccess, initialData = null, activeYearId = null }) {
     const isEdit = !!initialData;
@@ -70,7 +71,7 @@ export default function GroupModal({ show, onClose, onSuccess, initialData = nul
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'An error occurred.');
+                showError('Error', err.response?.data?.message || 'An error occurred.');
             }
         } finally {
             setLoading(false);
@@ -104,7 +105,7 @@ export default function GroupModal({ show, onClose, onSuccess, initialData = nul
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.name ? 'ring-2 ring-error' : ''}`}
+                                    className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.name ? 'ring-2 ring-error' : ''}`}
                                     placeholder="e.g. Science Class A"
                                     required
                                 />
@@ -119,7 +120,7 @@ export default function GroupModal({ show, onClose, onSuccess, initialData = nul
                                     max="12"
                                     value={formData.grade}
                                     onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
-                                    className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.grade ? 'ring-2 ring-error' : ''}`}
+                                    className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.grade ? 'ring-2 ring-error' : ''}`}
                                     placeholder="e.g. 10"
                                     required
                                 />
@@ -136,7 +137,7 @@ export default function GroupModal({ show, onClose, onSuccess, initialData = nul
                                             type="text"
                                             value={group.name}
                                             onChange={(e) => handleGroupChange(index, 'name', e.target.value)}
-                                            className={`w-full bg-white border-none rounded-lg p-2.5 focus:ring-2 focus:ring-primary transition-all text-body-sm font-body-sm shadow-sm ${errors[`groups.${index}.name`] ? 'ring-2 ring-error' : ''}`}
+                                            className={`w-full bg-surface-container-lowest border-none rounded-lg p-2.5 focus:ring-2 focus:ring-primary transition-all text-body-sm font-body-sm shadow-sm ${errors[`groups.${index}.name`] ? 'ring-2 ring-error' : ''}`}
                                             placeholder="e.g. Class 10A"
                                             required
                                         />
@@ -150,7 +151,7 @@ export default function GroupModal({ show, onClose, onSuccess, initialData = nul
                                             max="12"
                                             value={group.grade}
                                             onChange={(e) => handleGroupChange(index, 'grade', e.target.value)}
-                                            className={`w-full bg-white border-none rounded-lg p-2.5 focus:ring-2 focus:ring-primary transition-all text-body-sm font-body-sm shadow-sm ${errors[`groups.${index}.grade`] ? 'ring-2 ring-error' : ''}`}
+                                            className={`w-full bg-surface-container-lowest border-none rounded-lg p-2.5 focus:ring-2 focus:ring-primary transition-all text-body-sm font-body-sm shadow-sm ${errors[`groups.${index}.grade`] ? 'ring-2 ring-error' : ''}`}
                                             placeholder="e.g. 10"
                                             required
                                         />

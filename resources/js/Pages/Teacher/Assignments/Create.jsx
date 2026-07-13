@@ -7,6 +7,7 @@ import AssignmentAttachmentForm from '@/Components/features/teacher-assignments/
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmAction } from '@/utils/swal';
 
 export default function Create() {
     const { data: classes } = useApiGet('/classes');
@@ -63,7 +64,7 @@ export default function Create() {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'Error creating assignment');
+                showError('Error', err.response?.data?.message || 'Error creating assignment');
             }
         } finally {
             setIsSaving(false);
@@ -109,8 +110,9 @@ export default function Create() {
                 <RubricBuilder 
                     rubric={rubric} 
                     onChange={setRubric} 
-                    onClear={() => {
-                        if (confirm("Are you sure you want to clear the rubric?")) {
+                    onClear={async () => {
+                        const confirmed = await confirmAction('Clear Rubric?', 'Are you sure you want to clear the rubric?');
+                        if (confirmed) {
                             setRubric({ title: '', description: '', criteria: [] });
                         }
                     }}

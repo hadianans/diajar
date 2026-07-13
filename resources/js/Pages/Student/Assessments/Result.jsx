@@ -65,14 +65,14 @@ export default function Result({ attemptId }) {
                     </p>
                     
                     {isGraded && (
-                        <div className="mt-6 inline-block bg-white px-8 py-4 rounded-xl shadow-sm border border-outline-variant/30">
+                        <div className="mt-6 inline-block bg-surface-container-lowest px-8 py-4 rounded-xl shadow-sm border border-outline-variant/30">
                             <span className="block text-label-md text-outline-variant uppercase mb-1">Your Score</span>
                             <span className="text-display-sm text-primary font-bold">{grade}</span>
                         </div>
                     )}
                 </div>
 
-                <div className="bg-white border border-outline-variant/50 rounded-2xl p-6 shadow-sm">
+                <div className="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 shadow-sm">
                     <h3 className="text-title-lg text-on-surface mb-6">Review Answers</h3>
                     
                     <div className="space-y-6">

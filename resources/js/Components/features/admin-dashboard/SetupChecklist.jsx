@@ -11,7 +11,7 @@ export default function SetupChecklist({ items = [] }) {
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     return (
-        <div className="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
+        <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
             <div className="p-6 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
                 <div>
                     <h3 className="font-headline-md text-headline-md font-bold text-on-surface">Setup Completeness</h3>

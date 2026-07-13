@@ -10,7 +10,7 @@ export default function ClassHealthMetrics({ completion = 78, avgGrade = 82, avg
         : 'grid grid-cols-1 sm:grid-cols-3 gap-6';
 
     return (
-        <div className="bg-white/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-surface-container-lowest/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-headline-md text-headline-md mb-6 flex items-center gap-2 text-on-surface">
                 <Icon name="analytics" className="text-secondary" />
                 Class Health Overview

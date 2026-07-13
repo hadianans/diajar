@@ -8,6 +8,7 @@ import StudentTable from '@/Components/features/academic/StudentTable';
 import StudentModal from '@/Components/features/academic/modals/StudentModal';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError, showInfo, confirmDelete } from '@/utils/swal';
 
 export default function Show({ groupId }) {
     const { data, loading, refetch } = useApiGet(`/groups/${groupId}`);
@@ -21,7 +22,7 @@ export default function Show({ groupId }) {
         if (actionName === 'Add Students') {
             setIsStudentModalOpen(true);
         } else {
-            alert(`Initiated action: ${actionName} flow...`);
+            showInfo('Action Initiated', `${actionName} flow...`);
         }
     };
 
@@ -35,15 +36,16 @@ export default function Show({ groupId }) {
     }, [data]);
 
     const handleRemoveStudent = async (studentId) => {
-        if (confirm('Are you sure you want to remove this student from the group?')) {
+        const confirmed = await confirmDelete('Remove Student?', 'Are you sure you want to remove this student from the group?');
+        if (confirmed) {
             try {
                 await api.delete(`/groups/${groupId}/students/${studentId}`, {
                     data: { year_id: data?.group_year?.year_id }
                 });
-                alert('Student removed successfully.');
+                showSuccess('Student removed successfully.');
                 refetch();
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to remove student.');
+                showError('Error', err.response?.data?.message || 'Failed to remove student.');
             }
         }
     };

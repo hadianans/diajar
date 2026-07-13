@@ -14,7 +14,7 @@ export default function Index() {
 
             <DashboardTemplate
                 activeTab="Account"
-                title="Lumen Admin"
+                title="Diajar Admin"
                 viewLabel="Admin View"
                 showBack={false}
             >

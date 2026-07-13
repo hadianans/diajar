@@ -4,7 +4,7 @@ import Icon from '@/Components/shared/ui/Icon';
 export default function GradebookTable({ students, columns, averages }) {
     
     return (
-        <div className="bg-white border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)] rounded-xl overflow-hidden">
+        <div className="bg-surface-container-lowest border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)] rounded-xl overflow-hidden">
             <div className="custom-scrollbar overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>

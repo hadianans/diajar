@@ -47,19 +47,19 @@ export default function AssessmentHeroSummary({
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter mt-stack-md">
-                    <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+                    <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
                         <span className="text-label-sm font-label-sm text-on-surface-variant">Questions</span>
                         <span className="text-headline-md font-headline-md">{questionsCount}</span>
                     </div>
-                    <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+                    <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
                         <span className="text-label-sm font-label-sm text-on-surface-variant">Correct</span>
                         <span className="text-headline-md font-headline-md text-secondary">{correctCount}</span>
                     </div>
-                    <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+                    <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
                         <span className="text-label-sm font-label-sm text-on-surface-variant">Incorrect</span>
                         <span className="text-headline-md font-headline-md text-error">{incorrectCount}</span>
                     </div>
-                    <div className="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+                    <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
                         <span className="text-label-sm font-label-sm text-on-surface-variant">Time Spent</span>
                         <span className="text-headline-md font-headline-md">{timeSpent}</span>
                     </div>
@@ -67,7 +67,7 @@ export default function AssessmentHeroSummary({
             </div>
 
             {/* Right: Score Ring */}
-            <div className="lg:col-span-4 bg-white p-8 rounded-xl border border-outline-variant shadow-sm flex flex-col items-center justify-center relative">
+            <div className="lg:col-span-4 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm flex flex-col items-center justify-center relative">
                 <div className="relative w-40 h-40">
                     <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                         <circle 

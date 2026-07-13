@@ -133,7 +133,7 @@ export default function AccountList({ onCreateClick }) {
                     )}
                 </div>
             ) : (
-                <div className="p-12 text-center flex flex-col items-center bg-white rounded-2xl border border-outline-variant shadow-sm mt-4">
+                <div className="p-12 text-center flex flex-col items-center bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm mt-4">
                     <Icon name="search_off" className="text-6xl text-outline mb-4" />
                     <h4 className="text-lg font-bold text-on-surface mb-2">No accounts found</h4>
                     <p className="text-on-surface-variant mb-6 max-w-xs mx-auto">

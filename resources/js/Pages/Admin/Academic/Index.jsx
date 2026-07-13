@@ -155,19 +155,19 @@ export default function Index() {
                         <div className="flex space-x-1 bg-surface-container-low p-1 rounded-xl border border-outline-variant/30 overflow-x-auto shrink-0 w-full sm:w-auto">
                             <button
                                 onClick={() => handleTabChange('years')}
-                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'years' ? 'bg-white text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
+                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'years' ? 'bg-surface-container-lowest text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
                             >
                                 Academic Years
                             </button>
                             <button
                                 onClick={() => handleTabChange('subjects')}
-                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'subjects' ? 'bg-white text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
+                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'subjects' ? 'bg-surface-container-lowest text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
                             >
                                 Subjects
                             </button>
                             <button
                                 onClick={() => handleTabChange('groups')}
-                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'groups' ? 'bg-white text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
+                                className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'groups' ? 'bg-surface-container-lowest text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
                             >
                                 Student Groups
                             </button>

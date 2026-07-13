@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
+import { showWarning } from '@/utils/swal';
 import { usePage } from '@inertiajs/react';
 import Modal from '@/Components/shared/ui/Modal';
 import ReflectionForm from '@/Components/features/reflections/ReflectionForm';
@@ -83,7 +84,7 @@ export default function SubmissionCard({
     const handleActionClick = () => {
         if (status === 'assigned' || status === 'submitted') {
             if (!attachment && status === 'assigned') {
-                alert("Please add a file or link before turning in.");
+                showWarning('Missing File', "Please add a file or link before turning in.");
                 return;
             }
             const formData = new FormData();
@@ -97,7 +98,7 @@ export default function SubmissionCard({
     };
 
     return (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
+        <div className="bg-surface-container-lowest rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
             <div className="p-5 space-y-4">
                 {/* Header */}
                 <div className="flex justify-between items-center">
@@ -146,7 +147,7 @@ export default function SubmissionCard({
                                 Add or create
                             </button>
                             {showDropdown && (
-                                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden">
+                                <div className="absolute top-full left-0 w-full mt-1 bg-surface-container-lowest border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden">
                                     <button 
                                         onClick={handleUploadClick}
                                         className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 text-left transition-colors text-on-surface"

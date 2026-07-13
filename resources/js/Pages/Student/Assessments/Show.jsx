@@ -89,7 +89,7 @@ export default function Show({ assessmentId }) {
                 {/* <div className="relative w-full h-40 rounded-xl overflow-hidden shadow-sm">
                     <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
                     <div className="absolute inset-0 flex items-center p-6">
-                        <div className="p-3 bg-white/90 backdrop-blur rounded-lg shadow-sm border border-white/40">
+                        <div className="p-3 bg-surface-container-lowest/90 backdrop-blur rounded-lg shadow-sm border border-white/40">
                             <Icon name="science" className="text-primary scale-125" style={{ fontVariationSettings: "'FILL' 1" }} />
                         </div>
                     </div>

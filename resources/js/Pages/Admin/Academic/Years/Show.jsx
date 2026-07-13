@@ -6,6 +6,7 @@ import YearClassesList from '@/Components/features/academic/YearClassesList';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError, confirmAction } from '@/utils/swal';
 
 export default function Show({ yearId }) {
     const { data: year, loading, refetch } = useApiGet(`/school-years/${yearId}`);
@@ -16,14 +17,15 @@ export default function Show({ yearId }) {
     };
 
     const handleArchive = async () => {
-        if (confirm('Are you sure you want to archive this year? It will lock all data.')) {
+        const confirmed = await confirmAction('Archive this year?', 'It will lock all data as read-only.');
+        if (confirmed) {
             setActionLoading(true);
             try {
                 await api.post(`/school-years/${yearId}/archive`);
-                alert('Academic year archived successfully.');
+                showSuccess('Academic year archived successfully.');
                 refetch();
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to archive year.');
+                showError('Error', err.response?.data?.message || 'Failed to archive year.');
             } finally {
                 setActionLoading(false);
             }
@@ -31,14 +33,15 @@ export default function Show({ yearId }) {
     };
 
     const handleReactivate = async () => {
-        if (confirm('Are you sure you want to reactivate this year? Only one year can be active at a time.')) {
+        const confirmed = await confirmAction('Reactivate this year?', 'Only one year can be active at a time.');
+        if (confirmed) {
             setActionLoading(true);
             try {
                 await api.post(`/school-years/${yearId}/reactivate`);
-                alert('Academic year reactivated successfully.');
+                showSuccess('Academic year reactivated successfully.');
                 refetch();
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to reactivate year.');
+                showError('Error', err.response?.data?.message || 'Failed to reactivate year.');
             } finally {
                 setActionLoading(false);
             }

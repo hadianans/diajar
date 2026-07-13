@@ -317,7 +317,13 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 // Legacy Dashboard (redirect to student homepage)
 // ============================================================
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $role = auth()->user()->role ?? 'student';
+    if ($role === 'admin') {
+        return redirect()->route('admin.homepage');
+    } elseif ($role === 'teacher') {
+        return redirect()->route('teacher.homepage');
+    }
+    return redirect()->route('student.homepage');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // ============================================================

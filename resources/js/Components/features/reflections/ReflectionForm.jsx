@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
+import { showWarning, promptInput } from '@/utils/swal';
 
 export default function ReflectionForm({
     initialData = null,
@@ -14,12 +15,13 @@ export default function ReflectionForm({
     const [selectedEmojis, setSelectedEmojis] = useState(initialData?.emotions || []);
     const [reflectionNotes, setReflectionNotes] = useState(initialData?.content || '');
 
-    const emojis = ['😊', '😕', '🤓', '🤯', '😴', '😡'];
+    const defaultEmojis = ['😄', '😵', '🧐', '😕', '😮', '🥱', '🤨'];
+    const emojis = Array.from(new Set([...defaultEmojis, ...selectedEmojis]));
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (comprehension === 0) {
-            alert('Comprehension level is mandatory.');
+            showWarning('Missing Field', 'Comprehension level is mandatory.');
             return;
         }
 
@@ -69,10 +71,10 @@ export default function ReflectionForm({
                                         <span className={`absolute inset-0 rounded-full bg-primary/10 scale-0 group-hover:scale-100 transition-transform duration-200 ${isActive ? 'scale-110 bg-primary/15' : ''}`}></span>
                                         <span
                                             className={`w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 border-2 z-10 ${isActive
-                                                ? 'border-primary bg-white scale-110 shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]'
+                                                ? 'border-primary bg-surface-container-lowest scale-110 shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]'
                                                 : isPassed
-                                                    ? 'border-primary bg-white group-hover:border-primary-container'
-                                                    : 'border-outline-variant bg-white group-hover:border-primary/60'
+                                                    ? 'border-primary bg-surface-container-lowest group-hover:border-primary-container'
+                                                    : 'border-outline-variant bg-surface-container-lowest group-hover:border-primary/60'
                                                 }`}
                                         >
                                             {isActive && (
@@ -174,6 +176,25 @@ export default function ReflectionForm({
                             </button>
                         );
                     })}
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            const customEmoji = await promptInput("Add custom emoji", {
+                                inputLabel: "Emoji (e.g. 🚀):",
+                                inputPlaceholder: "Paste your emoji here"
+                            });
+                            if (customEmoji && customEmoji.trim() !== "") {
+                                const emojiStr = customEmoji.trim();
+                                if (!selectedEmojis.includes(emojiStr)) {
+                                    setSelectedEmojis([...selectedEmojis, emojiStr]);
+                                }
+                            }
+                        }}
+                        className="w-12 h-12 text-2xl rounded-full flex items-center justify-center transition-all duration-200 ease-out active:scale-95 select-none bg-transparent hover:bg-surface-container-high border border-outline-variant/30 hover:border-outline-variant hover:scale-105 shadow-sm text-on-surface-variant"
+                        title="Tambah emoji"
+                    >
+                        <span className="material-symbols-outlined text-3xl font-light">add</span>
+                    </button>
                 </div>
             </div>
 

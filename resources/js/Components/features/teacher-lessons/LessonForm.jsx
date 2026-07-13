@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import RichTextEditor from '@/Components/shared/editor/RichTextEditor';
 import { getFileDetails } from '@/utils/getFileDetails';
+import { showWarning } from '@/utils/swal';
 
 const getYoutubeEmbedUrl = (url) => {
     if (!url) return null;
@@ -23,13 +24,13 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
         
         const currentCount = (formData.attachments?.length || 0) + (formData.existing_attachments?.length || 0);
         if (currentCount + files.length > 3) {
-            alert("Maximum 3 attachments allowed.");
+            showWarning('Limit Reached', "Maximum 3 attachments allowed.");
             return;
         }
         
         const validFiles = files.filter(f => f.size <= 8 * 1024 * 1024).map(f => ({ file: f, title: '' }));
         if (validFiles.length < files.length) {
-            alert("Some files exceed the 8 MB size limit and were not added.");
+            showWarning('File Too Large', "Some files exceed the 8 MB size limit and were not added.");
         }
         
         onChange({
@@ -47,7 +48,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
         if (!file) return;
 
         if (file.size > 25 * 1024 * 1024) {
-            alert("Maximum file size is 25 MB.");
+            showWarning('File Too Large', "Maximum file size is 25 MB.");
             return;
         }
 
@@ -178,7 +179,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
                     <button
                         type="button"
                         onClick={() => handleTypeChange('video')}
-                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${formData.file_type === 'video' ? 'bg-white text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
+                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${formData.file_type === 'video' ? 'bg-surface-container-lowest text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
                     >
                         <Icon name="videocam" className="text-[20px]" />
                         Video
@@ -186,7 +187,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
                     <button
                         type="button"
                         onClick={() => handleTypeChange('text')}
-                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${formData.file_type === 'text' ? 'bg-white text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
+                        className={`flex-1 py-2.5 rounded-full font-label-md text-label-md transition-all duration-300 flex items-center justify-center gap-2 ${formData.file_type === 'text' ? 'bg-surface-container-lowest text-primary shadow-[0_4px_6px_-1px_rgb(0,0,0,0.1),0_2px_4px_-2px_rgb(0,0,0,0.1)]' : 'text-on-surface-variant'}`}
                     >
                         <Icon name="article" className="text-[20px]" />
                         Text Content
@@ -197,7 +198,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
             {/* Section 3: Video Input */}
             {formData.file_type === 'video' && (
                 <section className="space-y-stack-md animate-in fade-in duration-300">
-                    <div className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm">
+                    <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm">
                         <h3 className="font-label-lg mb-4 text-on-surface">Video Source</h3>
                         
                         {/* Primary: File Upload */}
@@ -235,7 +236,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
                             <>
                                 <div className="relative flex items-center justify-center my-6">
                                     <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-outline-variant"></div></div>
-                                    <span className="relative bg-white px-4 text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">OR USE A LINK</span>
+                                    <span className="relative bg-surface-container-lowest px-4 text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">OR USE A LINK</span>
                                 </div>
 
                                 {/* Fallback: URL */}
@@ -286,7 +287,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
             {/* Section 4: Rich Text Editor / Document Upload */}
             {formData.file_type === 'text' && (
                 <section className="space-y-stack-md animate-in fade-in duration-300">
-                    <div className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm mb-4">
+                    <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm mb-4">
                         <h3 className="font-label-lg mb-4 text-on-surface">Document Source</h3>
                         
                         {/* Primary: File Upload */}
@@ -337,7 +338,7 @@ export default function LessonForm({ formData, onChange, errors = {}, chapters =
                             <>
                                 <div className="relative flex items-center justify-center my-6">
                                     <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-outline-variant"></div></div>
-                                    <span className="relative bg-white px-4 text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">OR WRITE DIRECTLY</span>
+                                    <span className="relative bg-surface-container-lowest px-4 text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">OR WRITE DIRECTLY</span>
                                 </div>
 
                                 <RichTextEditor

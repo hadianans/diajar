@@ -3,6 +3,7 @@ import { Head, router } from '@inertiajs/react';
 import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError, showWarning } from '@/utils/swal';
 
 export default function ReflectionModal() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -36,7 +37,7 @@ export default function ReflectionModal() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!reflectableId) {
-            alert('Missing reflectable ID');
+            showWarning('Missing Data', 'Missing reflectable ID');
             return;
         }
 
@@ -52,7 +53,7 @@ export default function ReflectionModal() {
             });
             router.visit('/student/dashboard');
         } catch (err) {
-            alert(err.response?.data?.message || 'Error saving reflection');
+            showError('Error', err.response?.data?.message || 'Error saving reflection');
             setIsSubmitting(false);
         }
     };

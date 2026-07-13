@@ -7,7 +7,7 @@ export default function ActiveClassCard({ id, groupId, subject, subjectIcon, tit
         <section className="space-y-stack-sm">
             <h2 className="text-label-sm font-label-sm tracking-wider text-outline uppercase px-1">Active Class</h2>
             
-            <div className="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-outline-variant hover:border-primary/50 hover:shadow-md group transition-all">
+            <div className="relative overflow-hidden rounded-2xl bg-surface-container-lowest p-6 shadow-sm border border-outline-variant hover:border-primary/50 hover:shadow-md group transition-all">
                 {/* Subtle top accent */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-tertiary opacity-80"></div>
                 

@@ -52,7 +52,7 @@ export default function AssessmentCard({
     }
 
     return (
-        <div className={`bg-white rounded-xl border ${borderColorClass} shadow-sm overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 group relative`}>
+        <div className={`bg-surface-container-lowest rounded-xl border ${borderColorClass} shadow-sm overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 group relative`}>
             {state === 'pending' && (
                 <div className="absolute top-4 right-4 z-10">
                     <span className={`px-2 py-1 rounded font-label-sm text-[10px] uppercase tracking-wider ${badgeClass}`}>
@@ -124,7 +124,7 @@ export default function AssessmentCard({
                 <div className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(); }}
-                        className="p-1.5 rounded-full bg-white/90 hover:bg-error-container text-on-surface-variant hover:text-error shadow-sm transition-all"
+                        className="p-1.5 rounded-full bg-surface-container-lowest/90 hover:bg-error-container text-on-surface-variant hover:text-error shadow-sm transition-all"
                         title="Delete assessment"
                     >
                         <Icon name="delete" className="text-[18px]" />

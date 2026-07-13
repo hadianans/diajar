@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import RoleSelectCard from '@/Components/features/accounts/RoleSelectCard';
 import AvatarUpload from '@/Components/features/accounts/AvatarUpload';
+import Avatar from '@/Components/shared/ui/Avatar';
 import Icon from '@/Components/shared/ui/Icon';
+import { showError, showWarning } from '@/utils/swal';
 import api from '@/utils/api';
 
 export default function AccountForm({ initialData = {}, isEdit = false, onSubmit, onCancel }) {
@@ -39,7 +41,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
         setErrors({});
         
         if (!name || !username || !email) {
-            alert('Please fill out all required fields marked with *');
+            showWarning('Missing Fields', 'Please fill out all required fields marked with *');
             return;
         }
 
@@ -66,7 +68,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                 if (err.response?.status === 422) {
                     setErrors(err.response.data.errors || {});
                 } else {
-                    alert(err.response?.data?.message || 'An error occurred while saving the account.');
+                    showError('Error', err.response?.data?.message || 'An error occurred while saving the account.');
                 }
             } finally {
                 setLoading(false);
@@ -75,7 +77,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
     };
 
     return (
-        <form onSubmit={handleFormSubmit} className="space-y-stack-lg max-w-xl mx-auto bg-white border border-outline-variant p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+        <form onSubmit={handleFormSubmit} className="space-y-stack-lg max-w-xl mx-auto bg-surface-container-lowest border border-outline-variant p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
             {/* Header controls block */}
             <div className="flex justify-between items-center pb-4 border-b border-outline-variant/30 mb-stack-md">
                 <div className="flex items-center gap-2">
@@ -147,7 +149,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.full_name ? 'ring-2 ring-error bg-error-container/10' : ''}`}
+                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md focus:shadow-sm ${errors.full_name ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                         placeholder="e.g. Aditiya Wijaya"
                         type="text"
                         required
@@ -169,7 +171,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                                     setErrors(prev => ({ ...prev, username: null }));
                                 }
                             }}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.username ? 'ring-2 ring-error bg-error-container/10' : ''}`}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md focus:shadow-sm ${errors.username ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                             placeholder="aditiya_w"
                             type="text"
                             required
@@ -186,7 +188,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.email ? 'ring-2 ring-error bg-error-container/10' : ''}`}
+                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md focus:shadow-sm ${errors.email ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                         placeholder="name@diajar.edu"
                         type="email"
                         required
@@ -258,7 +260,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                         <input
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.password ? 'ring-2 ring-error bg-error-container/10' : ''}`}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 pr-12 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md focus:shadow-sm ${errors.password ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                             placeholder="••••••••"
                             type={isPasswordVisible ? 'text' : 'password'}
                             required={!isEdit}
@@ -285,7 +287,7 @@ export default function AccountForm({ initialData = {}, isEdit = false, onSubmit
                     <input
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md focus:shadow-sm ${errors.confirmPassword ? 'ring-2 ring-error bg-error-container/10' : ''}`}
+                        className={`w-full bg-[#F1F5F9] border-none rounded-xl p-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md focus:shadow-sm ${errors.confirmPassword ? 'ring-2 ring-error bg-error-container/10' : ''}`}
                         placeholder="••••••••"
                         type={isPasswordVisible ? 'text' : 'password'}
                         required={!isEdit}

@@ -3,7 +3,7 @@ import Icon from '@/Components/shared/ui/Icon';
 
 export default function SavedLaterBox({ savedItems = [], onAddNewClick, onItemClick }) {
     return (
-        <section className="bg-white border border-outline-variant p-6 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
+        <section className="bg-surface-container-lowest border border-outline-variant p-6 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="font-headline-md text-headline-md text-on-surface mb-4 font-bold">
                 Saved for Later
             </h3>

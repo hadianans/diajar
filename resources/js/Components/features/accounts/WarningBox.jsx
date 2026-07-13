@@ -3,7 +3,7 @@ import Icon from '@/Components/shared/ui/Icon';
 
 export default function WarningBox({ title, description, buttonLabel, onButtonClick }) {
     return (
-        <div className="tonal-layer rounded-xl overflow-hidden border-tertiary border-l-4 shadow-sm bg-white">
+        <div className="tonal-layer rounded-xl overflow-hidden border-tertiary border-l-4 shadow-sm bg-surface-container-lowest">
             <div className="p-6">
                 <div className="flex items-center gap-2 mb-6">
                     <Icon name="group" className="text-tertiary text-2xl" />

@@ -6,6 +6,7 @@ import AssessmentFilterTabs from '@/Components/features/teacher-assessments/Asse
 import AssessmentCard from '@/Components/features/teacher-assessments/AssessmentCard';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import moment from 'moment';
 
 export default function Index() {
@@ -17,12 +18,13 @@ export default function Index() {
     };
 
     const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this assessment?')) return;
+        const confirmed = await confirmDelete('Delete Assessment?', 'This will permanently remove this assessment.');
+        if (!confirmed) return;
         try {
             await api.delete(`/assessments/${id}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting assessment');
+            showError('Error', err.response?.data?.message || 'Error deleting assessment');
         }
     };
 

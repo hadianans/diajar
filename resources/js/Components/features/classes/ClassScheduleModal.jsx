@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 const days = [
     { value: 0, label: 'Sunday' },
@@ -35,7 +36,7 @@ export default function ClassScheduleModal({ show, onClose, classId, currentDay,
             });
             onSuccess();
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to update schedule.');
+            showError('Error', err.response?.data?.message || 'Failed to update schedule.');
         } finally {
             setLoading(false);
         }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 import useApiGet from '@/hooks/useApiGet';
 
 export default function ChapterModal({ show, onClose, onSuccess, initialData = null, classesData }) {
@@ -105,7 +106,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'An error occurred.');
+                showError('Error', err.response?.data?.message || 'An error occurred.');
             }
         } finally {
             setLoading(false);
@@ -130,7 +131,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
                         <select
                             value={formData.subject_id}
                             onChange={(e) => setFormData({ ...formData, subject_id: e.target.value })}
-                            className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.subject_id ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.subject_id ? 'ring-2 ring-error' : ''}`}
                             disabled={isEdit || subjectsLoading}
                             required
                         >
@@ -148,7 +149,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
                             type="text"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.name ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.name ? 'ring-2 ring-error' : ''}`}
                             placeholder="e.g. Molecular Biology"
                             required
                         />
@@ -160,7 +161,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
                         <textarea
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md min-h-[100px] resize-y ${errors.description ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md min-h-[100px] resize-y ${errors.description ? 'ring-2 ring-error' : ''}`}
                             placeholder="Brief description of the chapter..."
                         />
                         {errors.description && <p className="text-error text-xs mt-1">{errors.description[0]}</p>}
@@ -173,7 +174,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
                                 type="number"
                                 value={formData.order}
                                 onChange={(e) => setFormData({ ...formData, order: e.target.value })}
-                                className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.order ? 'ring-2 ring-error' : ''}`}
+                                className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.order ? 'ring-2 ring-error' : ''}`}
                                 placeholder="e.g. 1"
                             />
                             {errors.order && <p className="text-error text-xs mt-1">{errors.order[0]}</p>}
@@ -184,7 +185,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
                             <select
                                 value={formData.target_grade}
                                 onChange={(e) => handleGradeChange(e.target.value)}
-                                className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.target_grade ? 'ring-2 ring-error' : ''}`}
+                                className={`w-full bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.target_grade ? 'ring-2 ring-error' : ''}`}
                             >
                                 <option value="" disabled>Select Grade</option>
                                 {availableGrades.map(grade => (
@@ -235,7 +236,7 @@ export default function ChapterModal({ show, onClose, onSuccess, initialData = n
                                     }
                                 }}
                                 disabled={formData.tags.length >= 3}
-                                className={`flex-1 bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.tags ? 'ring-2 ring-error' : ''}`}
+                                className={`flex-1 bg-surface-container-low border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.tags ? 'ring-2 ring-error' : ''}`}
                                 placeholder={formData.tags.length >= 3 ? "Maximum tags reached" : "Type and press Enter"}
                             />
                             <button

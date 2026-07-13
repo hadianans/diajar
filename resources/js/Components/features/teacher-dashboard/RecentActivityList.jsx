@@ -3,7 +3,7 @@ import Icon from '@/Components/shared/ui/Icon';
 
 export default function RecentActivityList({ activities = [] }) {
     return (
-        <div className="bg-white/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-surface-container-lowest/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="font-headline-md text-headline-md flex items-center gap-2">
                     <Icon name="history" className="text-primary" />

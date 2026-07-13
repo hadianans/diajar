@@ -4,7 +4,7 @@ import Icon from '@/Components/shared/ui/Icon';
 export default function GradebookOverview({ assignmentWeight = 40, assessmentWeight = 60 }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
-            <div className="bg-white border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)] p-6 rounded-xl md:col-span-1">
+            <div className="bg-surface-container-lowest border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)] p-6 rounded-xl md:col-span-1">
                 <div className="flex items-center gap-2 mb-4">
                     <Icon name="analytics" className="text-secondary" filled />
                     <h3 className="font-label-md text-label-md text-on-surface">Grading Scheme</h3>
@@ -28,7 +28,7 @@ export default function GradebookOverview({ assignmentWeight = 40, assessmentWei
             </div>
 
             {/* Decorative Visual Token */}
-            <div className="bg-white border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)] p-6 rounded-xl md:col-span-2 relative overflow-hidden flex items-center justify-between">
+            <div className="bg-surface-container-lowest border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)] p-6 rounded-xl md:col-span-2 relative overflow-hidden flex items-center justify-between">
                 <div className="z-10">
                     <h3 className="font-headline-md text-headline-md text-on-background">Performance Insight</h3>
                     <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-md">Class is actively working on their assignments. The overall participation is looking great.</p>

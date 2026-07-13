@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function TeacherModal({ show, onClose, onSuccess, subjectId, linkedTeacherIds = [] }) {
     const [teachers, setTeachers] = useState([]);
@@ -60,7 +61,7 @@ export default function TeacherModal({ show, onClose, onSuccess, subjectId, link
             });
             onSuccess();
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to link teachers.');
+            showError('Error', err.response?.data?.message || 'Failed to link teachers.');
         } finally {
             setLoading(false);
         }
@@ -85,7 +86,7 @@ export default function TeacherModal({ show, onClose, onSuccess, subjectId, link
                         placeholder="Search teachers..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-[#F1F5F9] border-none rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md"
+                        className="w-full bg-[#F1F5F9] border-none rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md"
                     />
                 </div>
 

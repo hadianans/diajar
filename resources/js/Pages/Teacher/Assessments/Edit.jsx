@@ -4,6 +4,7 @@ import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function Edit({ assessmentId }) {
     const { data: assessment, loading } = useApiGet(`/assessments/${assessmentId}`);
@@ -60,7 +61,7 @@ export default function Edit({ assessmentId }) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'Error updating assessment');
+                showError('Error', err.response?.data?.message || 'Error updating assessment');
             }
         } finally {
             setIsSaving(false);

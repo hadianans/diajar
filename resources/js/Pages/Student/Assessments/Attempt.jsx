@@ -5,6 +5,7 @@ import AttemptHeader from '@/Components/features/student-assessments/AttemptHead
 import QuestionCard from '@/Components/features/student-assessments/QuestionCard';
 import QuestionNavigator from '@/Components/features/student-assessments/QuestionNavigator';
 import api from '@/utils/api';
+import { showError, showWarning, confirmAction } from '@/utils/swal';
 
 export default function Attempt({ assessmentId }) {
     const [loading, setLoading] = useState(true);
@@ -45,12 +46,12 @@ export default function Attempt({ assessmentId }) {
                     });
                     setAnswersState(initialAnswers);
                 } else {
-                    alert('Could not start assessment: Unknown error');
+                    showError('Error', 'Could not start assessment: Unknown error');
                     router.visit(`/student/assessments/${assessmentId}`);
                 }
             } catch (error) {
                 console.error('Error starting attempt:', error);
-                alert('An error occurred. You might have reached the maximum attempts.');
+                showWarning('Cannot Start', 'An error occurred. You might have reached the maximum attempts.');
                 router.visit(`/student/assessments/${assessmentId}`);
             } finally {
                 setLoading(false);
@@ -108,14 +109,14 @@ export default function Attempt({ assessmentId }) {
 
     const handleSubmit = async () => {
         const unansweredCount = questions.length - Object.values(answersState).filter(s => (s?.status === 'answered' || s?.status === 'flagged') && s?.selectedOptionId != null).length;
-        if (confirm(`Are you sure you want to finish the attempt? You still have ${unansweredCount} unanswered questions.`)) {
+        const confirmed = await confirmAction('Finish Attempt?', `You still have ${unansweredCount} unanswered questions. Are you sure you want to submit?`);
+        if (confirmed) {
             try {
                 await api.patch(`/attempts/${attemptId}/submit`);
-                alert("Assessment submitted successfully. Redirecting to results...");
                 router.visit(`/student/attempts/${attemptId}/result`);
             } catch (error) {
                 console.error('Error submitting:', error);
-                alert('Failed to submit. Please try again.');
+                showError('Error', 'Failed to submit. Please try again.');
             }
         }
     };
@@ -167,7 +168,7 @@ export default function Attempt({ assessmentId }) {
                 </div>
 
                 {/* Question Area */}
-                <div className="bg-white border border-outline-variant/50 rounded-2xl p-6 shadow-sm mb-6">
+                <div className="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 shadow-sm mb-6">
                     <div className="flex justify-between items-start mb-6">
                         <h3 className="font-headline-sm text-headline-sm text-on-surface" dangerouslySetInnerHTML={{ __html: currentQuestion.question }} />
                         <button 

@@ -49,7 +49,7 @@ export default function SubmissionViewer({ fileName, pathUrl }) {
                             </a>
                         </div>
                     ) : isImage ? (
-                        <div className="w-full h-full bg-white rounded shadow-lg max-w-2xl mx-auto overflow-auto flex flex-col items-center justify-start p-4">
+                        <div className="w-full h-full bg-surface-container-lowest rounded shadow-lg max-w-2xl mx-auto overflow-auto flex flex-col items-center justify-start p-4">
                             <img 
                                 src={pathUrl} 
                                 alt="Document Preview" 
@@ -58,7 +58,7 @@ export default function SubmissionViewer({ fileName, pathUrl }) {
                             />
                         </div>
                     ) : isPdf ? (
-                        <iframe src={pathUrl} className="w-full h-full bg-white rounded shadow-lg border-none" title="Submission Preview" />
+                        <iframe src={pathUrl} className="w-full h-full bg-surface-container-lowest rounded shadow-lg border-none" title="Submission Preview" />
                     ) : (
                         <div className="flex flex-col items-center justify-center text-center space-y-4">
                             <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center">

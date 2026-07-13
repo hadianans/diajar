@@ -12,7 +12,7 @@ export default function LoginTemplate({ header, children, footer, overlay }) {
             {/* Main Login Container */}
             <main className="w-full max-w-[400px] flex flex-col items-center animate-fade-in py-lg px-md">
                 {header}
-                
+
                 {/* Login Form Card */}
                 <section className="w-full bg-surface-container-lowest border border-outline-variant p-md rounded-xl login-card">
                     {children}

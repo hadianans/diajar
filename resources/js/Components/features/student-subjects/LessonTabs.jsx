@@ -5,7 +5,7 @@ export default function LessonTabs({ overviewContent, resources, content }) {
     const [activeTab, setActiveTab] = useState(content ? 'content' : 'overview');
 
     return (
-        <div className="bg-white border border-outline-variant rounded-2xl overflow-hidden">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden">
             <div className="flex border-b border-outline-variant">
                 {content && (
                     <button 

@@ -207,7 +207,7 @@ export default function RichTextEditor({
     if (!editor) return null;
 
     return (
-        <div className={`rounded-2xl border ${error ? 'border-error' : 'border-outline-variant'} shadow-sm overflow-hidden bg-white`}>
+        <div className={`rounded-2xl border ${error ? 'border-error' : 'border-outline-variant'} shadow-sm overflow-hidden bg-surface-container-lowest`}>
             {/* ── Main Toolbar ─────────────────────────────────────────────── */}
             <div className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-outline-variant bg-surface-container-low">
                 {/* Font Family & Size Dropdowns */}
@@ -405,7 +405,7 @@ export default function RichTextEditor({
                             key={w}
                             type="button"
                             onClick={() => setImageSize(w)}
-                            className="px-2.5 py-1 text-label-sm font-label-sm bg-white border border-outline-variant hover:bg-primary hover:text-on-primary hover:border-primary rounded-lg transition-colors"
+                            className="px-2.5 py-1 text-label-sm font-label-sm bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary hover:border-primary rounded-lg transition-colors"
                         >
                             {label}
                         </button>
@@ -419,7 +419,7 @@ export default function RichTextEditor({
                             key={d}
                             type="button"
                             onClick={() => setImageDisplay(d)}
-                            className="px-2.5 py-1 text-label-sm font-label-sm bg-white border border-outline-variant hover:bg-primary hover:text-on-primary hover:border-primary rounded-lg transition-colors"
+                            className="px-2.5 py-1 text-label-sm font-label-sm bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary hover:border-primary rounded-lg transition-colors"
                         >
                             {label}
                         </button>
@@ -433,7 +433,7 @@ export default function RichTextEditor({
                             const alt = window.prompt('Alt text:', editor.getAttributes('image').alt || '');
                             if (alt !== null) editor.chain().focus().updateAttributes('image', { alt }).run();
                         }}
-                        className="px-2.5 py-1 text-label-sm font-label-sm bg-white border border-outline-variant hover:bg-primary hover:text-on-primary hover:border-primary rounded-lg transition-colors"
+                        className="px-2.5 py-1 text-label-sm font-label-sm bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary hover:border-primary rounded-lg transition-colors"
                     >
                         Alt Text
                     </button>

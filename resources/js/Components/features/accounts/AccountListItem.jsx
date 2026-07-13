@@ -21,7 +21,7 @@ export default function AccountListItem({ account, onMoreClick }) {
     const avatarBg = avatarBgMap[roleKey] || 'bg-outline-variant text-on-surface';
 
     return (
-        <div className="bg-white p-4 rounded-xl border border-outline-variant flex items-center gap-4 transition-all hover:shadow-md hover:-translate-y-0.5 group">
+        <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex items-center gap-4 transition-all hover:shadow-md hover:-translate-y-0.5 group">
             <Avatar
                 src={account.avatar}
                 initials={initials}

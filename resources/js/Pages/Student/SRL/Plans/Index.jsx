@@ -5,6 +5,7 @@ import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import moment from 'moment';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import Pagination from '@/Components/shared/ui/Pagination';
 
 export default function PlansIndex() {
@@ -137,7 +138,7 @@ export default function PlansIndex() {
                 refetch();
             }
         } catch (err) {
-            alert(err.response?.data?.message || 'Error saving plan');
+            showError('Error', err.response?.data?.message || 'Error saving plan');
         }
     };
 
@@ -153,7 +154,8 @@ export default function PlansIndex() {
 
     const handleDelete = async (planId, e) => {
         if (e) e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this study plan?')) return;
+        const confirmed = await confirmDelete('Delete Plan?', 'Are you sure you want to delete this study plan?');
+        if (!confirmed) return;
         try {
             await api.delete(`/plans/${planId}`);
             refetch();

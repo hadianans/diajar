@@ -5,6 +5,7 @@ import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import moment from 'moment';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function Planner() {
     const { data: plansData, loading, mutate } = useApiGet('/plans');
@@ -30,7 +31,7 @@ export default function Planner() {
             setNewPlan({ title: '', description: '', target_date: moment().format('YYYY-MM-DD') });
             mutate(); // Refresh the list
         } catch (err) {
-            alert(err.response?.data?.message || 'Error creating plan');
+            showError('Error', err.response?.data?.message || 'Error creating plan');
         }
     };
 

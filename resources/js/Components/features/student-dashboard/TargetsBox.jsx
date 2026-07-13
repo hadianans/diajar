@@ -13,7 +13,7 @@ export default function TargetsBox({ initialTargets = [], onViewAllClick }) {
     };
 
     return (
-        <section className="bg-white border border-outline-variant p-6 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
+        <section className="bg-surface-container-lowest border border-outline-variant p-6 rounded-[24px] shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
                     Your Targets

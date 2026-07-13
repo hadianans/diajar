@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function AcademicYearModal({ show, onClose, onSuccess, initialData = null }) {
     const isEdit = !!initialData;
@@ -42,7 +43,7 @@ export default function AcademicYearModal({ show, onClose, onSuccess, initialDat
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'An error occurred.');
+                showError('Error', err.response?.data?.message || 'An error occurred.');
             }
         } finally {
             setLoading(false);
@@ -68,7 +69,7 @@ export default function AcademicYearModal({ show, onClose, onSuccess, initialDat
                             type="text"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.name ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.name ? 'ring-2 ring-error' : ''}`}
                             required
                         />
                         {errors.name && <p className="text-error text-xs mt-1">{errors.name[0]}</p>}
@@ -81,7 +82,7 @@ export default function AcademicYearModal({ show, onClose, onSuccess, initialDat
                                 type="date"
                                 value={formData.date_start}
                                 onChange={(e) => setFormData({ ...formData, date_start: e.target.value })}
-                                className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.date_start ? 'ring-2 ring-error' : ''}`}
+                                className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.date_start ? 'ring-2 ring-error' : ''}`}
                                 required
                             />
                             {errors.date_start && <p className="text-error text-xs mt-1">{errors.date_start[0]}</p>}
@@ -92,7 +93,7 @@ export default function AcademicYearModal({ show, onClose, onSuccess, initialDat
                                 type="date"
                                 value={formData.date_end}
                                 onChange={(e) => setFormData({ ...formData, date_end: e.target.value })}
-                                className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.date_end ? 'ring-2 ring-error' : ''}`}
+                                className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.date_end ? 'ring-2 ring-error' : ''}`}
                                 required
                             />
                             {errors.date_end && <p className="text-error text-xs mt-1">{errors.date_end[0]}</p>}
@@ -104,7 +105,7 @@ export default function AcademicYearModal({ show, onClose, onSuccess, initialDat
                         <select
                             value={formData.status}
                             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.status ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.status ? 'ring-2 ring-error' : ''}`}
                         >
                             <option value="active">Active</option>
                             <option value="archive">Archived</option>

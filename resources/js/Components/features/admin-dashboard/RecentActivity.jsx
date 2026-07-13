@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function RecentActivity({ activities = [], onViewLogs }) {
     return (
-        <div className="bg-white rounded-2xl border border-outline-variant p-6 shadow-sm">
+        <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 shadow-sm">
             <h4 className="font-headline-md text-headline-md font-bold mb-6 text-on-surface">Recent Activity</h4>
             <div className="flex flex-col gap-6">
                 {activities.map((activity, idx) => {

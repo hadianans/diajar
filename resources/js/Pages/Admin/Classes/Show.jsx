@@ -7,6 +7,7 @@ import StudentsAccessCard from '@/Components/features/classes/StudentsAccessCard
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError, showInfo, confirmDelete } from '@/utils/swal';
 import ClassScheduleModal from '@/Components/features/classes/ClassScheduleModal';
 import GroupYearSelectionModal from '@/Components/features/academic/modals/GroupYearSelectionModal';
 
@@ -36,17 +37,18 @@ export default function Show({ classId }) {
     };
 
     const handleActionClick = (actionName) => {
-        alert(`Initiated action: ${actionName} flow...`);
+        showInfo('Action Initiated', `${actionName} flow...`);
     };
 
     const handleDeleteClass = async () => {
-        if (confirm('DANGER: This action cannot be undone. All class data, logs, and configurations for this class will be permanently deleted. Are you absolutely sure?')) {
+        const confirmed = await confirmDelete('Delete this class?', 'All class data, logs, and configurations will be permanently deleted. This cannot be undone.');
+        if (confirmed) {
             try {
                 await api.delete(`/classes/${classId}`);
-                alert('Class deleted successfully.');
+                showSuccess('Class deleted successfully.');
                 router.visit('/admin/classes');
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to delete class.');
+                showError('Error', err.response?.data?.message || 'Failed to delete class.');
             }
         }
     };
@@ -62,9 +64,9 @@ export default function Show({ classId }) {
             });
             refetchClass();
             setIsCohortModalOpen(false);
-            alert('Cohorts updated successfully!');
+            showSuccess('Cohorts updated successfully!');
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to update cohorts.');
+            showError('Error', err.response?.data?.message || 'Failed to update cohorts.');
         }
     };
 

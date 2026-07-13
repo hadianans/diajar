@@ -7,6 +7,7 @@ import HorizontalGradeChart from '@/Components/features/teacher-assessments/Hori
 import StudentAttemptsTable from '@/Components/features/teacher-assessments/StudentAttemptsTable';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import moment from 'moment';
 
 export default function Show({ assessmentId }) {
@@ -16,13 +17,14 @@ export default function Show({ assessmentId }) {
     const handleBack = () => router.visit(route('teacher.assessments.index'));
 
     const handleDelete = async () => {
-        if (!confirm('Are you sure you want to delete this assessment? This action cannot be undone.')) return;
+        const confirmed = await confirmDelete('Delete Assessment?', 'This action cannot be undone.');
+        if (!confirmed) return;
         setIsDeleting(true);
         try {
             await api.delete(`/assessments/${assessmentId}`);
             router.visit(route('teacher.assessments.index'));
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting assessment');
+            showError('Error', err.response?.data?.message || 'Error deleting assessment');
             setIsDeleting(false);
         }
     };

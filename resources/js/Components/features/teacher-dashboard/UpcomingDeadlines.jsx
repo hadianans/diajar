@@ -3,7 +3,7 @@ import Icon from '@/Components/shared/ui/Icon';
 
 export default function UpcomingDeadlines({ deadlines = [] }) {
     return (
-        <div className="bg-white/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-surface-container-lowest/80 backdrop-blur-[8px] border border-slate-200/50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-headline-md text-headline-md mb-6 flex items-center gap-2">
                 <Icon name="alarm" className="text-error" />
                 Deadlines

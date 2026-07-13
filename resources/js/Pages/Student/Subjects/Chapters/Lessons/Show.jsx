@@ -9,6 +9,7 @@ import PromoBanner from '@/Components/features/student-subjects/PromoBanner';
 import ReflectionForm from '@/Components/features/reflections/ReflectionForm';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError, showInfo } from '@/utils/swal';
 import { getFileDetails } from '@/utils/getFileDetails';
 
 export default function Show({
@@ -210,7 +211,7 @@ export default function Show({
                     target_date: planDate,
                     description: planNotes,
                 });
-                alert('Study plan updated successfully!');
+                showSuccess('Study plan updated successfully!');
             } else {
                 await api.post('/plans', {
                     class_id: subjectId,
@@ -225,13 +226,13 @@ export default function Show({
                         }
                     ]
                 });
-                alert('Study plan created successfully!');
+                showSuccess('Study plan created successfully!');
             }
             refetchPlans();
             setActiveAction(null);
         } catch (err) {
             console.error(err);
-            alert('Failed to save study plan');
+            showError('Error', 'Failed to save study plan');
         } finally {
             setIsSavingPlan(false);
         }
@@ -270,12 +271,12 @@ export default function Show({
                 setData({ ...materialData, is_completed: true });
             }
 
-            alert('Reflection submitted and lesson marked as completed!');
+            showSuccess('Reflection submitted and lesson marked as completed!');
             refetchReflections();
             setActiveAction(null);
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.message || 'Failed to submit reflection.');
+            showError('Error', err.response?.data?.message || 'Failed to submit reflection.');
         } finally {
             setIsSavingReflection(false);
         }
@@ -420,7 +421,7 @@ export default function Show({
                             if (lesson.relatedAssessment) {
                                 router.visit(`/student/assessments/${lesson.relatedAssessment.id}`);
                             } else {
-                                alert('No assessment tied to this lesson.');
+                                showInfo('No Assessment', 'No assessment tied to this lesson.');
                             }
                         }}
                         hasQuiz={!!lesson.relatedAssessment}
@@ -428,7 +429,7 @@ export default function Show({
 
                     {/* SRL Forms Container */}
                     {activeAction === 'plan' && (
-                        <div className="bg-white border border-outline-variant rounded-2xl p-6 shadow-sm mt-4 animate-fadeIn">
+                        <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 shadow-sm mt-4 animate-fadeIn">
                             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/40 mb-5">
                                 <h3 className="font-headline-sm text-headline-sm text-on-surface">
                                     {existingPlan ? 'Edit Study Plan' : 'Study Plan'}
@@ -469,7 +470,7 @@ export default function Show({
                     )}
 
                     {activeAction === 'reflection' && (
-                        <div id="reflection-form-section" className="bg-white border border-outline-variant rounded-2xl p-6 shadow-sm mt-4 animate-fadeIn">
+                        <div id="reflection-form-section" className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 shadow-sm mt-4 animate-fadeIn">
                             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/40 mb-6">
                                 <h3 className="font-headline-sm text-headline-sm text-on-surface">
                                     {existingReflection ? 'Edit Reflection' : 'Write Reflection'}

@@ -7,7 +7,7 @@ export default function AccountOverviewCard({ account = {}, onEdit, onResetPassw
     return (
         <div className="flex flex-col gap-stack-md w-full">
             {/* Overview Box */}
-            <div className="tonal-layer rounded-xl p-6 flex flex-col items-center text-center bg-white border border-outline-variant shadow-sm">
+            <div className="tonal-layer rounded-xl p-6 flex flex-col items-center text-center bg-surface-container-lowest border border-outline-variant shadow-sm">
                 <Avatar
                     src={account.avatar}
                     initials={initials}
@@ -45,7 +45,7 @@ export default function AccountOverviewCard({ account = {}, onEdit, onResetPassw
             </div>
 
             {/* Account Information Box */}
-            <div className="tonal-layer rounded-xl p-6 bg-white border border-outline-variant shadow-sm">
+            <div className="tonal-layer rounded-xl p-6 bg-surface-container-lowest border border-outline-variant shadow-sm">
                 <h3 className="font-label-md text-on-surface mb-4 border-b border-outline-variant pb-2 font-bold">
                     Account Information
                 </h3>

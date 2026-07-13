@@ -5,7 +5,7 @@ export default function AvatarUpload({ avatarUrl, onUploadClick, label = 'Upload
     return (
         <section className="flex flex-col items-center">
             <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-2 border-primary-container/20 shadow-inner bg-white">
+                <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-2 border-primary-container/20 shadow-inner bg-surface-container-lowest">
                     {avatarUrl ? (
                         <img
                             className="w-full h-full object-cover"

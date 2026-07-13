@@ -15,7 +15,7 @@ export default function LessonActions({
     hasPlan 
 }) {
     return (
-        <div className="bg-white border border-outline-variant rounded-3xl p-6 shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-3xl p-6 shadow-sm">
             <h3 className="font-label-md text-label-md text-outline uppercase tracking-wider mb-4">Lesson Actions</h3>
             
             <div className="space-y-4">

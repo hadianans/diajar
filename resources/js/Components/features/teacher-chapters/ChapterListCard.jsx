@@ -44,7 +44,7 @@ export default function ChapterListCard({ chapterId, number, title, description,
             onClick={handleClick}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`bg-white p-6 rounded-xl border border-outline-variant shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] transition-transform cursor-pointer group ${isHovered ? 'translate-y-[-2px]' : ''}`}
+            className={`bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] transition-transform cursor-pointer group ${isHovered ? 'translate-y-[-2px]' : ''}`}
         >
             <div className="flex items-start justify-between mb-4">
                 <div className="flex gap-4">

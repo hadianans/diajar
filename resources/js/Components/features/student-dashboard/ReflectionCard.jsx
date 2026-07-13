@@ -10,7 +10,7 @@ export default function ReflectionCard({
     isStale = false // used for older entries
 }) {
     return (
-        <div className={`bg-white border border-outline-variant rounded-xl p-4 shadow-sm transition-all hover:shadow-md ${isStale ? 'opacity-80' : ''}`}>
+        <div className={`bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm transition-all hover:shadow-md ${isStale ? 'opacity-80' : ''}`}>
             <div className="flex justify-between items-start mb-2">
                 <div>
                     <h4 className="text-label-md font-bold">{title}</h4>

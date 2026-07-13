@@ -7,6 +7,7 @@ import QuestionOptionsBuilder from '@/Components/features/teacher-questions/Ques
 import QuestionSettingsBento from '@/Components/features/teacher-questions/QuestionSettingsBento';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, showWarning } from '@/utils/swal';
 
 export default function Edit({ questionId }) {
     const { data: subjectsData } = useApiGet('/subjects'); // Fetch subjects linked to teacher
@@ -78,9 +79,9 @@ export default function Edit({ questionId }) {
         } catch (err) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
-                alert("Please check the form for errors.");
+                showWarning('Form Errors', 'Please check the form for errors.');
             } else {
-                alert(err.response?.data?.message || 'Error updating question');
+                showError('Error', err.response?.data?.message || 'Error updating question');
             }
         } finally {
             setIsSaving(false);

@@ -28,7 +28,7 @@ export default function StudentsAccessCard({
     const paginatedStudents = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
     return (
-        <article className="bg-white/80 backdrop-blur-md border border-outline-variant rounded-xl p-6 h-full flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <article className="bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant rounded-xl p-6 h-full flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex justify-between items-center">
                 <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
                     Students with Access ({students.length})

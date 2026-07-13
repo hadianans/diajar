@@ -7,6 +7,7 @@ import EngagementPanel from '@/Components/features/teacher-lessons/EngagementPan
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 import moment from 'moment';
 
 export default function LessonShow({ chapterId, lessonId }) {
@@ -21,12 +22,13 @@ export default function LessonShow({ chapterId, lessonId }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm('Are you sure you want to delete this material?')) return;
+        const confirmed = await confirmDelete('Delete Material?', 'This will permanently remove this material.');
+        if (!confirmed) return;
         try {
             await api.delete(`/materials/${lessonId}`);
             router.visit(route('teacher.chapters.show', { chapterId: material.chapter_id || chapterId }));
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting material');
+            showError('Error', err.response?.data?.message || 'Error deleting material');
         }
     };
 
@@ -36,7 +38,7 @@ export default function LessonShow({ chapterId, lessonId }) {
             await api.patch(`/materials/${lessonId}/${action}`);
             refetch();
         } catch (err) {
-            alert(err.response?.data?.message || `Error attempting to ${action} material`);
+            showError('Error', err.response?.data?.message || `Error attempting to ${action} material`);
         }
     };
 

@@ -6,6 +6,7 @@ import MaterialPreviewModal from '@/Components/features/teacher-lessons/Material
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
 import useApiGet from '@/hooks/useApiGet';
+import { showError } from '@/utils/swal';
 
 export default function Create({ chapterId }) {
     const { url } = usePage();
@@ -80,7 +81,7 @@ export default function Create({ chapterId }) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'Error saving material');
+                showError('Error', err.response?.data?.message || 'Error saving material');
             }
         } finally {
             setIsSaving(false);
@@ -163,7 +164,7 @@ export default function Create({ chapterId }) {
             <div className="hidden md:flex fixed bottom-10 right-10 flex-col gap-3">
                 <button 
                     onClick={() => setShowPreview(true)}
-                    className="bg-white border border-outline-variant text-primary shadow-lg p-4 rounded-full hover:shadow-xl transition-all flex items-center gap-3 group active:scale-95"
+                    className="bg-surface-container-lowest border border-outline-variant text-primary shadow-lg p-4 rounded-full hover:shadow-xl transition-all flex items-center gap-3 group active:scale-95"
                 >
                     <Icon name="visibility" />
                     <span className="font-label-md text-label-md pr-2">Preview Material</span>

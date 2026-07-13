@@ -6,6 +6,7 @@ import QuestionFilters from '@/Components/features/teacher-questions/QuestionFil
 import QuestionCard from '@/Components/features/teacher-questions/QuestionCard';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 
 export default function Index() {
     const { data: response, loading } = useApiGet('/questions');
@@ -15,12 +16,13 @@ export default function Index() {
     };
 
     const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this question?')) return;
+        const confirmed = await confirmDelete('Delete Question?', 'This will permanently remove this question.');
+        if (!confirmed) return;
         try {
             await api.delete(`/questions/${id}`);
             window.location.reload();
         } catch (err) {
-            alert(err.response?.data?.message || 'Error deleting question');
+            showError('Error', err.response?.data?.message || 'Error deleting question');
         }
     };
 
@@ -87,7 +89,7 @@ export default function Index() {
                     <p className="text-body-md text-on-surface-variant">Showing <span className="font-bold text-on-surface">{questions.length}</span> of {totalQuestions} questions</p>
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-outline">Sort by:</span>
-                        <button className="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-outline-variant hover:bg-surface transition-colors font-label-md text-label-md">
+                        <button className="flex items-center gap-2 px-3 py-2 bg-surface-container-lowest rounded-xl border border-outline-variant hover:bg-surface transition-colors font-label-md text-label-md">
                             Newest First
                             <Icon name="expand_more" className="text-sm" />
                         </button>

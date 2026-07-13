@@ -10,7 +10,7 @@ export default function GroupsBox({ groups = [], onAddGroupClick, onViewAllGroup
     const startIndex = (currentPage - 1) * itemsPerPage;
     const paginatedGroups = groups.slice(startIndex, startIndex + itemsPerPage);
     return (
-        <section className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
+        <section className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-stack-md">
                 <div className="flex items-center gap-2">
                     <Icon name="group_work" className="text-on-surface-variant text-xl" />

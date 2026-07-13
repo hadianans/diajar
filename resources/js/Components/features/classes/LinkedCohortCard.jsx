@@ -8,7 +8,7 @@ export default function LinkedCohortCard({
     onCohortClick
 }) {
     return (
-        <article className="bg-white/80 backdrop-blur-md border border-outline-variant rounded-xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <article className="bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant rounded-xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
                 Linked Student Group
             </h3>

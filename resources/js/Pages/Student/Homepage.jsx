@@ -10,6 +10,7 @@ import RecommendedCarousel from '@/Components/features/student-dashboard/Recomme
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import moment from 'moment';
+import { showInfo } from '@/utils/swal';
 
 export default function Homepage() {
     const { auth } = usePage().props;
@@ -95,7 +96,7 @@ export default function Homepage() {
     const headerSection = (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Greeting */}
-            <div className="flex justify-between items-center bg-white border border-outline-variant/40 rounded-2xl p-4 shadow-sm mt-4">
+            <div className="flex justify-between items-center bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-4 shadow-sm mt-4">
                 <div>
                     <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-extrabold tracking-tight">
                         {greeting}, {user.first_name || user.full_name?.split(' ')[0] || 'Student'}!
@@ -227,7 +228,7 @@ export default function Homepage() {
                         <SavedLaterBox
                             savedItems={bookmarks}
                             onAddNewClick={() => router.visit('/student/subjects')}
-                            onItemClick={(item) => alert('View bookmark: ' + item.title)}
+                            onItemClick={(item) => showInfo('Bookmark', 'View bookmark: ' + item.title)}
                         />
 
                     </div>

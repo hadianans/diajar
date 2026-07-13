@@ -3,6 +3,7 @@ import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import Pagination from '@/Components/shared/ui/Pagination';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function StudentModal({ show, onClose, onSuccess, groupId, yearId }) {
     const [students, setStudents] = useState([]);
@@ -72,7 +73,7 @@ export default function StudentModal({ show, onClose, onSuccess, groupId, yearId
             });
             onSuccess();
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to add students.');
+            showError('Error', err.response?.data?.message || 'Failed to add students.');
         } finally {
             setLoading(false);
         }
@@ -108,12 +109,12 @@ export default function StudentModal({ show, onClose, onSuccess, groupId, yearId
                                     placeholder="Search students..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full bg-[#F1F5F9] border-none rounded-xl py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md shadow-sm"
+                                    className="w-full bg-[#F1F5F9] border-none rounded-xl py-2.5 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md shadow-sm"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-4 bg-white">
+                        <div className="flex-1 overflow-y-auto p-4 bg-surface-container-lowest">
                             {fetching && students.length === 0 ? (
                                 <div className="flex justify-center py-8 text-on-surface-variant text-sm">Loading...</div>
                             ) : students.length === 0 ? (
@@ -174,7 +175,7 @@ export default function StudentModal({ show, onClose, onSuccess, groupId, yearId
                             ) : (
                                 <div className="flex flex-wrap gap-2">
                                     {selectedStudents.map(student => (
-                                        <div key={student.id} className="flex items-center gap-2 bg-white border border-outline-variant/60 rounded-lg px-3 py-1.5 shadow-sm max-w-full">
+                                        <div key={student.id} className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/60 rounded-lg px-3 py-1.5 shadow-sm max-w-full">
                                             <span className="text-sm font-medium text-on-surface truncate">{student.full_name}</span>
                                             <button 
                                                 onClick={() => handleRemoveSelected(student.id)}
@@ -190,7 +191,7 @@ export default function StudentModal({ show, onClose, onSuccess, groupId, yearId
                             )}
                         </div>
                         {selectedStudents.length > 0 && (
-                            <div className="p-4 border-t border-outline-variant/30 bg-white flex justify-end">
+                            <div className="p-4 border-t border-outline-variant/30 bg-surface-container-lowest flex justify-end">
                                 <button
                                     onClick={() => setSelectedStudents([])}
                                     className="text-error text-sm font-medium hover:underline px-2 py-1"

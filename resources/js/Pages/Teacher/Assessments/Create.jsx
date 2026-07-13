@@ -6,6 +6,7 @@ import WizardStepQuestionBank from '@/Components/features/teacher-assessments/Wi
 import WizardStepReview from '@/Components/features/teacher-assessments/WizardStepReview';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function Create() {
     const { data: classes } = useApiGet('/classes');
@@ -73,7 +74,7 @@ export default function Create() {
                 const hasBasicError = Object.keys(err.response.data.errors || {}).some(k => basicFields.includes(k));
                 if (hasBasicError) setCurrentStep(1);
             } else {
-                alert(err.response?.data?.message || 'Error creating assessment');
+                showError('Error', err.response?.data?.message || 'Error creating assessment');
             }
         } finally {
             setIsSaving(false);

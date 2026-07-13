@@ -4,7 +4,7 @@ import Icon from '@/Components/shared/ui/Icon';
 
 export default function YearClassesList({ classes = [], onViewAllClick, onGenerateClassClick, onClassMoreClick }) {
     return (
-        <section className="flex flex-col gap-stack-md bg-white p-5 md:p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+        <section className="flex flex-col gap-stack-md bg-surface-container-lowest p-5 md:p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
                 <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
                     Subject Classes <span className="text-on-surface-variant text-body-md font-normal">(This Year)</span>

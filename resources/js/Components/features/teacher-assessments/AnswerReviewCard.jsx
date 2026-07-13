@@ -11,7 +11,7 @@ export default function AnswerReviewCard({
     explanation 
 }) {
     return (
-        <div className="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">

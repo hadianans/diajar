@@ -8,6 +8,7 @@ import PerformanceRing from '@/Components/features/accounts/PerformanceRing';
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError, confirmDelete, promptInput } from '@/utils/swal';
 
 export default function Show({ accountId }) {
     const { data: user, loading, refetch } = useApiGet(`/users/${accountId}`);
@@ -22,34 +23,35 @@ export default function Show({ accountId }) {
     };
 
     const handleResetPassword = async () => {
-        const newPassword = prompt('Enter new password for this user (min 8 characters):');
+        const newPassword = await promptInput('Enter new password for this user', { inputLabel: 'Min 8 characters', inputPlaceholder: 'New password', inputType: 'text' });
         if (!newPassword) return;
         
         if (newPassword.length < 8) {
-            alert('Password must be at least 8 characters long.');
+            showError('Invalid Password', 'Password must be at least 8 characters long.');
             return;
         }
 
         setActionLoading(true);
         try {
             await api.patch(`/users/${accountId}/password`, { password: newPassword });
-            alert('Password updated successfully.');
+            showSuccess('Password updated successfully.');
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to update password.');
+            showError('Error', err.response?.data?.message || 'Failed to update password.');
         } finally {
             setActionLoading(false);
         }
     };
 
     const handleDelete = async () => {
-        if (confirm('Are you sure you want to delete this account? Once deleted, all records are permanently erased.')) {
+        const confirmed = await confirmDelete('Delete Account?', 'Once deleted, all records are permanently erased.');
+        if (confirmed) {
             setActionLoading(true);
             try {
                 await api.delete(`/users/${accountId}`);
-                alert('Account deleted successfully.');
+                showSuccess('Account deleted successfully.');
                 router.visit('/admin/accounts');
             } catch (err) {
-                alert(err.response?.data?.message || 'Failed to delete account.');
+                showError('Error', err.response?.data?.message || 'Failed to delete account.');
                 setActionLoading(false);
             }
         }
@@ -119,7 +121,7 @@ export default function Show({ accountId }) {
 
                         {/* Bento Supplementary Info cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-                            <div className="tonal-layer rounded-xl p-6 bg-white border border-outline-variant shadow-sm">
+                            <div className="tonal-layer rounded-xl p-6 bg-surface-container-lowest border border-outline-variant shadow-sm">
                                 <h4 className="font-label-md text-primary mb-4 flex items-center gap-2 font-bold">
                                     <Icon name="history" className="text-lg" /> Recent Activity
                                 </h4>
@@ -128,7 +130,7 @@ export default function Show({ accountId }) {
                                 </div>
                             </div>
                             
-                            <div className="tonal-layer rounded-xl p-6 relative overflow-hidden group bg-white border border-outline-variant shadow-sm">
+                            <div className="tonal-layer rounded-xl p-6 relative overflow-hidden group bg-surface-container-lowest border border-outline-variant shadow-sm">
                                 <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                                 <h4 className="font-label-md text-primary mb-4 flex items-center gap-2 font-bold">
                                     <Icon name="school" className="text-lg" /> Performance

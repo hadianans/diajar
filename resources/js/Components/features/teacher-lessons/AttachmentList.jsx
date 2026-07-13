@@ -24,7 +24,7 @@ export default function AttachmentList({ attachments = [] }) {
                             href={attachment.url || '#'} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="flex items-center justify-between p-4 bg-white border border-outline-variant rounded-2xl hover:border-primary transition-all cursor-pointer group shadow-sm"
+                            className="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-2xl hover:border-primary transition-all cursor-pointer group shadow-sm"
                         >
                             <div className="flex items-center gap-4">
                                 <div className={`w-10 h-10 ${iconBgClass} ${iconColorClass} rounded-xl flex items-center justify-center`}>

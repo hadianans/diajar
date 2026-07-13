@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@/Components/shared/ui/Modal';
 import Icon from '@/Components/shared/ui/Icon';
 import api from '@/utils/api';
+import { showError } from '@/utils/swal';
 
 export default function SubjectModal({ show, onClose, onSuccess, initialData = null }) {
     const isEdit = !!initialData;
@@ -38,7 +39,7 @@ export default function SubjectModal({ show, onClose, onSuccess, initialData = n
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'An error occurred.');
+                showError('Error', err.response?.data?.message || 'An error occurred.');
             }
         } finally {
             setLoading(false);
@@ -64,7 +65,7 @@ export default function SubjectModal({ show, onClose, onSuccess, initialData = n
                             type="text"
                             value={formData.subject_name}
                             onChange={(e) => setFormData({ ...formData, subject_name: e.target.value })}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md ${errors.subject_name ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md ${errors.subject_name ? 'ring-2 ring-error' : ''}`}
                             placeholder="e.g. Mathematics"
                             required
                         />
@@ -76,7 +77,7 @@ export default function SubjectModal({ show, onClose, onSuccess, initialData = n
                         <textarea
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-body-md font-body-md min-h-[100px] resize-y ${errors.description ? 'ring-2 ring-error' : ''}`}
+                            className={`w-full bg-[#F1F5F9] border-none rounded-xl p-3 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-body-md font-body-md min-h-[100px] resize-y ${errors.description ? 'ring-2 ring-error' : ''}`}
                             placeholder="Brief description of the subject..."
                         />
                         {errors.description && <p className="text-error text-xs mt-1">{errors.description[0]}</p>}

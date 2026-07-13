@@ -10,7 +10,7 @@ export default function SubjectsBox({ subjects = [], onAddSubjectClick, onViewAl
     const startIndex = (currentPage - 1) * itemsPerPage;
     const paginatedSubjects = subjects.slice(startIndex, startIndex + itemsPerPage);
     return (
-        <section className="bg-white p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
+        <section className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex flex-col h-full hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-stack-md">
                 <div className="flex items-center gap-2">
                     <Icon name="book_5" className="text-on-surface-variant text-xl" />

@@ -8,6 +8,7 @@ import SubmissionCard from '@/Components/features/student-assignments/Submission
 import ReflectionForm from '@/Components/features/reflections/ReflectionForm';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showSuccess, showError } from '@/utils/swal';
 
 export default function Show({ assignmentId }) {
     const { data: responseData, loading, setData } = useApiGet(`/assignments/${assignmentId}`);
@@ -84,7 +85,7 @@ export default function Show({ assignmentId }) {
             window.location.reload(); 
         } catch (error) {
             console.error('Error submitting assignment:', error);
-            alert('Failed to submit assignment. Please try again.');
+            showError('Error', 'Failed to submit assignment. Please try again.');
         } finally {
             setSubmitLoading(false);
         }
@@ -110,11 +111,11 @@ export default function Show({ assignmentId }) {
                     reflectable_type: 'App\\Models\\ClassAssignment'
                 });
             }
-            alert('Reflection saved!');
+            showSuccess('Reflection saved!');
             refetchReflections();
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.message || 'Failed to save reflection.');
+            showError('Error', err.response?.data?.message || 'Failed to save reflection.');
         } finally {
             setIsSavingReflection(false);
         }

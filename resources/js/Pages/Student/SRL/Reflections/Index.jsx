@@ -5,6 +5,7 @@ import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import moment from 'moment';
 import api from '@/utils/api';
+import { showSuccess, showError, confirmDelete } from '@/utils/swal';
 import Pagination from '@/Components/shared/ui/Pagination';
 import ReflectionForm from '@/Components/features/reflections/ReflectionForm';
 
@@ -44,7 +45,8 @@ export default function ReflectionsIndex() {
 
     const handleDelete = async (id, e) => {
         if (e) e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this reflection?')) return;
+        const confirmed = await confirmDelete('Delete Reflection?', 'Are you sure you want to delete this reflection?');
+        if (!confirmed) return;
         try {
             await api.delete(`/reflections/${id}`);
             refetch();
@@ -67,12 +69,12 @@ export default function ReflectionsIndex() {
                 material_quality: data.material_quality,
                 emotions: data.emotions,
             });
-            alert('Reflection updated successfully!');
+            showSuccess('Reflection updated successfully!');
             refetch();
             setSelectedRef(null);
         } catch (err) {
             console.error(err);
-            alert('Failed to update reflection.');
+            showError('Error', 'Failed to update reflection.');
         } finally {
             setIsUpdating(false);
         }

@@ -4,6 +4,7 @@ import DashboardTemplate from '@/Components/shared/layout/DashboardTemplate';
 import api from '@/utils/api';
 import useApiGet from '@/hooks/useApiGet';
 import Icon from '@/Components/shared/ui/Icon';
+import { showSuccess, showError } from '@/utils/swal';
 import GroupYearSelectionModal from '@/Components/features/academic/modals/GroupYearSelectionModal';
 
 export default function Create() {
@@ -73,10 +74,10 @@ export default function Create() {
                 assignment_weight: parseFloat(form.assignment_weight),
                 assessment_weight: parseFloat(form.assessment_weight)
             });
-            alert('Class created successfully');
+            showSuccess('Class created successfully');
             router.visit('/admin/classes');
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to create class.');
+            showError('Error', err.response?.data?.message || 'Failed to create class.');
         } finally {
             setLoading(false);
         }

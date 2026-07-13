@@ -3,7 +3,7 @@ import Icon from '@/Components/shared/ui/Icon';
 
 export default function QuestionMetadataPanel({ explanation, tags, usageCount }) {
     return (
-        <section className="space-y-stack-md bg-white rounded-xl p-6 border border-outline-variant/50 shadow-[0_4px_12px_0_rgba(15,23,42,0.05)]">
+        <section className="space-y-stack-md bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 shadow-[0_4px_12px_0_rgba(15,23,42,0.05)]">
             <div className="space-y-stack-sm">
                 <h3 className="font-label-md text-label-md text-primary uppercase tracking-wider">Student Explanation</h3>
                 <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">

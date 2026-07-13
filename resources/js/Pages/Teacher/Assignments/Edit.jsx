@@ -7,6 +7,7 @@ import AssignmentAttachmentForm from '@/Components/features/teacher-assignments/
 import Icon from '@/Components/shared/ui/Icon';
 import useApiGet from '@/hooks/useApiGet';
 import api from '@/utils/api';
+import { showError, confirmDelete } from '@/utils/swal';
 
 export default function Edit({ assignmentId }) {
     const { data: assignment, loading } = useApiGet(`/assignments/${assignmentId}`);
@@ -88,7 +89,7 @@ export default function Edit({ assignmentId }) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                alert(err.response?.data?.message || 'Error updating assignment');
+                showError('Error', err.response?.data?.message || 'Error updating assignment');
             }
         } finally {
             setIsSaving(false);
@@ -96,11 +97,12 @@ export default function Edit({ assignmentId }) {
     };
 
     const handleRemoveExistingAttachment = async (attachmentId) => {
-        if (!confirm("Are you sure you want to remove this attachment? This action cannot be undone.")) return;
+        const confirmed = await confirmDelete('Remove Attachment?', 'This action cannot be undone.');
+        if (!confirmed) return;
         try {
             await api.delete(`/assignments/${assignmentId}/attachments/${attachmentId}`);
         } catch (err) {
-            alert(err.response?.data?.message || 'Error removing attachment');
+            showError('Error', err.response?.data?.message || 'Error removing attachment');
         }
     };
 
@@ -152,14 +154,15 @@ export default function Edit({ assignmentId }) {
                     rubric={rubric}
                     onChange={setRubric}
                     onClear={async () => {
-                        if (!confirm("Are you sure you want to completely clear and delete this rubric?")) return;
+                        const confirmed = await confirmDelete('Delete Rubric?', 'This will completely clear and delete this rubric.');
+                        if (!confirmed) return;
                         try {
                             if (assignment.rubric) {
                                 await api.delete(`/assignments/${assignmentId}/rubric`);
                             }
                             setRubric({ title: '', description: '', criteria: [] });
                         } catch (err) {
-                            alert(err.response?.data?.message || 'Error deleting rubric');
+                            showError('Error', err.response?.data?.message || 'Error deleting rubric');
                         }
                     }}
                 />
