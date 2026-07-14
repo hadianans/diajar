@@ -443,9 +443,10 @@ export default function Show({
                                     <label className="block font-label-md text-label-md text-on-surface-variant mb-2">Target Date</label>
                                     <input
                                         type="date"
-                                        className="w-full bg-surface-container-low border border-transparent focus:border-primary rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface outline-none transition-all"
+                                        className="w-full bg-surface-container-low border border-transparent focus:border-primary rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface outline-none transition-all cursor-pointer dark:[color-scheme:dark] dark:[&::-webkit-calendar-picker-indicator]:invert"
                                         value={planDate}
                                         onChange={e => setPlanDate(e.target.value)}
+                                        onClick={(e) => { try { e.currentTarget.showPicker && e.currentTarget.showPicker(); } catch (err) {} }}
                                         required
                                     />
                                 </div>

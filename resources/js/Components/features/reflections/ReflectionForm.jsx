@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from '@/Components/shared/ui/Icon';
 import { showWarning, promptInput } from '@/utils/swal';
 
@@ -14,6 +14,15 @@ export default function ReflectionForm({
     const [quality, setQuality] = useState(initialData?.material_quality || 0);
     const [selectedEmojis, setSelectedEmojis] = useState(initialData?.emotions || []);
     const [reflectionNotes, setReflectionNotes] = useState(initialData?.content || '');
+
+    useEffect(() => {
+        if (initialData) {
+            setComprehension(initialData.comprehension_level || 0);
+            setQuality(initialData.material_quality || 0);
+            setSelectedEmojis(typeof initialData.emotions === 'string' ? JSON.parse(initialData.emotions) : (initialData.emotions || []));
+            setReflectionNotes(initialData.content || '');
+        }
+    }, [initialData]);
 
     const defaultEmojis = ['😄', '😵', '🧐', '😕', '😮', '🥱', '🤨'];
     const emojis = Array.from(new Set([...defaultEmojis, ...selectedEmojis]));
@@ -120,8 +129,8 @@ export default function ReflectionForm({
                                         <Icon
                                             name="star"
                                             className={`transition-all duration-300 ${isSelected
-                                                ? 'text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)] scale-105'
-                                                : 'text-outline-variant/30 group-hover/rating:text-amber-500/40 [&:hover]:text-amber-500'
+                                                ? 'text-amber-500 dark:text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.4)] scale-105'
+                                                : 'text-on-surface-variant/40 dark:text-on-surface-variant/50 group-hover/rating:text-amber-500/40 [&:hover]:text-amber-500'
                                                 } ${quality === val ? 'animate-[bounce_0.3s_ease-in-out_1]' : ''}`}
                                             style={{ fontVariationSettings: isSelected ? "'FILL' 1, 'wght' 500" : "'FILL' 0, 'wght' 400" }}
                                         />

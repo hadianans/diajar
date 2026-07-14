@@ -96,7 +96,7 @@ export default function Homepage() {
     const headerSection = (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Greeting */}
-            <div className="flex justify-between items-center bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-4 shadow-sm mt-4">
+            <div className="flex justify-between items-center bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-4 sm:p-6 shadow-sm mt-4 gap-4">
                 <div>
                     <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-extrabold tracking-tight">
                         {greeting}, {user.first_name || user.full_name?.split(' ')[0] || 'Student'}!
@@ -105,14 +105,24 @@ export default function Homepage() {
                         Welcome back to your learning hub
                     </p>
                 </div>
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-fixed flex-shrink-0 bg-surface-container">
-                    {user.picture ? (
-                        <img className="w-full h-full object-cover" src={user.picture} alt="Avatar" />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center font-bold text-primary">
-                            {user.full_name ? user.full_name.substring(0, 2).toUpperCase() : 'ST'}
-                        </div>
-                    )}
+                <div className="flex items-center gap-3 ml-auto">
+                    <button
+                        onClick={() => router.visit('/student/dashboard')}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-sm font-semibold shadow-sm hover:bg-primary/95 active:scale-95 transition-all flex-shrink-0"
+                        type="button"
+                    >
+                        <Icon name="add" className="text-lg" />
+                        <span>Target</span>
+                    </button>
+                    {/* <div className="hidden sm:flex w-12 h-12 rounded-full overflow-hidden border-2 border-primary-fixed flex-shrink-0 bg-surface-container">
+                        {user.picture ? (
+                            <img className="w-full h-full object-cover" src={user.picture} alt="Avatar" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center font-bold text-primary">
+                                {user.full_name ? user.full_name.substring(0, 2).toUpperCase() : 'ST'}
+                            </div>
+                        )}
+                    </div> */}
                 </div>
             </div>
         </div>
@@ -132,7 +142,7 @@ export default function Homepage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
                     {/* Left Column: Course Cards, Actions, Deadlines, Suggestions */}
                     <div className="lg:col-span-8 flex flex-col gap-stack-lg">
-                        
+
                         {/* Continue Learning card widget */}
                         {lastAccessed && lastAccessed.material ? (
                             <ContinueLearningCard
@@ -205,7 +215,7 @@ export default function Homepage() {
 
                     {/* Right Column: Progress Rings, Targets, and Bookmarks */}
                     <div className="lg:col-span-4 flex flex-col gap-stack-lg">
-                        
+
                         {/* Overall Progress rings summary container */}
                         <section className="bg-surface-container-low rounded-[24px] p-6 border border-outline-variant hover:shadow-md transition-shadow duration-300">
                             <h3 className="font-headline-md text-headline-md text-on-surface mb-6 font-bold">
@@ -234,15 +244,6 @@ export default function Homepage() {
                     </div>
                 </div>
 
-                {/* Mobile floating quick add button */}
-                <button
-                    onClick={() => router.visit('/student/dashboard')}
-                    className="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center active:scale-95 transition-transform hover:bg-primary/95 z-40"
-                    type="button"
-                    title="Quick Add Target"
-                >
-                    <Icon name="add" className="text-2xl text-white" />
-                </button>
             </DashboardTemplate>
         </>
     );

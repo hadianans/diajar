@@ -61,13 +61,21 @@ class ReflectionController extends Controller
 
         // Map relation paths so frontend gets consistent data structure
         $paginated->getCollection()->transform(function ($reflection) {
-            $reflection->reflectables->each(function ($reflectable) {
+            $materialQuality = 0;
+            $reflection->reflectables->each(function ($reflectable) use (&$materialQuality, $reflection) {
                 if ($reflectable->reflectable_type === \App\Models\Material::class && $reflectable->reflectable) {
                     $reflectable->reflectable->load('chapter.subject');
+                    $review = \App\Models\MaterialReview::where('material_id', $reflectable->reflectable_id)
+                        ->where('student_id', $reflection->student_id)
+                        ->first();
+                    if ($review) {
+                        $materialQuality = $review->score;
+                    }
                 } elseif (in_array($reflectable->reflectable_type, [\App\Models\ClassAssignment::class, \App\Models\ClassAssessment::class]) && $reflectable->reflectable) {
                     $reflectable->reflectable->load('class.subject');
                 }
             });
+            $reflection->material_quality = $materialQuality;
             return $reflection;
         });
 
@@ -130,6 +138,20 @@ class ReflectionController extends Controller
             'comprehension_level' => $request->input('comprehension_level'),
             'emotions' => json_encode($request->input('emotions', [])),
         ]);
+
+        if ($request->has('material_quality') && $request->material_quality > 0) {
+            $reflection->load('reflectables');
+            foreach ($reflection->reflectables as $ref) {
+                if ($ref->reflectable_type === \App\Models\Material::class) {
+                    \App\Models\MaterialReview::updateOrCreate([
+                        'material_id' => $ref->reflectable_id,
+                        'student_id'  => auth()->id(),
+                    ], [
+                        'score' => (int) $request->material_quality,
+                    ]);
+                }
+            }
+        }
 
         return $this->success($reflection);
     }

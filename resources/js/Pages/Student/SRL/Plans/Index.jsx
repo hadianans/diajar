@@ -168,9 +168,11 @@ export default function PlansIndex() {
     const getTargetLink = (planable, plan) => {
         if (!planable) return '#';
         if (planable.planable_type.includes('Material')) {
-            const subjectId = plan?.chapter?.subject_id || plan?.class?.subject_id || 1;
-            const chapterId = plan?.chapter_id || 1;
-            return `/student/subjects/${subjectId}/${chapterId}/${planable.planable_id}`;
+            const target = planable.planable;
+            const chapterId = target?.chapter_id || target?.chapter?.id || plan?.chapter_id || 1;
+            const subjectId = target?.chapter?.subject_id || target?.chapter?.subject?.id || plan?.chapter?.subject_id || plan?.class?.subject_id || 1;
+            const lessonId = target?.id || planable.planable_id;
+            return `/student/subjects/${subjectId}/${chapterId}/${lessonId}`;
         }
         if (planable.planable_type.includes('Assignment')) {
             return `/student/assignments/${planable.planable_id}`;
@@ -206,7 +208,7 @@ export default function PlansIndex() {
                         <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">
                             {selectedPlan ? 'Edit Study Plan' : 'Set a New Goal'}
                         </h3>
-                        
+
                         {selectedPlan && (
                             <div className="border-b border-outline-variant/50 pb-4 mb-4 flex justify-between items-start gap-4 animate-fadeIn">
                                 <div>
@@ -240,7 +242,8 @@ export default function PlansIndex() {
                                     required
                                     value={formData.target_date}
                                     onChange={e => setFormData({ ...formData, target_date: e.target.value })}
-                                    className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
+                                    onClick={(e) => { try { e.currentTarget.showPicker && e.currentTarget.showPicker(); } catch (err) {} }}
+                                    className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer dark:[color-scheme:dark] dark:[&::-webkit-calendar-picker-indicator]:invert"
                                 />
                             </div>
 
@@ -311,14 +314,14 @@ export default function PlansIndex() {
                                 >
                                     {selectedPlan ? 'Update Plan' : 'Commit to Plan'}
                                 </button>
-                                
+
                                 {selectedPlan && (
                                     <div className="flex gap-2">
                                         <Link href={getTargetLink(selectedPlan.planables?.[0], selectedPlan)} className="flex-1 flex justify-center items-center gap-2 py-3 bg-secondary-container text-on-secondary-container rounded-xl text-label-md font-label-md hover:opacity-90 transition-opacity">
                                             <Icon name="arrow_forward" className="text-[18px]" />
                                             View Task
                                         </Link>
-                                        <button 
+                                        <button
                                             type="button"
                                             onClick={() => setSelectedPlan(null)}
                                             className="flex-1 flex justify-center items-center gap-2 py-3 bg-surface-container text-on-surface rounded-xl text-label-md font-label-md hover:bg-surface-variant transition-opacity border border-outline-variant"
@@ -337,14 +340,14 @@ export default function PlansIndex() {
 
                     {/* Toolbar */}
                     <div className="flex flex-col xl:flex-row justify-between items-center gap-4 bg-surface-container-low p-4 rounded-2xl border border-outline-variant/30">
-                        <div className="flex items-center bg-surface w-full xl:w-96 rounded-full px-4 py-2 border border-outline-variant">
+                        <div className="flex items-center bg-surface w-full xl:w-96 rounded-xl px-4 py-2 border border-outline-variant">
                             <Icon name="search" className="text-on-surface-variant mr-2" />
                             <input
                                 type="text"
                                 placeholder="Search plans..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full bg-transparent outline-none text-body-md text-on-surface"
+                                className="w-full bg-transparent border-none rounded-md px-4 py-2 text-body-md text-on-surface outline-none focus:border-primary transition-colors"
                             />
                         </div>
 

@@ -58,6 +58,13 @@ class PlanController extends Controller
                 Carbon::parse($plan->target_date)->lt($now)                           => 'overdue',
                 default                                                               => 'active',
             };
+            $plan->planables->each(function ($planable) {
+                if ($planable->planable_type === \App\Models\Material::class && $planable->planable) {
+                    $planable->planable->load('chapter.subject');
+                } elseif (in_array($planable->planable_type, [\App\Models\ClassAssignment::class, \App\Models\ClassAssessment::class]) && $planable->planable) {
+                    $planable->planable->load('class.subject');
+                }
+            });
             return $plan;
         });
 

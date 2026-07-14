@@ -10,14 +10,13 @@ const linksConfig = {
             { label: 'Subject', icon: 'book', href: '/student/subjects' },
             { label: 'Assignment', icon: 'assignment', href: '/student/assignments' },
             { label: 'Assessment', icon: 'analytics', href: '/student/assessments' },
-            { label: 'Gradebook', icon: 'grade', href: '/student/gradebook' },
         ],
         mobile: [
             { label: 'Assessment', icon: 'analytics', href: '/student/assessments' },
             { label: 'Assignment', icon: 'assignment', href: '/student/assignments' },
             { label: 'Home', icon: 'home', href: '/student/homepage' },
             { label: 'Subject', icon: 'book', href: '/student/subjects' },
-            { label: 'Gradebook', icon: 'grade', href: '/student/gradebook' },
+            { label: 'Dashboard', icon: 'dashboard', href: '/student/dashboard' },
         ]
     },
     teacher: {
@@ -53,7 +52,8 @@ const linksConfig = {
 };
 
 export default function RoleNavbar({ activeTab, onTabChange }) {
-    const { auth } = usePage().props;
+    const page = usePage();
+    const auth = page.props?.auth;
     const user = auth?.user || {};
     const role = user.role || 'admin';
     const activeRole = role.toLowerCase();
@@ -62,6 +62,44 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
     
     // Ensure we have a default active tab based on role if none is provided
     const currentActiveTab = activeTab || (activeRole === 'admin' ? 'Dashboard' : 'Home');
+    const pathname = (page.url || '').split('?')[0];
+    
+    const hasUrlMatch = (items) => items.some(item => 
+        item.href && item.href !== '#' && item.href !== '/' && 
+        (pathname === item.href || pathname.startsWith(item.href + '/'))
+    );
+    const useUrlMatchOnly = hasUrlMatch(config.desktop.concat(config.mobile));
+
+    const checkIsActive = (item) => {
+        // 1. Precise URL match has priority
+        if (item.href && item.href !== '#' && item.href !== '/') {
+            if (pathname === item.href || pathname.startsWith(item.href + '/')) {
+                return true;
+            }
+        }
+        if (useUrlMatchOnly) {
+            return false;
+        }
+
+        // 2. Fall back to activeTab prop matching
+        if (!currentActiveTab) return false;
+        const tab = currentActiveTab.toLowerCase();
+        const label = item.label.toLowerCase();
+
+        if (tab === label) return true;
+        if (tab === label + 's' || tab + 's' === label) return true;
+        if (tab.replace(/s$/, '') === label.replace(/s$/, '')) return true;
+
+        // Custom aliases for existing page props
+        if (label === 'assignment' && (tab === 'tasks' || tab === 'assignments')) return true;
+        if (label === 'assessment' && (tab === 'assessments' || tab === 'quizzes' || tab === 'exams')) return true;
+        if (label === 'class' && tab === 'classes') return true;
+        if (label === 'chapter' && tab === 'chapters') return true;
+        if (label === 'subject' && tab === 'subjects') return true;
+        if (label === 'account' && tab === 'accounts') return true;
+
+        return false;
+    };
     
     const roleLabelMap = {
         admin: 'Lead Administrator',
@@ -89,7 +127,7 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
                 </div>
                 <nav className="flex flex-col gap-2 px-2">
                     {config.desktop.map((item) => {
-                        const isActive = currentActiveTab.toLowerCase() === item.label.toLowerCase();
+                        const isActive = checkIsActive(item);
                         return (
                             <Link
                                 key={item.label}
@@ -97,7 +135,7 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
                                 onClick={() => onTabChange && onTabChange(item.label)}
                                 className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all text-left ${
                                     isActive
-                                        ? 'bg-secondary-container text-on-secondary-container font-bold scale-[0.98]'
+                                        ? 'bg-primary-container text-on-primary-container font-bold scale-[0.98] shadow-sm'
                                         : 'text-on-surface-variant hover:bg-surface-container-highest'
                                 }`}
                             >
@@ -112,7 +150,7 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
             {/* Mobile Bottom Navigation */}
             <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-surface-container-lowest shadow-lg border-t border-outline-variant h-16 px-1">
                 {config.mobile.map((item) => {
-                    const isActive = currentActiveTab.toLowerCase() === item.label.toLowerCase();
+                    const isActive = checkIsActive(item);
                     return (
                         <div key={item.label} className="flex-1 flex justify-center">
                             <Link
@@ -120,7 +158,7 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
                                 onClick={() => onTabChange && onTabChange(item.label)}
                                 className={`flex flex-col items-center justify-center w-full max-w-[72px] py-1 px-1 rounded-xl transition-all ${
                                     isActive
-                                        ? 'bg-primary-container text-on-primary-container font-bold'
+                                        ? 'bg-primary-container text-on-primary-container font-bold shadow-sm scale-95'
                                         : 'text-on-surface-variant'
                                 }`}
                             >

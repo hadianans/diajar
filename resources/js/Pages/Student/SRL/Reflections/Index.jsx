@@ -84,7 +84,10 @@ export default function ReflectionsIndex() {
         if (!reflectable) return '#';
         if (reflectable.reflectable_type.includes('Material')) {
             const mat = reflectable.reflectable;
-            return `/student/subjects/${mat?.chapter?.subject_id || 1}/${mat?.chapter_id || 1}/${mat?.id || reflectable.reflectable_id}`;
+            const chapterId = mat?.chapter_id || mat?.chapter?.id || 1;
+            const subjectId = mat?.chapter?.subject_id || mat?.chapter?.subject?.id || 1;
+            const lessonId = mat?.id || reflectable.reflectable_id;
+            return `/student/subjects/${subjectId}/${chapterId}/${lessonId}`;
         }
         if (reflectable.reflectable_type.includes('Assignment')) {
             return `/student/assignments/${reflectable.reflectable_id}`;
@@ -111,7 +114,7 @@ export default function ReflectionsIndex() {
     };
 
     return (
-        <DashboardTemplate 
+        <DashboardTemplate
             role="student"
             activeTab="dashboard"
             title="Reflections"
@@ -121,12 +124,12 @@ export default function ReflectionsIndex() {
             <Head title="My Reflections - Diajar" />
 
             <div className="flex flex-col md:flex-row gap-gutter pb-12 items-start">
-                
+
                 {/* Left Column: Details Form */}
                 <div className="md:w-1/3 flex flex-col gap-stack-md w-full sticky top-24">
                     <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30 min-h-[400px]">
                         <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">Reflection Details</h3>
-                        
+
                         {selectedRef ? (
                             <div className="flex flex-col gap-6 animate-fadeIn">
                                 <div className="border-b border-outline-variant/50 pb-4 flex justify-between items-start gap-4">
@@ -152,7 +155,7 @@ export default function ReflectionsIndex() {
                                     </div>
                                 )}
 
-                                <ReflectionForm 
+                                <ReflectionForm
                                     initialData={{
                                         ...selectedRef,
                                         emotions: typeof selectedRef.emotions === 'string' ? JSON.parse(selectedRef.emotions) : (selectedRef.emotions || [])
@@ -167,7 +170,7 @@ export default function ReflectionsIndex() {
                                                 <Icon name="arrow_forward" className="text-[18px]" />
                                                 View Task
                                             </Link>
-                                            <button 
+                                            <button
                                                 onClick={(e) => handleDelete(selectedRef.id, e)}
                                                 className="flex items-center gap-2 px-5 py-2.5 bg-error-container text-on-error-container rounded-full text-label-md font-label-md hover:opacity-90 transition-opacity"
                                                 type="button"
@@ -191,22 +194,22 @@ export default function ReflectionsIndex() {
 
                 {/* Right Column: List & Filters */}
                 <div className="md:w-2/3 flex flex-col gap-stack-md w-full">
-                    
+
                     {/* Toolbar */}
                     <div className="flex flex-col xl:flex-row justify-between items-center gap-4 bg-surface-container-low p-4 rounded-2xl border border-outline-variant/30">
-                        <div className="flex items-center bg-surface w-full xl:w-80 rounded-full px-4 py-2 border border-outline-variant focus-within:border-primary transition-colors">
+                        <div className="flex items-center bg-surface w-full xl:w-80 rounded-xl px-4 py-2 border border-outline-variant focus-within:border-primary transition-colors">
                             <Icon name="search" className="text-on-surface-variant mr-2" />
-                            <input 
-                                type="text" 
-                                placeholder="Search journal..." 
+                            <input
+                                type="text"
+                                placeholder="Search journal..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full bg-transparent outline-none text-body-md text-on-surface"
+                                className="w-full bg-transparent border-none rounded-md px-4 py-2 text-body-md text-on-surface outline-none focus:border-primary transition-colors"
                             />
                         </div>
-                        
+
                         <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-                            <select 
+                            <select
                                 value={subjectFilter}
                                 onChange={(e) => { setSubjectFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
@@ -214,7 +217,7 @@ export default function ReflectionsIndex() {
                                 <option value="">All Subjects</option>
                                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                             </select>
-                            <select 
+                            <select
                                 value={typeFilter}
                                 onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
@@ -239,17 +242,16 @@ export default function ReflectionsIndex() {
                                 if (ref.reflectables?.[0]?.reflectable_type?.includes('Material')) typeLabel = 'Lesson';
                                 if (ref.reflectables?.[0]?.reflectable_type?.includes('Assignment')) typeLabel = 'Assignment';
                                 if (ref.reflectables?.[0]?.reflectable_type?.includes('Assessment')) typeLabel = 'Assessment';
-                                
+
                                 const isSelected = selectedRef?.id === ref.id;
 
                                 return (
-                                    <div 
-                                        key={ref.id} 
-                                        className={`p-5 rounded-2xl border flex flex-col gap-3 cursor-pointer transition-all ${
-                                            isSelected 
-                                                ? 'bg-primary-container/20 border-primary shadow-sm' 
-                                                : 'bg-surface-container-low border-outline-variant/30 hover:border-primary/50'
-                                        }`}
+                                    <div
+                                        key={ref.id}
+                                        className={`p-5 rounded-2xl border flex flex-col gap-3 cursor-pointer transition-all ${isSelected
+                                            ? 'bg-primary-container/20 border-primary shadow-sm'
+                                            : 'bg-surface-container-low border-outline-variant/30 hover:border-primary/50'
+                                            }`}
                                         onClick={() => setSelectedRef(ref)}
                                     >
                                         <div className="flex justify-between items-start gap-4">
@@ -274,7 +276,7 @@ export default function ReflectionsIndex() {
                                                     )}
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="flex flex-col items-center gap-1 shrink-0">
                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-sm ${compColors[ref.comprehension_level] || 'bg-surface border border-outline-variant text-on-surface-variant'}`} title={`Comprehension Level: ${ref.comprehension_level}/5`}>
                                                     {ref.comprehension_level}
@@ -301,7 +303,7 @@ export default function ReflectionsIndex() {
                             totalItems={total}
                             itemsPerPage={10}
                             onPageChange={setPage}
-                            onItemsPerPageChange={() => {}}
+                            onItemsPerPageChange={() => { }}
                             itemsPerPageOptions={[10]}
                         />
                     )}

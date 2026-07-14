@@ -108,53 +108,97 @@ class DashboardController extends Controller
     public function srlDashboard(Request $request): JsonResponse
     {
         $studentId = auth()->id();
+        $subjectId = $request->query('subject_id') ? (int) $request->query('subject_id') : null;
 
-        // 1. Planning Snapshot: Removed (handled via separate paginated endpoint)
+        // Active academic year classes for this student, optionally filtered by subject
+        $classIds = $this->getStudentClassIds($studentId, $subjectId, true);
 
-        // 2. Monitoring Snapshot: Weekly Stats
+        // 1. Weekly Stats
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
         
-        $weeklyPlansTotal = Plan::where('student_id', $studentId)
-            ->whereBetween('target_date', [$startOfWeek, $endOfWeek])
-            ->count();
-            
-        $weeklyPlansCompleted = Plan::where('student_id', $studentId)
-            ->whereBetween('target_date', [$startOfWeek, $endOfWeek])
-            ->whereNotNull('completed_at')
-            ->count();
-            
+        $weeklyPlansQuery = Plan::where('student_id', $studentId)
+            ->whereBetween('target_date', [$startOfWeek, $endOfWeek]);
+
+        if ($subjectId) {
+            $weeklyPlansQuery->where(function ($q) use ($subjectId) {
+                $q->whereHas('planables', function ($q2) use ($subjectId) {
+                    $q2->where(function ($q3) use ($subjectId) {
+                        $q3->whereHasMorph('planable', [\App\Models\Material::class], function ($q4) use ($subjectId) {
+                            $q4->whereHas('chapter', fn($q5) => $q5->where('subject_id', $subjectId));
+                        })->orWhereHasMorph('planable', [\App\Models\ClassAssignment::class, \App\Models\ClassAssessment::class], function ($q4) use ($subjectId) {
+                            $q4->whereHas('class', fn($q5) => $q5->where('subject_id', $subjectId));
+                        });
+                    });
+                });
+            });
+        }
+
+        $weeklyPlansTotal = (clone $weeklyPlansQuery)->count();
+        $weeklyPlansCompleted = (clone $weeklyPlansQuery)->whereNotNull('completed_at')->count();
         $weeklyProgress = $weeklyPlansTotal > 0 ? round(($weeklyPlansCompleted / $weeklyPlansTotal) * 100) : 0;
 
-        $comprehension = Reflection::where('student_id', $studentId)
-            ->selectRaw('comprehension_level, COUNT(*) as count')
-            ->groupBy('comprehension_level')
-            ->pluck('count', 'comprehension_level');
+        // 2. Average Comprehension Stats (5-point scale)
+        $reflectionsQuery = Reflection::where('student_id', $studentId);
+        if ($subjectId) {
+            $reflectionsQuery->whereHas('reflectables', function ($q) use ($subjectId) {
+                $q->where(function ($q2) use ($subjectId) {
+                    $q2->whereHasMorph('reflectable', [\App\Models\Material::class], function ($q3) use ($subjectId) {
+                        $q3->whereHas('chapter', fn($q4) => $q4->where('subject_id', $subjectId));
+                    })->orWhereHasMorph('reflectable', [\App\Models\ClassAssignment::class, \App\Models\ClassAssessment::class], function ($q3) use ($subjectId) {
+                        $q3->whereHas('class', fn($q4) => $q4->where('subject_id', $subjectId));
+                    });
+                });
+            });
+        }
 
-        // LMS Progress Stats
-        $classIds = $this->getStudentClassIds($studentId);
+        $reflectionsList = (clone $reflectionsQuery)->get(['comprehension_level']);
+        $totalReflections = $reflectionsList->count();
+        
+        $counts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+        $sum = 0;
+        foreach ($reflectionsList as $ref) {
+            $level = (int) $ref->comprehension_level;
+            if ($level >= 1 && $level <= 5) {
+                $counts[$level]++;
+                $sum += $level;
+            }
+        }
+        $averageScore = $totalReflections > 0 ? round($sum / $totalReflections, 1) : 0;
 
-        $totalPublished = \App\Models\Material::where('status', 'published')
+        // 3. LMS Progress Stats (Current Active Academic Year + Subject Filter)
+        $publishedMaterialIds = \App\Models\Material::where('status', 'published')
             ->whereHas('chapter.subject.classes', fn ($q) => $q->whereIn('classes.id', $classIds)->whereNull('classes.deleted_at'))
-            ->count() ?: 1;
-        $materialCompleted = MaterialCompletion::where('student_id', $studentId)->where('is_completed', true)->count();
+            ->pluck('id');
+        $totalPublished = $publishedMaterialIds->count() ?: 1;
+        $materialCompleted = MaterialCompletion::where('student_id', $studentId)
+            ->where('is_completed', true)
+            ->whereIn('material_id', $publishedMaterialIds)
+            ->count();
 
-        $totalAssignments = ClassAssignment::whereIn('class_id', $classIds)->whereNull('deleted_at')->where('status', 'open')->count() ?: 1;
+        $classAssignmentIds = ClassAssignment::whereIn('class_id', $classIds)
+            ->whereNull('deleted_at')
+            ->where('status', 'open')
+            ->pluck('id');
+        $totalAssignments = $classAssignmentIds->count() ?: 1;
         $submittedAssignments = AssignmentSubmission::where('student_id', $studentId)
-            ->whereHas('classAssignment', fn ($q) => $q->whereIn('class_id', $classIds)->whereNull('deleted_at'))->count();
+            ->whereIn('class_assignment_id', $classAssignmentIds)
+            ->count();
 
-        $totalAssessments = ClassAssessment::whereIn('class_id', $classIds)->whereNull('deleted_at')->count() ?: 1;
+        $classAssessmentIds = ClassAssessment::whereIn('class_id', $classIds)
+            ->whereNull('deleted_at')
+            ->pluck('id');
+        $totalAssessments = $classAssessmentIds->count() ?: 1;
         $submittedAssessments = AssessmentAttempt::where('student_id', $studentId)
             ->whereIn('status', ['submitted', 'graded'])
-            ->whereHas('classAssessment', fn ($q) => $q->whereIn('class_id', $classIds)->whereNull('deleted_at'))->count();
+            ->whereIn('class_assessment_id', $classAssessmentIds)
+            ->count();
 
         $lmsProgress = [
             'material' => round(($materialCompleted / $totalPublished) * 100),
             'assignment' => round(($submittedAssignments / $totalAssignments) * 100),
             'assessment' => round(($submittedAssessments / $totalAssessments) * 100),
         ];
-
-        // 3. Reflection Prompts: Removed (handled via separate paginated endpoint)
 
         return $this->success([
             'weekly_stats'               => [
@@ -163,17 +207,27 @@ class DashboardController extends Controller
                 'progress'  => $weeklyProgress,
             ],
             'lms_progress'               => $lmsProgress,
-            'comprehension_distribution' => $comprehension,
+            'comprehension_distribution' => $counts,
+            'comprehension_average'      => $averageScore,
+            'comprehension_total'        => $totalReflections,
         ]);
     }
 
-    private function getStudentClassIds(int $studentId): array
+    private function getStudentClassIds(int $studentId, ?int $subjectId = null, bool $activeYearOnly = true): array
     {
-        $groupYearIds = StudentGroup::where('student_id', $studentId)->pluck('group_year_id');
+        $groupYearQuery = StudentGroup::where('student_id', $studentId);
+        if ($activeYearOnly) {
+            $groupYearQuery->whereHas('groupYear.schoolYear', fn($q) => $q->where('status', 'active'));
+        }
+        $groupYearIds = $groupYearQuery->pluck('group_year_id');
 
-        return ClassModel::whereHas('groupYears', fn($q) => $q->whereIn('group_years.id', $groupYearIds))
-            ->whereNull('deleted_at')
-            ->pluck('id')
-            ->toArray();
+        $classesQuery = ClassModel::whereHas('groupYears', fn($q) => $q->whereIn('group_years.id', $groupYearIds))
+            ->whereNull('deleted_at');
+
+        if ($subjectId) {
+            $classesQuery->where('subject_id', $subjectId);
+        }
+
+        return $classesQuery->pluck('id')->toArray();
     }
 }
