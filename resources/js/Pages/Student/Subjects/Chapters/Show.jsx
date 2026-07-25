@@ -40,7 +40,7 @@ export default function Show({ subjectId, chapterId }) {
             if (mats.length === 0) return;
 
             const firstMat = mats[0];
-            const subTitle = subId === 'root' ? 'General' : (firstMat.subchapter?.name || 'Lessons');
+            const subTitle = subId === 'root' ? 'Umum' : (firstMat.subchapter?.name || 'Pelajaran');
             const subOrder = subId === 'root' ? -1 : (firstMat.subchapter?.order || 999);
 
             result.push({
@@ -122,7 +122,7 @@ export default function Show({ subjectId, chapterId }) {
     if (loading) {
         return (
             <DashboardTemplate role="student" activeTab="Subject" title="Loading..." showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Loading chapter materials...</div>
+                <div className="text-center py-12">Memuat materi bab...</div>
             </DashboardTemplate>
         );
     }
@@ -130,7 +130,7 @@ export default function Show({ subjectId, chapterId }) {
     if (!chapterDataInfo) {
         return (
             <DashboardTemplate role="student" activeTab="Subject" title="Not Found" showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Chapter not found.</div>
+                <div className="text-center py-12">Bab tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -144,7 +144,7 @@ export default function Show({ subjectId, chapterId }) {
         >
             <Head title={`${chapterDataInfo.name || chapterDataInfo.title} - ${subjectTitle}`} />
 
-            <div className="max-w-2xl mx-auto pb-8 mt-4">
+            <div className="max-w-5xl mx-auto pb-8 mt-4">
                 {/* Chapter Context */}
                 <section className="mt-stack-md">
                     <div className="flex items-center gap-2 mb-2">
@@ -163,7 +163,7 @@ export default function Show({ subjectId, chapterId }) {
                         <Icon name="search" className="absolute left-4 text-outline" />
                         <input
                             className="w-full h-12 pl-12 pr-4 bg-surface-container-low border-none rounded-xl font-body-md text-body-md focus:ring-2 focus:ring-primary focus:bg-surface transition-all shadow-sm"
-                            placeholder="Search materials..."
+                            placeholder="Cari materi..."
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -182,7 +182,7 @@ export default function Show({ subjectId, chapterId }) {
                                 : 'border-transparent text-on-surface-variant hover:text-on-surface'
                                 }`}
                         >
-                            {tab}
+                            {tab === 'Materials' ? 'Materi' : tab === 'Assignments' ? 'Tugas' : 'Penilaian'}
                             {tab === 'Assignments' && chapterAssignments.length > 0 && (
                                 <span className="ml-2 px-2 py-0.5 bg-primary-container text-on-primary-container rounded-full text-xs">
                                     {chapterAssignments.length}
@@ -200,7 +200,7 @@ export default function Show({ subjectId, chapterId }) {
                 <div className="mt-stack-lg space-y-10">
                     {activeTab === 'Materials' && (() => {
                         if (subchapters.length === 0) {
-                            return <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">No materials available for this chapter.</div>;
+                            return <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">Tidak ada materi yang tersedia untuk bab ini.</div>;
                         }
 
                         const visibleSubchapters = subchapters.map(sub => {
@@ -211,13 +211,13 @@ export default function Show({ subjectId, chapterId }) {
                         }).filter(sub => sub.lessons.length > 0);
 
                         if (visibleSubchapters.length === 0) {
-                            return <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">No materials match your search.</div>;
+                            return <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">Tidak ada materi yang cocok dengan pencarian Anda.</div>;
                         }
 
                         return visibleSubchapters.map((subchapter, subIdx) => (
                             <section key={`subchapter-${subchapter.id || subIdx}`}>
                                 <h2 className="font-headline-md text-headline-md text-on-surface mb-stack-md">{subchapter.title}</h2>
-                                <div className="space-y-stack-sm">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                     {subchapter.lessons.map((lesson, idx) => {
                                         const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
                                         const hasPlan = plansArray.some(plan => 
@@ -241,7 +241,7 @@ export default function Show({ subjectId, chapterId }) {
 
                     {activeTab === 'Assignments' && (
                         chapterAssignments.length === 0 ? (
-                            <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">No assignments for this chapter.</div>
+                            <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">Tidak ada tugas untuk bab ini.</div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {chapterAssignments.map(a => {
@@ -255,7 +255,7 @@ export default function Show({ subjectId, chapterId }) {
                                             id={a.id}
                                             title={a.title}
                                             dueDate={a.due_date}
-                                            status={a.display_status === 'not_submitted' ? 'To-do' : a.display_status === 'graded' ? 'Graded' : 'Submitted'}
+                                            status={a.display_status === 'not_submitted' ? 'Akan Dikerjakan' : a.display_status === 'graded' ? 'Dinilai' : 'Dikumpulkan'}
                                             progress={a.display_status === 'not_submitted' ? 0 : 100}
                                             hasPlan={hasPlan}
                                             onPlanClick={(id, title) => handlePlanClick(id, title, 'App\\Models\\ClassAssignment')}
@@ -268,7 +268,7 @@ export default function Show({ subjectId, chapterId }) {
 
                     {activeTab === 'Assessments' && (
                         chapterAssessments.length === 0 ? (
-                            <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">No assessments for this chapter.</div>
+                            <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">Tidak ada penilaian untuk bab ini.</div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {chapterAssessments.map(a => {
@@ -284,8 +284,8 @@ export default function Show({ subjectId, chapterId }) {
                                             date={a.start_date || a.due_date}
                                             duration={a.duration_minutes ? `${a.duration_minutes} mins` : 'N/A'}
                                             questionsCount={a.question_count}
-                                            status={a.attempt_status === 'no_attempt' ? 'Not Started' : a.attempt_status === 'in_progress' ? 'In Progress' : 'Graded'}
-                                            type="Exam"
+                                            status={a.attempt_status === 'no_attempt' ? 'Belum Dimulai' : a.attempt_status === 'in_progress' ? 'Sedang Berlangsung' : 'Dinilai'}
+                                            type="Ujian"
                                             actionUrl={route('student.assessments.show', a.id)}
                                             hasPlan={hasPlan}
                                             onPlanClick={(id, title) => handlePlanClick(id, title, 'App\\Models\\ClassAssessment')}

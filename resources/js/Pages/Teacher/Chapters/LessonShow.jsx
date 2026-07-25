@@ -22,13 +22,13 @@ export default function LessonShow({ chapterId, lessonId }) {
     };
 
     const handleDelete = async () => {
-        const confirmed = await confirmDelete('Delete Material?', 'This will permanently remove this material.');
+        const confirmed = await confirmDelete('Hapus Materi?', 'Tindakan ini akan menghapus materi ini secara permanen.');
         if (!confirmed) return;
         try {
             await api.delete(`/materials/${lessonId}`);
             router.visit(route('teacher.chapters.show', { chapterId: material.chapter_id || chapterId }));
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error deleting material');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus materi');
         }
     };
 
@@ -38,22 +38,22 @@ export default function LessonShow({ chapterId, lessonId }) {
             await api.patch(`/materials/${lessonId}/${action}`);
             refetch();
         } catch (err) {
-            showError('Error', err.response?.data?.message || `Error attempting to ${action} material`);
+            showError('Kesalahan', err.response?.data?.message || `Kesalahan saat mencoba memproses materi`);
         }
     };
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" title="Loading..." showBack={true} onBack={handleBack}>
-                <div className="text-center py-12 text-on-surface-variant">Loading lesson...</div>
+            <DashboardTemplate role="teacher" title="Memuat..." showBack={true} onBack={handleBack}>
+                <div className="text-center py-12 text-on-surface-variant">Memuat pelajaran...</div>
             </DashboardTemplate>
         );
     }
 
     if (!material) {
         return (
-            <DashboardTemplate role="teacher" title="Not Found" showBack={true} onBack={handleBack}>
-                <div className="text-center py-12 text-on-surface-variant">Lesson not found.</div>
+            <DashboardTemplate role="teacher" title="Tidak Ditemukan" showBack={true} onBack={handleBack}>
+                <div className="text-center py-12 text-on-surface-variant">Pelajaran tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -76,7 +76,7 @@ export default function LessonShow({ chapterId, lessonId }) {
     const attachments = (material.attachments || []).map(att => ({
         name: att.file_name,
         type: att.file_type || 'file',
-        size: 'Unknown',
+        size: 'Tidak Diketahui',
         date: moment(att.created_at).format('MMM D')
     }));
 
@@ -87,19 +87,19 @@ export default function LessonShow({ chapterId, lessonId }) {
                 className={`hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full font-label-md transition-colors active:scale-95 ${material.status === 'published' ? 'bg-error-container text-error' : 'bg-primary-container text-on-primary-container'}`}
             >
                 <Icon name={material.status === 'published' ? 'unpublished' : 'rocket_launch'} className="text-[18px]" />
-                {material.status === 'published' ? 'Unpublish' : 'Publish'}
+                {material.status === 'published' ? 'Batal Terbitkan' : 'Terbitkan'}
             </button>
             <button 
                 onClick={handleEdit}
                 className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high"
-                title="Edit Material"
+                title="Edit Materi"
             >
                 <Icon name="edit" className="text-primary" />
             </button>
             <button 
                 onClick={handleDelete}
                 className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20"
-                title="Delete Material"
+                title="Hapus Materi"
             >
                 <Icon name="delete" className="text-error" />
             </button>
@@ -117,12 +117,12 @@ export default function LessonShow({ chapterId, lessonId }) {
         <DashboardTemplate 
             role="teacher"
             activeTab="chapters"
-            title={material.chapter?.name || "Chapter View"} 
+            title={material.chapter?.name || "Tampilan Bab"} 
             showBack={true}
             onBack={handleBack} 
             actions={actions}
         >
-            <Head title={`${material.title} - Lesson View`} />
+            <Head title={`${material.title} - Tampilan Pelajaran`} />
 
             {/* Video Player Section */}
             {material.file_type === 'video' && material.file_url && (
@@ -141,7 +141,7 @@ export default function LessonShow({ chapterId, lessonId }) {
                             ) : material.file_url ? (
                                 <div className="flex flex-col items-center justify-center p-8 bg-surface-container-low border border-outline-variant rounded-2xl">
                                     <Icon name="description" className="text-4xl text-primary mb-4" />
-                                    <p className="text-body-lg text-on-surface mb-4">This lesson contains an attached document.</p>
+                                    <p className="text-body-lg text-on-surface mb-4">Pelajaran ini berisi dokumen terlampir.</p>
                                     <a 
                                         href={material.file_url} 
                                         target="_blank" 
@@ -149,15 +149,15 @@ export default function LessonShow({ chapterId, lessonId }) {
                                         className="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:bg-primary/90 transition-colors flex items-center gap-2"
                                     >
                                         <Icon name="open_in_new" className="text-[18px]" />
-                                        View Document
+                                        Lihat Dokumen
                                     </a>
                                 </div>
                             ) : (
-                                <p className="font-body-md text-body-md text-on-surface-variant italic">No content available.</p>
+                                <p className="font-body-md text-body-md text-on-surface-variant italic">Tidak ada konten yang tersedia.</p>
                             )
                         ) : (
                             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                                {material.description || "No description provided."}
+                                {material.description || "Tidak ada deskripsi yang diberikan."}
                             </p>
                         )}
                     </div>

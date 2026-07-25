@@ -54,7 +54,7 @@ export default function Index() {
                 id: y.id,
                 year: y.name,
                 range: `${new Date(y.date_start).toLocaleDateString()} - ${new Date(y.date_end).toLocaleDateString()}`,
-                status: y.status === 'active' ? 'Active' : 'Archived'
+                status: y.status === 'active' ? 'Aktif' : 'Diarsipkan'
             }));
     }, [yearsData, searchQuery]);
 
@@ -94,15 +94,15 @@ export default function Index() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-extrabold tracking-tight">
-                        Academic Hub
+                        Pusat Akademik
                     </h2>
                     <p className="text-on-surface-variant font-body-md text-body-md mt-1">
-                        Manage institutional structures and learning cohorts.
+                        Kelola struktur institusional dan kohort pembelajaran.
                     </p>
                 </div>
                 {activeYear && (
                     <div className="inline-flex items-center bg-surface-container-low px-4 py-2 rounded-xl border border-outline-variant shadow-sm">
-                        <span className="text-label-sm font-label-sm text-on-surface-variant mr-2 font-medium">Active Year:</span>
+                        <span className="text-label-sm font-label-sm text-on-surface-variant mr-2 font-medium">Tahun Aktif:</span>
                         <span className="text-label-sm font-label-sm text-primary font-bold">{activeYear.year}</span>
                     </div>
                 )}
@@ -114,21 +114,21 @@ export default function Index() {
     const metricsSection = (
         <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
             <ProgressMetricCard
-                label="Subjects with teachers"
+                label="Mata Pelajaran dengan guru"
                 value={subjectsLoading ? '...' : `${subjects.filter(s => !s.warning).length}/${subjects.length}`}
                 icon="badge"
                 bgClass="bg-primary-container/10"
                 textClass="text-primary"
             />
             <ProgressMetricCard
-                label="Groups with students"
+                label="Grup dengan siswa"
                 value={groupsLoading ? '...' : `${groups.filter(g => !g.warning).length}/${groups.length}`}
                 icon="groups"
                 bgClass="bg-secondary-container/20"
                 textClass="text-secondary"
             />
             <ProgressMetricCard
-                label="Active Academic Years"
+                label="Tahun Akademik Aktif"
                 value={yearsLoading ? '...' : (activeYear ? '1' : '0')}
                 icon="event"
                 bgClass="bg-tertiary-container/10"
@@ -139,12 +139,12 @@ export default function Index() {
 
     return (
         <>
-            <Head title="Academic Management Hub" />
+            <Head title="Pusat Manajemen Akademik" />
 
             <DashboardTemplate
                 activeTab="Academic"
-                title="Academic Management"
-                viewLabel="Admin View"
+                title="Manajemen Akademik"
+                viewLabel="Tampilan Admin"
                 showBack={false}
                 headerSection={headerSection}
                 statsSection={metricsSection}
@@ -157,26 +157,26 @@ export default function Index() {
                                 onClick={() => handleTabChange('years')}
                                 className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'years' ? 'bg-surface-container-lowest text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
                             >
-                                Academic Years
+                                Tahun Akademik
                             </button>
                             <button
                                 onClick={() => handleTabChange('subjects')}
                                 className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'subjects' ? 'bg-surface-container-lowest text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
                             >
-                                Subjects
+                                Mata Pelajaran
                             </button>
                             <button
                                 onClick={() => handleTabChange('groups')}
                                 className={`flex-1 min-w-fit px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all ${activeTab === 'groups' ? 'bg-surface-container-lowest text-on-surface shadow-sm ring-1 ring-outline-variant/20' : 'text-on-surface-variant hover:bg-surface-variant/50'}`}
                             >
-                                Student Groups
+                                Grup Siswa
                             </button>
                         </div>
 
                         <div className="relative w-full sm:w-64 shrink-0">
                             <input
                                 type="text"
-                                placeholder="Search..."
+                                placeholder="Cari..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full bg-surface-container-low border border-outline-variant/50 rounded-xl py-2.5 px-4 text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm"

@@ -81,7 +81,7 @@ export default function Create({ chapterId }) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                showError('Error', err.response?.data?.message || 'Error saving material');
+                showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menyimpan materi');
             }
         } finally {
             setIsSaving(false);
@@ -98,11 +98,11 @@ export default function Create({ chapterId }) {
                 <div className="flex items-center gap-2 text-on-surface-variant mb-2">
                     <button onClick={handleClose} className="hover:text-primary transition-colors flex items-center gap-1 text-label-md">
                         <Icon name="arrow_back" className="text-[18px]" />
-                        Back to Chapter
+                        Kembali ke Bab
                     </button>
                 </div>
-                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Create New Lesson</h2>
-                <p className="text-on-surface-variant font-body-md">Draft and publish educational materials for your students.</p>
+                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Buat Pelajaran Baru</h2>
+                <p className="text-on-surface-variant font-body-md">Buat draf dan terbitkan materi pendidikan untuk siswa Anda.</p>
             </div>
             <div className="flex items-center gap-3">
                 <button
@@ -110,7 +110,7 @@ export default function Create({ chapterId }) {
                     disabled={isSaving}
                     className="text-primary font-bold px-5 py-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200 disabled:opacity-50 border border-primary/20"
                 >
-                    Save Draft
+                    Simpan Draf
                 </button>
                 <button
                     onClick={() => handleSave('published')}
@@ -118,15 +118,15 @@ export default function Create({ chapterId }) {
                     className="bg-primary-container text-on-primary-container font-bold px-6 py-2 rounded-full shadow-md hover:shadow-lg active:scale-95 duration-200 disabled:opacity-50 flex items-center gap-2"
                 >
                     <Icon name="rocket_launch" />
-                    Publish
+                    Terbitkan
                 </button>
             </div>
         </section>
     );
 
     return (
-        <DashboardTemplate role="teacher" activeTab="chapters" title="New Lesson" headerSection={headerSection}>
-            <Head title="Create New Lesson Material" />
+        <DashboardTemplate role="teacher" activeTab="chapters" title="Pelajaran Baru" headerSection={headerSection}>
+            <Head title="Buat Materi Pelajaran Baru" />
 
             <LessonForm
                 formData={formData}
@@ -145,7 +145,7 @@ export default function Create({ chapterId }) {
                         className="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors px-4 py-2 disabled:opacity-50"
                     >
                         <Icon name="save" />
-                        <span className="font-label-md text-label-md">Save Draft</span>
+                        <span className="font-label-md text-label-md">Simpan Draf</span>
                     </button>
                 </div>
                 <div className="flex-1 flex justify-center">
@@ -155,7 +155,7 @@ export default function Create({ chapterId }) {
                         className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-8 py-2 active:scale-95 transition-transform disabled:opacity-50"
                     >
                         <Icon name="rocket_launch" />
-                        <span className="font-label-md text-label-md">Publish</span>
+                        <span className="font-label-md text-label-md">Terbitkan</span>
                     </button>
                 </div>
             </nav>
@@ -167,7 +167,7 @@ export default function Create({ chapterId }) {
                     className="bg-surface-container-lowest border border-outline-variant text-primary shadow-lg p-4 rounded-full hover:shadow-xl transition-all flex items-center gap-3 group active:scale-95"
                 >
                     <Icon name="visibility" />
-                    <span className="font-label-md text-label-md pr-2">Preview Material</span>
+                    <span className="font-label-md text-label-md pr-2">Pratinjau Materi</span>
                 </button>
             </div>
 

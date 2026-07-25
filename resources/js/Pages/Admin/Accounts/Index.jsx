@@ -10,12 +10,12 @@ export default function Index() {
 
     return (
         <>
-            <Head title="Admin Accounts" />
+            <Head title="Akun Admin" />
 
             <DashboardTemplate
                 activeTab="Account"
                 title="Diajar Admin"
-                viewLabel="Admin View"
+                viewLabel="Tampilan Admin"
                 showBack={false}
             >
                 <div className="max-w-2xl mx-auto w-full">

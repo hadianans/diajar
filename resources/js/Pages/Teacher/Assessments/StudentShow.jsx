@@ -29,13 +29,13 @@ export default function StudentShow({ assessmentId, studentId }) {
     if (loading) {
         return (
             <AssessmentReviewLayout 
-                title="Loading Review..."
+                title="Memuat Tinjauan..."
                 onBack={handleBack}
                 currentStudentIndex={1}
                 totalStudents={1}
                 studentAvatars={[]}
             >
-                <div className="text-center py-12 text-on-surface-variant">Loading student attempt...</div>
+                <div className="text-center py-12 text-on-surface-variant">Memuat upaya siswa...</div>
             </AssessmentReviewLayout>
         );
     }
@@ -43,24 +43,24 @@ export default function StudentShow({ assessmentId, studentId }) {
     if (!data || !data.attempt) {
         return (
             <AssessmentReviewLayout 
-                title="Not Found"
+                title="Tidak Ditemukan"
                 onBack={handleBack}
                 currentStudentIndex={1}
                 totalStudents={1}
                 studentAvatars={[]}
             >
-                <div className="text-center py-12 text-on-surface-variant">Student attempt not found.</div>
+                <div className="text-center py-12 text-on-surface-variant">Upaya siswa tidak ditemukan.</div>
             </AssessmentReviewLayout>
         );
     }
 
     const { attempt, answers, correct_count, incorrect_count, total_score, time_spent } = data;
-    const studentName = attempt.student?.full_name || attempt.student?.username || 'Unknown Student';
+    const studentName = attempt.student?.full_name || attempt.student?.username || 'Siswa Tidak Diketahui';
 
     const formatTimeSpent = (seconds) => {
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
-        return `${m}m ${s}s`;
+        return `${m}m ${s}d`;
     };
 
     const displayAnswers = answers.filter(a => {
@@ -76,7 +76,7 @@ export default function StudentShow({ assessmentId, studentId }) {
 
     return (
         <AssessmentReviewLayout 
-            title={`Review: ${studentName}`}
+            title={`Tinjauan: ${studentName}`}
             onBack={handleBack}
             currentStudentIndex={currentIndex}
             totalStudents={totalCount}
@@ -85,10 +85,10 @@ export default function StudentShow({ assessmentId, studentId }) {
             onNextStudent={handleNextStudent}
         >
             <AssessmentHeroSummary 
-                title={`Assessment Attempt`} // We don't fetch assessment details in this payload, rely on context
+                title={`Upaya Penilaian`} // We don't fetch assessment details in this payload, rely on context
                 studentName={studentName}
-                group="Class"
-                submittedAt={attempt.completed_at ? moment(attempt.completed_at).format('MMM D, hh:mm A') : 'In Progress'}
+                group="Kelas"
+                submittedAt={attempt.completed_at ? moment(attempt.completed_at).format('MMM D, hh:mm A') : 'Sedang Berjalan'}
                 questionsCount={answers.length}
                 correctCount={correct_count}
                 incorrectCount={incorrect_count}
@@ -104,19 +104,19 @@ export default function StudentShow({ assessmentId, studentId }) {
                     onClick={() => setFilter('all')}
                     className={`px-6 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors border ${filter === 'all' ? 'bg-primary-container text-on-primary-container border-transparent' : 'hover:bg-surface-container-high text-on-surface-variant border-outline-variant'}`}
                 >
-                    All ({answers.length})
+                    Semua ({answers.length})
                 </button>
                 <button 
                     onClick={() => setFilter('correct')}
                     className={`px-6 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors border ${filter === 'correct' ? 'bg-primary-container text-on-primary-container border-transparent' : 'hover:bg-surface-container-high text-on-surface-variant border-outline-variant'}`}
                 >
-                    Correct ({correct_count})
+                    Benar ({correct_count})
                 </button>
                 <button 
                     onClick={() => setFilter('incorrect')}
                     className={`px-6 py-2 rounded-full font-label-md text-label-md whitespace-nowrap transition-colors border ${filter === 'incorrect' ? 'bg-primary-container text-on-primary-container border-transparent' : 'hover:bg-surface-container-high text-on-surface-variant border-outline-variant'}`}
                 >
-                    Incorrect ({incorrect_count})
+                    Salah ({incorrect_count})
                 </button>
             </div>
 
@@ -132,8 +132,8 @@ export default function StudentShow({ assessmentId, studentId }) {
                             questionNumber={idx + 1}
                             difficulty={`Level ${parseInt(q?.levels || 0) + 1}`}
                             isCorrect={Boolean(ans.is_correct)}
-                            questionText={q?.question || 'Unknown Question'}
-                            studentAnswer={ans.selected_option?.option || 'No answer'}
+                            questionText={q?.question || 'Soal Tidak Diketahui'}
+                            studentAnswer={ans.selected_option?.option || 'Tidak ada jawaban'}
                             correctAnswer={!ans.is_correct && correctOpt ? correctOpt.option : undefined}
                             explanation={q?.explanation}
                         />
@@ -144,18 +144,18 @@ export default function StudentShow({ assessmentId, studentId }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter mt-4">
                     <div className="bg-primary text-on-primary p-6 rounded-xl relative overflow-hidden group">
                         <div className="relative z-10">
-                            <h4 className="font-headline-md text-headline-md mb-2">Teacher's Insight</h4>
+                            <h4 className="font-headline-md text-headline-md mb-2">Wawasan Guru</h4>
                             <p className="text-label-md font-label-md opacity-90 leading-relaxed mb-4">
-                                {studentName} shows strong proficiency in general but missed a few questions. Reviewing the incorrect answers is recommended.
+                                {studentName} menunjukkan kemahiran yang kuat secara umum tetapi melewatkan beberapa soal. Meninjau jawaban yang salah disarankan.
                             </p>
                         </div>
                     </div>
                     
                     <div className="bg-surface-container-high p-6 rounded-xl flex items-center justify-between">
                         <div className="max-w-[60%]">
-                            <h4 className="font-headline-md text-headline-md mb-1">Score</h4>
+                            <h4 className="font-headline-md text-headline-md mb-1">Nilai</h4>
                             <p className="text-label-sm font-label-sm text-on-surface-variant">
-                                Final recorded score for this attempt.
+                                Nilai akhir yang tercatat untuk upaya ini.
                             </p>
                         </div>
                         <div className="w-24 h-24 bg-surface-container-lowest rounded-full flex items-center justify-center shadow-inner text-center">

@@ -3,9 +3,9 @@ import { Head } from '@inertiajs/react';
 export default function Index() {
     return (
         <>
-            <Head title={`Gradebook`} />
+            <Head title={`Buku Nilai`} />
             <div style={{ padding: '2rem' }}>
-                <h1>This is Teacher Gradebook page</h1>
+                <h1>Ini adalah halaman Buku Nilai Guru</h1>
             </div>
         </>
     );

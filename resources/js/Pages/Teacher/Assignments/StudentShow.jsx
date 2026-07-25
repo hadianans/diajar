@@ -72,22 +72,22 @@ export default function StudentShow({ assignmentId, studentId }) {
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" activeTab="assignments" title="Loading..." showBack={true} onBack={handleBack}>
-                <div className="text-center py-12 text-on-surface-variant">Loading submission...</div>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Memuat..." showBack={true} onBack={handleBack}>
+                <div className="text-center py-12 text-on-surface-variant">Memuat kiriman...</div>
             </DashboardTemplate>
         );
     }
 
     if (!data || !data.submission) {
         return (
-            <DashboardTemplate role="teacher" activeTab="assignments" title="Not Found" showBack={true} onBack={handleBack}>
-                <div className="text-center py-12 text-on-surface-variant">Submission not found.</div>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Tidak Ditemukan" showBack={true} onBack={handleBack}>
+                <div className="text-center py-12 text-on-surface-variant">Kiriman tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
 
     const { submission, rubric, rubric_points, next_student_id } = data;
-    const studentName = submission.student?.full_name || submission.student?.username || 'Unknown Student';
+    const studentName = submission.student?.full_name || submission.student?.username || 'Siswa Tidak Diketahui';
 
     const headerRight = (
         <div className="flex items-center gap-3">
@@ -100,7 +100,7 @@ export default function StudentShow({ assignmentId, studentId }) {
                 disabled={!next_student_id}
                 className={`flex items-center gap-2 px-4 py-1.5 rounded-full font-label-md transition-all ${next_student_id ? 'bg-primary text-on-primary hover:brightness-110 active:scale-95 shadow-sm' : 'bg-surface-variant text-on-surface-variant opacity-50 cursor-not-allowed'}`}
             >
-                Next Student
+                Siswa Berikutnya
                 <Icon name="arrow_forward" className="text-[16px]" />
             </button>
         </div>
@@ -154,16 +154,16 @@ export default function StudentShow({ assignmentId, studentId }) {
         <DashboardTemplate 
             role="teacher" 
             activeTab="assignments" 
-            title={`Grading: ${studentName}`}
+            title={`Penilaian: ${studentName}`}
             showBack={true}
             onBack={handleBack}
             actions={headerRight}
         >
-            <Head title={`Grading: ${studentName}`} />
+            <Head title={`Penilaian: ${studentName}`} />
             
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12 mt-2 w-full max-w-[1600px] mx-auto">
                 <SubmissionViewer 
-                    fileName={submission.path_url ? submission.path_url.split('/').pop() : "No File Submitted"} 
+                    fileName={submission.path_url ? submission.path_url.split('/').pop() : "Tidak Ada File yang Diserahkan"} 
                     pathUrl={submission.path_url}
                 />
                 
@@ -195,7 +195,7 @@ export default function StudentShow({ assignmentId, studentId }) {
                                             disabled={saving}
                                             className="flex-1 flex items-center justify-center border border-outline text-on-surface rounded-xl px-6 py-3.5 hover:bg-surface-container-low active:scale-95 transition-all shadow-sm"
                                         >
-                                            <span className="text-label-lg font-label-lg">Cancel</span>
+                                            <span className="text-label-lg font-label-lg">Batal</span>
                                         </button>
                                     )}
                                     <button 
@@ -204,7 +204,7 @@ export default function StudentShow({ assignmentId, studentId }) {
                                         className="flex-[2] flex items-center justify-center bg-primary text-on-primary rounded-xl px-6 py-3.5 hover:brightness-110 active:scale-95 transition-all shadow-md shadow-primary/20 disabled:opacity-50"
                                     >
                                         <Icon name="check_circle" filled className="mr-2" />
-                                        <span className="text-label-lg font-label-lg">{saving ? 'Saving...' : (submission.status === 'graded' ? 'Save Changes' : 'Submit Grade')}</span>
+                                        <span className="text-label-lg font-label-lg">{saving ? 'Menyimpan...' : (submission.status === 'graded' ? 'Simpan Perubahan' : 'Serahkan Nilai')}</span>
                                     </button>
                                 </>
                             ) : (
@@ -213,7 +213,7 @@ export default function StudentShow({ assignmentId, studentId }) {
                                     className="flex items-center justify-center bg-secondary text-on-secondary rounded-xl px-6 py-3.5 hover:brightness-110 active:scale-95 transition-all w-full shadow-md shadow-secondary/20"
                                 >
                                     <Icon name="edit" filled className="mr-2" />
-                                    <span className="text-label-lg font-label-lg">Edit Grade</span>
+                                    <span className="text-label-lg font-label-lg">Edit Nilai</span>
                                 </button>
                             )}
                         </div>
@@ -221,7 +221,7 @@ export default function StudentShow({ assignmentId, studentId }) {
                 ) : (
                     <div className="lg:col-span-5 bg-surface-container-lowest border border-outline-variant p-6 flex flex-col justify-center items-center h-[442px] lg:h-[calc(100vh-8rem)] rounded-xl">
                         <Icon name="fact_check" className="text-4xl text-outline mb-2" />
-                        <p className="text-on-surface-variant font-body-md text-center max-w-[200px]">No rubric assigned for this assignment.</p>
+                        <p className="text-on-surface-variant font-body-md text-center max-w-[200px]">Tidak ada rubrik yang ditetapkan untuk tugas ini.</p>
                     </div>
                 )}
             </div>

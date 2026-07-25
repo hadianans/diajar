@@ -18,13 +18,13 @@ export default function Index() {
     };
 
     const handleDelete = async (id) => {
-        const confirmed = await confirmDelete('Delete Assessment?', 'This will permanently remove this assessment.');
+        const confirmed = await confirmDelete('Hapus Penilaian?', 'Tindakan ini akan menghapus penilaian ini secara permanen.');
         if (!confirmed) return;
         try {
             await api.delete(`/assessments/${id}`);
             refetch();
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error deleting assessment');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus penilaian');
         }
     };
 
@@ -56,17 +56,17 @@ export default function Index() {
         if (!dueDate) return null;
         const diff = moment(dueDate).diff(moment(), 'minutes');
         if (diff <= 0) return null;
-        if (diff > 24 * 60) return `${Math.floor(diff / (24 * 60))}d remaining`;
+        if (diff > 24 * 60) return `${Math.floor(diff / (24 * 60))} hari tersisa`;
         const hours = Math.floor(diff / 60);
         const mins = diff % 60;
-        if (hours > 0) return `${hours}h ${mins}m`;
+        if (hours > 0) return `${hours}j ${mins}m`;
         return `${mins}m`;
     };
 
     const customTitleSection = (
         <div>
-            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Assessments</h2>
-            <p className="font-body-md text-body-md text-on-surface-variant mt-1">Design and track student performance evaluations.</p>
+            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Penilaian</h2>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-1">Rancang dan lacak evaluasi kinerja siswa.</p>
         </div>
     );
 
@@ -76,7 +76,7 @@ export default function Index() {
             className="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-md"
         >
             <Icon name="add" />
-            Create Assessment
+            Buat Penilaian
         </button>
     );
 
@@ -89,7 +89,7 @@ export default function Index() {
                     className="flex items-center justify-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-label-md text-label-md hover:bg-surface-container-highest active:scale-95 transition-all shadow-sm"
                 >
                     <Icon name="database" />
-                    Question Bank
+                    Bank Soal
                 </button>
                 {actions}
             </div>
@@ -98,7 +98,7 @@ export default function Index() {
 
     return (
         <DashboardTemplate role="teacher" activeTab="assessments" headerSection={headerSection}>
-            <Head title="Assessments | Diajar LMS" />
+            <Head title="Penilaian | LMS Diajar" />
             
             <AssessmentFilterTabs 
                 activeTab={activeTab} 
@@ -108,7 +108,7 @@ export default function Index() {
 
             {/* Assessment Grid */}
             {loading ? (
-                <div className="text-center py-12 text-on-surface-variant">Loading assessments...</div>
+                <div className="text-center py-12 text-on-surface-variant">Memuat penilaian...</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24">
                     {filteredAssessments.length > 0 ? (
@@ -117,7 +117,7 @@ export default function Index() {
                                 key={a.id}
                                 id={a.id.toString()}
                                 title={a.title}
-                                chapter={a.chapter?.name || "Uncategorized"}
+                                chapter={a.chapter?.name || "Tidak Dikategorikan"}
                                 state={a.lifecycle_status}
                                 classAvg={a.avg_score ? `${a.avg_score}%` : "-"}
                                 participationCompleted={a.attempt_count || 0}
@@ -131,7 +131,7 @@ export default function Index() {
                         ))
                     ) : (
                         <div className="col-span-full p-8 text-center text-on-surface-variant bg-surface-container rounded-2xl">
-                            {activeTab === 'all' ? 'You have no assessments.' : `No ${activeTab} assessments.`}
+                            {activeTab === 'all' ? 'Anda tidak memiliki penilaian.' : `Tidak ada penilaian ${activeTab}.`}
                         </div>
                     )}
                 </div>

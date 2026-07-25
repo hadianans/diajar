@@ -18,7 +18,7 @@ export default function Show({ classId }) {
     if (loading) {
         return (
             <div className="bg-[#FAFAFA] text-on-surface min-h-screen pb-24 pt-20 flex justify-center">
-                <div className="text-on-surface-variant">Loading gradebook...</div>
+                <div className="text-on-surface-variant">Memuat buku nilai...</div>
             </div>
         );
     }
@@ -26,7 +26,7 @@ export default function Show({ classId }) {
     if (!data) {
         return (
             <div className="bg-[#FAFAFA] text-on-surface min-h-screen pb-24 pt-20 flex justify-center">
-                <div className="text-on-surface-variant">Gradebook not found.</div>
+                <div className="text-on-surface-variant">Buku nilai tidak ditemukan.</div>
             </div>
         );
     }
@@ -41,7 +41,7 @@ export default function Show({ classId }) {
         // Flatten grades into student object based on column keys
         if (s.grades) {
             Object.keys(s.grades).forEach(k => {
-                studentObj[k] = s.grades[k] !== null ? s.grades[k] : 'Missing';
+                studentObj[k] = s.grades[k] !== null ? s.grades[k] : 'Hilang';
             });
         }
         return studentObj;
@@ -54,7 +54,7 @@ export default function Show({ classId }) {
 
     return (
         <div className="bg-[#FAFAFA] text-on-surface min-h-screen pb-24">
-            <Head title="Class Gradebook | Diajar LMS" />
+            <Head title="Buku Nilai Kelas | LMS Diajar" />
 
             {/* Top App Bar */}
             <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-margin-mobile h-16 bg-surface shadow-sm">
@@ -65,7 +65,7 @@ export default function Show({ classId }) {
                     >
                         <Icon name="arrow_back" className="text-primary" />
                     </button>
-                    <h1 className="font-headline-md text-headline-md font-bold text-primary">Class Gradebook</h1>
+                    <h1 className="font-headline-md text-headline-md font-bold text-primary">Buku Nilai Kelas</h1>
                 </div>
                 <div className="flex items-center gap-2">
                     <button className="hover:bg-surface-container-low transition-colors active:scale-95 duration-100 p-2 rounded-full">
@@ -77,8 +77,8 @@ export default function Show({ classId }) {
             <main className="mt-20 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
                 {/* Hero Section */}
                 <div className="mb-stack-lg">
-                    <h2 className="font-headline-lg text-headline-lg text-on-background">Class Grades</h2>
-                    <p className="font-body-md text-body-md text-on-surface-variant mt-1">Weights: Assignments ({data.grading_scheme?.assignment_weight || 0}%), Assessments ({data.grading_scheme?.assessment_weight || 0}%)</p>
+                    <h2 className="font-headline-lg text-headline-lg text-on-background">Nilai Kelas</h2>
+                    <p className="font-body-md text-body-md text-on-surface-variant mt-1">Bobot: Tugas ({data.grading_scheme?.assignment_weight || 0}%), Penilaian ({data.grading_scheme?.assessment_weight || 0}%)</p>
                 </div>
 
                 <GradebookOverview 
@@ -94,14 +94,14 @@ export default function Show({ classId }) {
                             className="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors"
                         >
                             <Icon name="filter_list" />
-                            <span className="capitalize">Filter: {filter} Columns</span>
+                            <span className="capitalize">Filter: {filter === 'all' ? 'Semua' : (filter === 'assignments' ? 'Tugas' : 'Penilaian')} Kolom</span>
                         </button>
                         <button 
                             onClick={() => setSort(sort === 'name' ? 'grade_desc' : (sort === 'grade_desc' ? 'grade_asc' : 'name'))}
                             className="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors"
                         >
                             <Icon name="sort_by_alpha" />
-                            <span>Sort: {sort === 'name' ? 'Name A-Z' : (sort === 'grade_desc' ? 'Highest Grade' : 'Lowest Grade')}</span>
+                            <span>Urutkan: {sort === 'name' ? 'Nama A-Z' : (sort === 'grade_desc' ? 'Nilai Tertinggi' : 'Nilai Terendah')}</span>
                         </button>
                     </div>
                     <div className="flex gap-2">

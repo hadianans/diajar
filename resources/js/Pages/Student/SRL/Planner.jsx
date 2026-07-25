@@ -31,7 +31,7 @@ export default function Planner() {
             setNewPlan({ title: '', description: '', target_date: moment().format('YYYY-MM-DD') });
             mutate(); // Refresh the list
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error creating plan');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat membuat rencana');
         }
     };
 
@@ -46,8 +46,8 @@ export default function Planner() {
 
     const headerSection = (
         <section className="flex flex-col gap-stack-sm pt-4">
-            <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Study Planner</h2>
-            <p className="text-body-md text-on-surface-variant">Set clear goals and choose your learning strategies.</p>
+            <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Perencana Belajar</h2>
+            <p className="text-body-md text-on-surface-variant">Tetapkan tujuan yang jelas dan pilih strategi belajar Anda.</p>
         </section>
     );
 
@@ -55,34 +55,34 @@ export default function Planner() {
         <DashboardTemplate 
             role="student"
             activeTab="dashboard"
-            title="Planner"
+            title="Perencana"
             headerSection={headerSection}
             onBack={handleBack}
         >
-            <Head title="Study Planner - Diajar" />
+            <Head title="Perencana Belajar - Diajar" />
 
             <div className="flex flex-col md:flex-row gap-gutter pb-12">
                 
                 {/* Left Column: Create New Plan */}
                 <div className="md:w-1/3 flex flex-col gap-stack-md">
                     <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30">
-                        <h3 className="text-headline-sm font-headline-sm text-on-surface mb-4">Set a New Goal</h3>
+                        <h3 className="text-headline-sm font-headline-sm text-on-surface mb-4">Tetapkan Tujuan Baru</h3>
                         
                         <form onSubmit={handleCreate} className="flex flex-col gap-4">
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Goal Title</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Judul Tujuan</label>
                                 <input 
                                     type="text"
                                     required
                                     value={newPlan.title}
                                     onChange={e => setNewPlan({...newPlan, title: e.target.value})}
-                                    placeholder="e.g. Master Chapter 4"
+                                    placeholder="Misalnya: Kuasai Bab 4"
                                     className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Target Date</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Tanggal Target</label>
                                 <input 
                                     type="date"
                                     required
@@ -94,13 +94,13 @@ export default function Planner() {
                             </div>
 
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Study Strategy (Description)</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Strategi Belajar (Deskripsi)</label>
                                 <textarea 
                                     rows="3"
                                     required
                                     value={newPlan.description}
                                     onChange={e => setNewPlan({...newPlan, description: e.target.value})}
-                                    placeholder="Describe how you plan to achieve this goal..."
+                                    placeholder="Jelaskan bagaimana Anda berencana untuk mencapai tujuan ini..."
                                     className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors resize-y"
                                 ></textarea>
                             </div>
@@ -109,7 +109,7 @@ export default function Planner() {
                                 type="submit"
                                 className="w-full bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm mt-2"
                             >
-                                Commit to Plan
+                                Komitmen pada Rencana
                             </button>
                         </form>
                     </div>
@@ -117,10 +117,10 @@ export default function Planner() {
 
                 {/* Right Column: Upcoming Plans */}
                 <div className="md:w-2/3 flex flex-col gap-stack-md">
-                    <h3 className="text-headline-md font-headline-md text-on-surface mb-2">Your Commitments</h3>
+                    <h3 className="text-headline-md font-headline-md text-on-surface mb-2">Komitmen Anda</h3>
                     
                     {loading ? (
-                        <div className="text-on-surface-variant text-center py-8">Loading plans...</div>
+                        <div className="text-on-surface-variant text-center py-8">Memuat rencana...</div>
                     ) : plans.length > 0 ? (
                         <div className="flex flex-col gap-3">
                             {plans.map(plan => (
@@ -140,7 +140,7 @@ export default function Planner() {
                                                 </span>
                                                 <span className="text-label-sm font-label-sm text-secondary flex items-center gap-1 bg-secondary/10 px-2 rounded-full">
                                                     <Icon name="psychology" className="text-[14px]" />
-                                                    Strategy Selected
+                                                    Strategi Dipilih
                                                 </span>
                                             </div>
                                         </div>
@@ -151,7 +151,7 @@ export default function Planner() {
                                             onClick={() => handleMarkComplete(plan.id)}
                                             className="bg-surface-container-high text-on-surface border border-outline-variant px-5 py-2 rounded-full font-label-md text-label-md hover:bg-success-container hover:text-on-success-container hover:border-transparent transition-all whitespace-nowrap"
                                         >
-                                            Mark Done
+                                            Tandai Selesai
                                         </button>
                                     )}
                                 </div>
@@ -160,9 +160,9 @@ export default function Planner() {
                     ) : (
                         <div className="text-center p-12 bg-surface-container-low rounded-2xl border border-outline-variant/30">
                             <Icon name="edit_calendar" className="text-primary text-display-md mb-2 opacity-50" />
-                            <h4 className="text-headline-sm font-headline-sm text-on-surface">No Plans Yet</h4>
+                            <h4 className="text-headline-sm font-headline-sm text-on-surface">Belum Ada Rencana</h4>
                             <p className="text-body-md text-on-surface-variant mt-2 max-w-sm mx-auto">
-                                Successful students plan their time. Use the form to set your first learning target!
+                                Siswa yang sukses merencanakan waktu mereka. Gunakan formulir ini untuk menetapkan target belajar pertama Anda!
                             </p>
                         </div>
                     )}

@@ -60,7 +60,7 @@ export default function Homepage() {
         }
 
         return {
-            studentName: act.target_type || 'System',
+            studentName: act.target_type || 'Sistem',
             action: act.description || act.action,
             time: timeStr,
             type: act.action,
@@ -74,14 +74,14 @@ export default function Homepage() {
     if (summary.upcoming_deadlines?.assignment) {
         deadlines.push({
             title: summary.upcoming_deadlines.assignment.title,
-            date: `Due ${moment(summary.upcoming_deadlines.assignment.due_date).format('MMM D')}`,
+            date: `Tenggat ${moment(summary.upcoming_deadlines.assignment.due_date).format('MMM D')}`,
             isUrgent: moment(summary.upcoming_deadlines.assignment.due_date).isSameOrBefore(moment().add(2, 'days'))
         });
     }
     if (summary.upcoming_deadlines?.assessment) {
         deadlines.push({
             title: summary.upcoming_deadlines.assessment.title,
-            date: `Due ${moment(summary.upcoming_deadlines.assessment.due_date).format('MMM D')}`,
+            date: `Tenggat ${moment(summary.upcoming_deadlines.assessment.due_date).format('MMM D')}`,
             isUrgent: moment(summary.upcoming_deadlines.assessment.due_date).isSameOrBefore(moment().add(2, 'days'))
         });
     }
@@ -90,8 +90,8 @@ export default function Homepage() {
         <section className="mb-stack-lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-2">
                 <div>
-                    <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Teacher Dashboard</h2>
-                    <p className="text-on-surface-variant font-body-md">Overview of your classes and tasks</p>
+                    <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Dasbor Guru</h2>
+                    <p className="text-on-surface-variant font-body-md">Ikhtisar kelas dan tugas Anda</p>
                 </div>
                 <div className="hidden md:flex bg-primary-container/10 px-4 py-2 rounded-xl border border-primary-container/20 items-center gap-2">
                     <Icon name="event_note" className="text-primary" />
@@ -103,8 +103,8 @@ export default function Homepage() {
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" activeTab="home" title="Dashboard">
-                <div className="flex justify-center p-12 text-on-surface-variant">Loading dashboard data...</div>
+            <DashboardTemplate role="teacher" activeTab="home" title="Dasbor">
+                <div className="flex justify-center p-12 text-on-surface-variant">Memuat data dasbor...</div>
             </DashboardTemplate>
         );
     }
@@ -113,10 +113,10 @@ export default function Homepage() {
         <DashboardTemplate
             role="teacher"
             activeTab="home"
-            title="Dashboard"
+            title="Dasbor"
             headerSection={headerSection}
         >
-            <Head title="Teacher Dashboard | Diajar LMS" />
+            <Head title="Dasbor Guru | LMS Diajar" />
             
             <div className="max-w-[1280px] mx-auto pb-12">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
@@ -125,7 +125,7 @@ export default function Homepage() {
                         <ActionRequiredCard ungradedCount={ungradedCount} reviewCount={reviewCount} />
                         <ClassHealthMetrics completion={Math.round(avgOverall)} avgGrade={avgAssignment} avgScore={avgAssessment} />
                         <RecentActivityList activities={recentActivities.length > 0 ? recentActivities : [
-                            { studentName: 'System', action: 'No recent activity in the last 7 days.', time: '', type: 'Info', icon: 'info', iconBg: 'bg-surface-container', iconColor: 'text-on-surface-variant' }
+                            { studentName: 'Sistem', action: 'Tidak ada aktivitas terbaru dalam 7 hari terakhir.', time: '', type: 'Info', icon: 'info', iconBg: 'bg-surface-container', iconColor: 'text-on-surface-variant' }
                         ]} />
                     </div>
 

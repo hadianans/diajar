@@ -138,7 +138,7 @@ export default function PlansIndex() {
                 refetch();
             }
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error saving plan');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menyimpan rencana');
         }
     };
 
@@ -154,7 +154,7 @@ export default function PlansIndex() {
 
     const handleDelete = async (planId, e) => {
         if (e) e.stopPropagation();
-        const confirmed = await confirmDelete('Delete Plan?', 'Are you sure you want to delete this study plan?');
+        const confirmed = await confirmDelete('Hapus Rencana?', 'Apakah Anda yakin ingin menghapus rencana belajar ini?');
         if (!confirmed) return;
         try {
             await api.delete(`/plans/${planId}`);
@@ -185,8 +185,8 @@ export default function PlansIndex() {
 
     const headerSection = (
         <section className="flex flex-col gap-stack-sm pt-4">
-            <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Study Plans</h2>
-            <p className="text-body-md text-on-surface-variant">View and manage all your learning goals.</p>
+            <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Rencana Belajar</h2>
+            <p className="text-body-md text-on-surface-variant">Lihat dan kelola semua tujuan belajar Anda.</p>
         </section>
     );
 
@@ -194,11 +194,11 @@ export default function PlansIndex() {
         <DashboardTemplate
             role="student"
             activeTab="dashboard"
-            title="Study Plans"
+            title="Rencana Belajar"
             headerSection={headerSection}
             onBack={handleBack}
         >
-            <Head title="My Study Plans - Diajar" />
+            <Head title="Rencana Belajarku - Diajar" />
 
             <div className="flex flex-col md:flex-row gap-gutter pb-12">
 
@@ -206,14 +206,14 @@ export default function PlansIndex() {
                 <div className="md:w-1/3 flex flex-col gap-stack-md w-full sticky top-24">
                     <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30 min-h-[400px]">
                         <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">
-                            {selectedPlan ? 'Edit Study Plan' : 'Set a New Goal'}
+                            {selectedPlan ? 'Edit Rencana Belajar' : 'Tetapkan Tujuan Baru'}
                         </h3>
 
                         {selectedPlan && (
                             <div className="border-b border-outline-variant/50 pb-4 mb-4 flex justify-between items-start gap-4 animate-fadeIn">
                                 <div>
-                                    <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Target Task</p>
-                                    <p className="text-headline-sm font-headline-sm mt-1">{selectedPlan.planables?.[0]?.planable?.title || 'Untitled'}</p>
+                                    <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Tugas Target</p>
+                                    <p className="text-headline-sm font-headline-sm mt-1">{selectedPlan.planables?.[0]?.planable?.title || 'Tanpa Judul'}</p>
                                     <p className="text-label-md text-on-surface-variant mt-2 flex items-center gap-1">
                                         <Icon name="event" className="text-[16px]" />
                                         {moment(selectedPlan.created_at).format('MMMM D, YYYY')}
@@ -224,19 +224,19 @@ export default function PlansIndex() {
 
                         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Goal Title</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Judul Tujuan</label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.title}
                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                    placeholder="e.g. Master Chapter 4"
+                                    placeholder="Misalnya: Kuasai Bab 4"
                                     className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Target Date</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Tanggal Target</label>
                                 <input
                                     type="date"
                                     required
@@ -248,13 +248,13 @@ export default function PlansIndex() {
                             </div>
 
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Study Strategy (Description)</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Strategi Belajar (Deskripsi)</label>
                                 <textarea
                                     rows="3"
                                     required
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                    placeholder="Describe how you plan to achieve this goal..."
+                                    placeholder="Jelaskan bagaimana Anda berencana untuk mencapai tujuan ini..."
                                     className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors resize-y"
                                 ></textarea>
                             </div>
@@ -262,28 +262,28 @@ export default function PlansIndex() {
                             {!selectedPlan && (
                                 <div className="grid grid-cols-1 gap-4 border-t border-outline-variant/50 pt-4 mt-2">
                                     <div>
-                                        <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Subject</label>
+                                        <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Mata Pelajaran</label>
                                         <select
                                             required
                                             value={selectedSubjectForm}
                                             onChange={e => { setSelectedSubjectForm(e.target.value); setSelectedChapterForm(''); setSelectedTargetForm(''); }}
                                             className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
                                         >
-                                            <option value="" disabled>Select Subject</option>
+                                            <option value="" disabled>Pilih Mata Pelajaran</option>
                                             {subjects.map(s => <option key={s.id} value={s.id}>{s.subject?.subject_name || s.subject_name || s.name}</option>)}
                                         </select>
                                     </div>
 
                                     {selectedSubjectForm && (
                                         <div>
-                                            <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Chapter</label>
+                                            <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Bab</label>
                                             <select
                                                 required
                                                 value={selectedChapterForm}
                                                 onChange={e => { setSelectedChapterForm(e.target.value); setSelectedTargetForm(''); }}
                                                 className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
                                             >
-                                                <option value="" disabled>Select Chapter</option>
+                                                <option value="" disabled>Pilih Bab</option>
                                                 {formChapters.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                             </select>
                                         </div>
@@ -298,7 +298,7 @@ export default function PlansIndex() {
                                                 onChange={e => setSelectedTargetForm(e.target.value)}
                                                 className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors"
                                             >
-                                                <option value="" disabled>Select Target (Lesson / Assignment / Assessment)</option>
+                                                <option value="" disabled>Pilih Target (Materi / Tugas / Penilaian)</option>
                                                 {formTargets.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                                             </select>
                                         </div>
@@ -312,21 +312,21 @@ export default function PlansIndex() {
                                     disabled={!selectedPlan && !selectedTargetForm}
                                     className="w-full bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm disabled:opacity-50"
                                 >
-                                    {selectedPlan ? 'Update Plan' : 'Commit to Plan'}
+                                    {selectedPlan ? 'Perbarui Rencana' : 'Komitmen pada Rencana'}
                                 </button>
 
                                 {selectedPlan && (
                                     <div className="flex gap-2">
                                         <Link href={getTargetLink(selectedPlan.planables?.[0], selectedPlan)} className="flex-1 flex justify-center items-center gap-2 py-3 bg-secondary-container text-on-secondary-container rounded-xl text-label-md font-label-md hover:opacity-90 transition-opacity">
                                             <Icon name="arrow_forward" className="text-[18px]" />
-                                            View Task
+                                            Lihat Tugas
                                         </Link>
                                         <button
                                             type="button"
                                             onClick={() => setSelectedPlan(null)}
                                             className="flex-1 flex justify-center items-center gap-2 py-3 bg-surface-container text-on-surface rounded-xl text-label-md font-label-md hover:bg-surface-variant transition-opacity border border-outline-variant"
                                         >
-                                            Cancel
+                                            Batal
                                         </button>
                                     </div>
                                 )}
@@ -344,7 +344,7 @@ export default function PlansIndex() {
                             <Icon name="search" className="text-on-surface-variant mr-2" />
                             <input
                                 type="text"
-                                placeholder="Search plans..."
+                                placeholder="Cari rencana..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="w-full bg-transparent border-none rounded-md px-4 py-2 text-body-md text-on-surface outline-none focus:border-primary transition-colors"
@@ -357,7 +357,7 @@ export default function PlansIndex() {
                                 onChange={(e) => { setSubjectFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
                             >
-                                <option value="">All Subjects</option>
+                                <option value="">Semua Mata Pelajaran</option>
                                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                             </select>
                             <select
@@ -365,20 +365,20 @@ export default function PlansIndex() {
                                 onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
                             >
-                                <option value="">All Types</option>
-                                <option value="lesson">Lesson</option>
-                                <option value="assignment">Assignment</option>
-                                <option value="assessment">Assessment</option>
+                                <option value="">Semua Jenis</option>
+                                <option value="lesson">Materi</option>
+                                <option value="assignment">Tugas</option>
+                                <option value="assessment">Penilaian</option>
                             </select>
                             <select
                                 value={statusFilter}
                                 onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
                             >
-                                <option value="">All Statuses</option>
-                                <option value="active">Active</option>
-                                <option value="completed">Completed</option>
-                                <option value="overdue">Overdue</option>
+                                <option value="">Semua Status</option>
+                                <option value="active">Aktif</option>
+                                <option value="completed">Selesai</option>
+                                <option value="overdue">Terlambat</option>
                             </select>
                         </div>
                     </div>
@@ -386,7 +386,7 @@ export default function PlansIndex() {
                     {/* List */}
                     <div className="flex flex-col gap-3 min-h-[400px]">
                         {loading ? (
-                            <div className="text-center p-12 text-on-surface-variant">Loading plans...</div>
+                            <div className="text-center p-12 text-on-surface-variant">Memuat rencana...</div>
                         ) : plans.length > 0 ? (
                             plans.map(plan => {
                                 const subjectName = plan.class?.subject?.name || plan.chapter?.subject?.name;
@@ -417,11 +417,11 @@ export default function PlansIndex() {
                                                         {plan.title}
                                                     </h3>
                                                     {plan.derived_status === 'overdue' && !plan.completed_at && (
-                                                        <span className="text-[10px] uppercase font-bold bg-error text-on-error px-2 py-0.5 rounded-full">Overdue</span>
+                                                        <span className="text-[10px] uppercase font-bold bg-error text-on-error px-2 py-0.5 rounded-full">Terlambat</span>
                                                     )}
                                                 </div>
                                                 <p className="text-body-md text-on-surface-variant line-clamp-2 max-w-3xl">
-                                                    {plan.description || <span className="italic opacity-50">No strategy description provided.</span>}
+                                                    {plan.description || <span className="italic opacity-50">Tidak ada deskripsi strategi yang diberikan.</span>}
                                                 </p>
                                                 <div className="flex flex-wrap items-center gap-3 mt-3">
                                                     <span className="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
@@ -440,7 +440,7 @@ export default function PlansIndex() {
                                                 <button
                                                     onClick={(e) => handleDelete(plan.id, e)}
                                                     className="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-full transition-colors"
-                                                    title="Delete Plan"
+                                                    title="Hapus Rencana"
                                                 >
                                                     <Icon name="delete" />
                                                 </button>
@@ -452,9 +452,9 @@ export default function PlansIndex() {
                         ) : (
                             <div className="text-center p-12 bg-surface-container-low rounded-2xl border border-outline-variant/30">
                                 <Icon name="event_busy" className="text-primary text-display-md mb-2 opacity-50" />
-                                <h4 className="text-headline-sm font-headline-sm text-on-surface">No Plans Found</h4>
+                                <h4 className="text-headline-sm font-headline-sm text-on-surface">Tidak Ada Rencana Ditemukan</h4>
                                 <p className="text-body-md text-on-surface-variant mt-2 max-w-sm mx-auto">
-                                    You don't have any study plans matching these filters. Use the form on the left to set your first learning target!
+                                    Anda tidak memiliki rencana belajar yang cocok dengan filter ini. Gunakan formulir di sebelah kiri untuk menetapkan target belajar pertama Anda!
                                 </p>
                             </div>
                         )}

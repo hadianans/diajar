@@ -21,11 +21,11 @@ export default function Edit({ accountId }) {
             }
             
             await api.put(`/users/${accountId}`, payload);
-            showSuccess('Account updated successfully!');
+            showSuccess('Akun berhasil diperbarui!');
             router.visit(`/admin/accounts/${accountId}`);
         } catch (err) {
             if (err.response?.status === 422 && err.response.data.message === 'Role change requires role_change_confirmed: true') {
-                const confirmed = await confirmAction('Change Role?', 'This might affect their permissions and linked data. Continue?');
+                const confirmed = await confirmAction('Ubah Peran?', 'Ini mungkin memengaruhi izin dan data terkait mereka. Lanjutkan?');
                 if (confirmed) {
                     return handleFormSubmit(formData, true);
                 }
@@ -37,16 +37,16 @@ export default function Edit({ accountId }) {
 
     if (loading) {
         return (
-            <DashboardTemplate activeTab="Account" title="Loading..." viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading account details...</div>
+            <DashboardTemplate activeTab="Account" title="Memuat..." viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-on-surface-variant">Memuat detail akun...</div>
             </DashboardTemplate>
         );
     }
 
     if (!user) {
         return (
-            <DashboardTemplate activeTab="Account" title="Not Found" viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-error">User not found.</div>
+            <DashboardTemplate activeTab="Account" title="Tidak Ditemukan" viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-error">Pengguna tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -62,12 +62,12 @@ export default function Edit({ accountId }) {
 
     return (
         <>
-            <Head title={`Edit Account ${user.full_name} - Diajar LMS`} />
+            <Head title={`Edit Akun ${user.full_name} - Diajar LMS`} />
 
             <DashboardTemplate
                 activeTab="Account"
-                title="Edit Account"
-                viewLabel="Admin View"
+                title="Edit Akun"
+                viewLabel="Tampilan Admin"
                 showBack={true}
                 onBack={handleBack}
             >

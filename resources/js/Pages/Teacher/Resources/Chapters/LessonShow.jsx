@@ -3,11 +3,11 @@ import { Head } from '@inertiajs/react';
 export default function LessonShow({ chapterId, lessonId }) {
     return (
         <>
-            <Head title={`Resource Chapter ${chapterId || ''} - Lesson ${lessonId || ''}`} />
+            <Head title={`Bab Sumber Daya ${chapterId || ''} - Pelajaran ${lessonId || ''}`} />
             <div style={{ padding: '2rem' }}>
-                <h1>This is Teacher Resource Chapter Lesson Detail page</h1>
-                <p>Chapter ID: {chapterId}</p>
-                <p>Lesson ID: {lessonId}</p>
+                <h1>Ini adalah halaman Detail Pelajaran Bab Sumber Daya Guru</h1>
+                <p>ID Bab: {chapterId}</p>
+                <p>ID Pelajaran: {lessonId}</p>
             </div>
         </>
     );

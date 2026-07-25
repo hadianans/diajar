@@ -91,7 +91,7 @@ export default function TopAppBar({ title, viewLabel, onBack, showBack = true })
 
                                 {/* Label Status/Role dipindahkan ke sini */}
                                 {rawLabel && (
-                                    <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-white bg-primary-container/85 px-2 py-0.5 rounded-full border border-primary/10">
+                                    <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/10">
                                         {rawLabel.replace(/ View/i, '')}
                                     </span>
                                 )}

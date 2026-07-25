@@ -19,16 +19,16 @@ export default function StudentShow({ classId, studentId }) {
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" activeTab="classes" title="Loading..." showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12 text-on-surface-variant">Loading student report...</div>
+            <DashboardTemplate role="teacher" activeTab="classes" title="Memuat..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Memuat laporan siswa...</div>
             </DashboardTemplate>
         );
     }
 
     if (!reportData) {
         return (
-            <DashboardTemplate role="teacher" activeTab="classes" title="Not Found" showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12 text-on-surface-variant">Report not found.</div>
+            <DashboardTemplate role="teacher" activeTab="classes" title="Tidak Ditemukan" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Laporan tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -39,26 +39,26 @@ export default function StudentShow({ classId, studentId }) {
         id: student.id,
         name: student.full_name || student.username,
         avatar: student.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.full_name || student.username)}&background=random`,
-        group: 'Enrolled Student', // Group name might not be passed
-        className: 'Class View',
+        group: 'Siswa Terdaftar', // Group name might not be passed
+        className: 'Tampilan Kelas',
         year: ''
     };
 
     const assignments = assignment_history.map(a => ({
         id: a.id,
-        title: a.classAssignment?.title || 'Unknown Assignment',
+        title: a.classAssignment?.title || 'Tugas Tidak Diketahui',
         subtitle: moment(a.created_at).format('MMM D, YYYY'),
         score: a.status === 'graded' ? `${a.grade}/100` : a.status,
-        statusText: a.status === 'graded' ? 'Graded' : 'Pending',
+        statusText: a.status === 'graded' ? 'Dinilai' : 'Tertunda',
         icon: 'description', iconBg: 'bg-primary-container/10', iconColor: 'text-primary'
     }));
 
     const assessments = assessment_history.map(a => ({
         id: a.id,
-        title: a.classAssessment?.title || 'Unknown Assessment',
+        title: a.classAssessment?.title || 'Penilaian Tidak Diketahui',
         subtitle: `${moment(a.created_at).format('MMM D')} • Time: ${Math.round(a.time_spent_seconds / 60)}m`,
         score: a.grade !== null ? `${a.grade}/100` : '-',
-        statusBadge: true, statusBadgeText: a.grade >= 80 ? 'Excellent' : (a.grade >= 60 ? 'Pass' : 'Needs Work'),
+        statusBadge: true, statusBadgeText: a.grade >= 80 ? 'Luar Biasa' : (a.grade >= 60 ? 'Lulus' : 'Perlu Perbaikan'),
         statusBadgeBg: a.grade >= 80 ? 'bg-secondary-container/20' : (a.grade >= 60 ? 'bg-primary-container/20' : 'bg-error-container/20'),
         statusBadgeColor: a.grade >= 80 ? 'text-secondary' : (a.grade >= 60 ? 'text-primary' : 'text-error'),
         icon: 'quiz', iconBg: 'bg-tertiary-container/10', iconColor: 'text-tertiary'
@@ -71,11 +71,11 @@ export default function StudentShow({ classId, studentId }) {
         <DashboardTemplate
             role="teacher"
             activeTab="classes"
-            title="Student Progress Report"
+            title="Laporan Kemajuan Siswa"
             showBack={true}
             onBack={() => window.history.back()}
         >
-            <Head title={`Student Progress | Diajar LMS`} />
+            <Head title={`Kemajuan Siswa | LMS Diajar`} />
 
             <div className="max-w-[1280px] mx-auto pb-12 w-full pt-4">
                 {/* Bento Grid Layout */}
@@ -122,7 +122,7 @@ export default function StudentShow({ classId, studentId }) {
                             />
                         ) : (
                             <div className="p-6 bg-surface-container rounded-2xl h-full flex items-center justify-center text-on-surface-variant">
-                                No active learning plans.
+                                Tidak ada rencana pembelajaran aktif.
                             </div>
                         )}
                     </section>
@@ -130,10 +130,10 @@ export default function StudentShow({ classId, studentId }) {
                     {/* 6. History Lists (Combined Grid Spacing) */}
                     <section className="md:col-span-8 space-y-gutter flex flex-col h-full">
                         <div className="flex-1">
-                            <HistoryList title="Assignment History" items={assignments} isAssessment={false} />
+                            <HistoryList title="Riwayat Tugas" items={assignments} isAssessment={false} />
                         </div>
                         <div className="flex-1">
-                            <HistoryList title="Assessment History" items={assessments} isAssessment={true} />
+                            <HistoryList title="Riwayat Penilaian" items={assessments} isAssessment={true} />
                         </div>
                     </section>
 
@@ -149,7 +149,7 @@ export default function StudentShow({ classId, studentId }) {
                             />
                         ) : (
                             <div className="p-6 bg-surface-container rounded-2xl h-full flex items-center justify-center text-on-surface-variant">
-                                No recent reflections.
+                                Tidak ada refleksi terbaru.
                             </div>
                         )}
                     </section>

@@ -89,7 +89,7 @@ export default function Edit({ assignmentId }) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                showError('Error', err.response?.data?.message || 'Error updating assignment');
+                showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat memperbarui tugas');
             }
         } finally {
             setIsSaving(false);
@@ -97,12 +97,12 @@ export default function Edit({ assignmentId }) {
     };
 
     const handleRemoveExistingAttachment = async (attachmentId) => {
-        const confirmed = await confirmDelete('Remove Attachment?', 'This action cannot be undone.');
+        const confirmed = await confirmDelete('Hapus Lampiran?', 'Tindakan ini tidak dapat dibatalkan.');
         if (!confirmed) return;
         try {
             await api.delete(`/assignments/${assignmentId}/attachments/${attachmentId}`);
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error removing attachment');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus lampiran');
         }
     };
 
@@ -112,8 +112,8 @@ export default function Edit({ assignmentId }) {
 
     if (loading || !formData) {
         return (
-            <DashboardTemplate role="teacher" activeTab="assignments" title="Loading...">
-                <div className="text-center py-12 text-on-surface-variant">Loading assignment data...</div>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Memuat...">
+                <div className="text-center py-12 text-on-surface-variant">Memuat data tugas...</div>
             </DashboardTemplate>
         );
     }
@@ -124,11 +124,11 @@ export default function Edit({ assignmentId }) {
                 <div className="flex items-center gap-2 text-on-surface-variant mb-2">
                     <button onClick={handleBack} className="hover:text-primary transition-colors flex items-center gap-1 text-label-md">
                         <Icon name="arrow_back" className="text-[18px]" />
-                        Back to Assignment
+                        Kembali ke Tugas
                     </button>
                 </div>
-                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Edit Assignment</h2>
-                <p className="text-on-surface-variant font-body-md">Modify the assignment details below.</p>
+                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Edit Tugas</h2>
+                <p className="text-on-surface-variant font-body-md">Ubah detail tugas di bawah ini.</p>
             </div>
         </section>
     );
@@ -137,10 +137,10 @@ export default function Edit({ assignmentId }) {
         <DashboardTemplate 
             role="teacher" 
             activeTab="assignments" 
-            title="Edit Assignment" 
+            title="Edit Tugas" 
             headerSection={headerSection}
         >
-            <Head title={`Edit Assignment: ${formData.title || ''}`} />
+            <Head title={`Edit Tugas: ${formData.title || ''}`} />
 
             <div className="space-y-stack-lg max-w-screen-md mx-auto w-full pb-32">
                 <AssignmentBasicInfoForm 
@@ -154,7 +154,7 @@ export default function Edit({ assignmentId }) {
                     rubric={rubric}
                     onChange={setRubric}
                     onClear={async () => {
-                        const confirmed = await confirmDelete('Delete Rubric?', 'This will completely clear and delete this rubric.');
+                        const confirmed = await confirmDelete('Hapus Rubrik?', 'Tindakan ini akan membersihkan dan menghapus rubrik ini sepenuhnya.');
                         if (!confirmed) return;
                         try {
                             if (assignment.rubric) {
@@ -162,7 +162,7 @@ export default function Edit({ assignmentId }) {
                             }
                             setRubric({ title: '', description: '', criteria: [] });
                         } catch (err) {
-                            showError('Error', err.response?.data?.message || 'Error deleting rubric');
+                            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus rubrik');
                         }
                     }}
                 />
@@ -177,20 +177,20 @@ export default function Edit({ assignmentId }) {
                 <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-outline-variant/50 mt-8">
                     <div className="hidden md:flex items-center gap-2 text-outline mr-auto">
                         <Icon name="edit_note" className="text-[18px]" />
-                        <span className="text-label-sm">Editing: {formData.title || 'Untitled'}</span>
+                        <span className="text-label-sm">Mengedit: {formData.title || 'Tanpa Judul'}</span>
                     </div>
                     <button 
                         onClick={handleBack}
                         className="w-full sm:w-auto px-6 h-12 rounded-full border border-outline text-on-surface-variant font-label-md hover:bg-surface transition-colors active:scale-95"
                     >
-                        Cancel
+                        Batal
                     </button>
                     <button 
                         onClick={handleSave}
                         disabled={isSaving}
                         className="w-full sm:w-auto px-8 h-12 rounded-full bg-primary text-on-primary font-label-md shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
                     >
-                        {isSaving ? 'Saving...' : 'Save Changes'}
+                        {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
                     </button>
                 </div>
             </div>

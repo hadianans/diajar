@@ -45,18 +45,21 @@ export default function Show({ subjectId }) {
         }));
     }, [chaptersData]);
 
+    const totalLessons = useMemo(() => mappedChapters.reduce((sum, ch) => sum + (ch.lessonsCount || 0), 0), [mappedChapters]);
+    const lessonsCompleted = useMemo(() => mappedChapters.filter(ch => ch.status === 'completed').reduce((sum, ch) => sum + (ch.lessonsCount || 0), 0), [mappedChapters]);
+
     if (loadingSubjects) {
         return (
-            <DashboardTemplate role="student" activeTab="Subject" title="Loading..." showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Loading subject details...</div>
+            <DashboardTemplate role="student" activeTab="Subject" title="Memuat..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12">Memuat detail mata pelajaran...</div>
             </DashboardTemplate>
         );
     }
 
     if (!subjectData) {
         return (
-            <DashboardTemplate role="student" activeTab="Subject" title="Not Found" showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Subject not found or you don't have access.</div>
+            <DashboardTemplate role="student" activeTab="Subject" title="Mata Pelajaran Tidak Ditemukan" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12">Mata pelajaran tidak ditemukan atau Anda tidak memiliki akses.</div>
             </DashboardTemplate>
         );
     }
@@ -68,7 +71,7 @@ export default function Show({ subjectId }) {
             showBack={true}
             onBack={() => window.history.back()}
         >
-            <Head title={`${subjectData.title} Chapters`} />
+            <Head title={`${subjectData.title} Bab`} />
 
             <div className="max-w-7xl mx-auto pb-8 mt-4">
                 {/* Subject Hero Section */}
@@ -76,28 +79,28 @@ export default function Show({ subjectId }) {
                     title={subjectData.title}
                     description={subjectData.description}
                     progress={subjectData.progress}
-                    lessonsCompleted={subjectData.lessonsCompleted}
-                    totalLessons={subjectData.totalLessons}
+                    lessonsCompleted={lessonsCompleted}
+                    totalLessons={totalLessons}
                 />
 
                 {/* Chapter List Header */}
                 <div className="flex items-center justify-between mb-stack-md mt-8">
-                    <h3 className="font-headline-md text-headline-md text-on-surface">Course Chapters</h3>
+                    <h3 className="font-headline-md text-headline-md text-on-surface">Bab Kursus</h3>
                     <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container p-1 px-3 rounded-full">
-                        {mappedChapters.length} Chapters
+                        {mappedChapters.length} Bab
                     </span>
                 </div>
 
                 {/* Chapter List */}
-                <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     {loadingChapters ? (
-                        <div className="text-center py-4">Loading chapters...</div>
+                        <div className="col-span-full text-center py-12 text-on-surface-variant font-body-lg animate-pulse">Memuat bab...</div>
                     ) : mappedChapters.length > 0 ? (
                         mappedChapters.map(chapter => (
                             <ChapterCard key={chapter.id} subjectId={subjectId} {...chapter} />
                         ))
                     ) : (
-                        <div className="text-center py-4 text-on-surface-variant">No chapters available for this subject.</div>
+                        <div className="col-span-full text-center py-4 text-on-surface-variant">Tidak ada bab yang tersedia untuk mata pelajaran ini.</div>
                     )}
                 </div>
             </div>

@@ -24,9 +24,9 @@ export default function Homepage() {
 
     useEffect(() => {
         const hour = new Date().getHours();
-        if (hour < 12) setGreeting('Good Morning');
-        else if (hour < 18) setGreeting('Good Afternoon');
-        else setGreeting('Good Evening');
+        if (hour < 12) setGreeting('Selamat Pagi');
+        else if (hour < 18) setGreeting('Selamat Siang');
+        else setGreeting('Selamat Malam');
     }, []);
 
     // Derived Data Mapping
@@ -41,7 +41,7 @@ export default function Homepage() {
             list.push({
                 id: `asn_${nearestDeadlines.assignment.id}`,
                 title: nearestDeadlines.assignment.title,
-                type: 'Assignment',
+                type: 'Tugas',
                 dueDate: moment(nearestDeadlines.assignment.due_date).calendar(),
                 icon: 'assignment',
                 badgeBgClass: 'bg-error-container text-on-error-container',
@@ -52,7 +52,7 @@ export default function Homepage() {
             list.push({
                 id: `ass_${nearestDeadlines.assessment.id}`,
                 title: nearestDeadlines.assessment.title,
-                type: 'Assessment',
+                type: 'Penilaian',
                 dueDate: moment(nearestDeadlines.assessment.due_date).calendar(),
                 icon: 'quiz',
                 badgeBgClass: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
@@ -99,10 +99,10 @@ export default function Homepage() {
             <div className="flex justify-between items-center bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-4 sm:p-6 shadow-sm mt-4 gap-4">
                 <div>
                     <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-extrabold tracking-tight">
-                        {greeting}, {user.first_name || user.full_name?.split(' ')[0] || 'Student'}!
+                        {greeting}, {user.first_name || user.full_name?.split(' ')[0] || 'Siswa'}!
                     </h2>
                     <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-                        Welcome back to your learning hub
+                        Selamat datang kembali di pusat pembelajaran Anda
                     </p>
                 </div>
                 <div className="flex items-center gap-3 ml-auto">
@@ -130,12 +130,12 @@ export default function Homepage() {
 
     return (
         <>
-            <Head title="Diajar LMS - Home" />
+            <Head title="LMS Diajar - Beranda" />
 
             <DashboardTemplate
                 activeTab="Home"
                 title="Diajar LMS"
-                viewLabel="Student View"
+                viewLabel="Tampilan Siswa"
                 showBack={false}
                 headerSection={headerSection}
             >
@@ -146,16 +146,16 @@ export default function Homepage() {
                         {/* Continue Learning card widget */}
                         {lastAccessed && lastAccessed.material ? (
                             <ContinueLearningCard
-                                subject="Resume Learning"
+                                subject="Lanjutkan Pembelajaran"
                                 title={lastAccessed.material.title}
-                                type={lastAccessed.material.file_type || 'Material'}
+                                type={lastAccessed.material.file_type || 'Materi'}
                                 progress={progress.material_completion || 0}
                                 onContinueClick={() => router.visit(`/student/subjects/${lastAccessed.material.chapter?.subject_id || 1}/${lastAccessed.material.chapter_id}/${lastAccessed.material_id}`)}
                             />
                         ) : (
                             <div className="bg-surface-container-low rounded-[24px] p-6 border border-outline-variant text-center">
-                                <h3 className="font-headline-sm text-headline-sm text-on-surface-variant mb-2">No active learning material</h3>
-                                <p className="text-body-md text-outline">Start studying a subject to see your progress here.</p>
+                                <h3 className="font-headline-sm text-headline-sm text-on-surface-variant mb-2">Tidak ada materi pembelajaran aktif</h3>
+                                <p className="text-body-md text-outline">Mulailah mempelajari mata pelajaran untuk melihat kemajuan Anda di sini.</p>
                             </div>
                         )}
 
@@ -170,7 +170,7 @@ export default function Homepage() {
                                     <Icon name="assignment" className="text-[20px]" />
                                 </div>
                                 <span className="font-label-md text-label-md text-on-surface font-bold">
-                                    Assignments
+                                    Tugas
                                 </span>
                             </button>
 
@@ -183,7 +183,7 @@ export default function Homepage() {
                                     <Icon name="quiz" className="text-[20px]" />
                                 </div>
                                 <span className="font-label-md text-label-md text-on-surface font-bold">
-                                    Assessments
+                                    Penilaian
                                 </span>
                             </button>
                         </section>
@@ -219,12 +219,12 @@ export default function Homepage() {
                         {/* Overall Progress rings summary container */}
                         <section className="bg-surface-container-low rounded-[24px] p-6 border border-outline-variant hover:shadow-md transition-shadow duration-300">
                             <h3 className="font-headline-md text-headline-md text-on-surface mb-6 font-bold">
-                                Learning Progress
+                                Kemajuan Pembelajaran
                             </h3>
                             <div className="flex justify-around items-center gap-2">
-                                <ProgressRing percentage={progress.material_completion} label="Materials" colorClass="text-primary" />
-                                <ProgressRing percentage={progress.assignment_completion} label="Homework" colorClass="text-secondary" />
-                                <ProgressRing percentage={progress.assessment_completion} label="Tests" colorClass="text-tertiary" />
+                                <ProgressRing percentage={progress.material_completion} label="Materi" colorClass="text-primary" />
+                                <ProgressRing percentage={progress.assignment_completion} label="Tugas Rumah" colorClass="text-secondary" />
+                                <ProgressRing percentage={progress.assessment_completion} label="Ujian" colorClass="text-tertiary" />
                             </div>
                         </section>
 

@@ -19,7 +19,7 @@ export default function Show({ questionId }) {
     if (loading) {
         return (
             <div className="bg-background text-on-background min-h-screen pb-24 pt-20 flex justify-center items-center">
-                <div className="text-on-surface-variant">Loading question...</div>
+                <div className="text-on-surface-variant">Memuat soal...</div>
             </div>
         );
     }
@@ -27,8 +27,8 @@ export default function Show({ questionId }) {
     if (!question) {
         return (
             <div className="bg-background text-on-background min-h-screen pb-24 pt-20 flex justify-center items-center flex-col gap-4">
-                <div className="text-on-surface-variant">Question not found.</div>
-                <button onClick={handleBack} className="text-primary hover:underline">Go back</button>
+                <div className="text-on-surface-variant">Soal tidak ditemukan.</div>
+                <button onClick={handleBack} className="text-primary hover:underline">Kembali</button>
             </div>
         );
     }
@@ -40,7 +40,7 @@ export default function Show({ questionId }) {
 
     return (
         <div className="bg-background text-on-background min-h-screen pb-24">
-            <Head title={`Question Detail ${questionId || ''}`} />
+            <Head title={`Detail Soal ${questionId || ''}`} />
 
             {/* TopAppBar */}
             <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
@@ -52,7 +52,7 @@ export default function Show({ questionId }) {
                         >
                             <Icon name="arrow_back" className="text-primary" />
                         </button>
-                        <h1 className="font-headline-md text-headline-md text-primary tracking-tight">Question Detail</h1>
+                        <h1 className="font-headline-md text-headline-md text-primary tracking-tight">Detail Soal</h1>
                     </div>
                     <div className="flex items-center gap-2">
                         <button 
@@ -74,7 +74,7 @@ export default function Show({ questionId }) {
                         Level {question.levels}
                     </span>
                     <span className="inline-flex items-center px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-md text-label-md rounded-full">
-                        {question.score} pts
+                        {question.score} poin
                     </span>
                     {question.subject?.subject_name && (
                         <span className="inline-flex items-center px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-md text-label-md rounded-full">
@@ -89,7 +89,7 @@ export default function Show({ questionId }) {
                 />
 
                 <QuestionMetadataPanel 
-                    explanation={question.explanation || 'No explanation provided.'}
+                    explanation={question.explanation || 'Tidak ada penjelasan yang diberikan.'}
                     tags={(question.tags || []).map(t => t.name)}
                     usageCount={question.usage_count || 0}
                 />

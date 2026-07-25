@@ -45,7 +45,7 @@ export default function Create() {
             // API returns GroupYear objects directly, not Groups.
             const allGroupYears = groups.map(gy => ({
                 id: gy.id,
-                group_name: gy.group?.name || 'Unknown',
+                group_name: gy.group?.name || 'Tidak diketahui',
                 grade: gy.grade
             }));
             setGroupYears(allGroupYears);
@@ -74,10 +74,10 @@ export default function Create() {
                 assignment_weight: parseFloat(form.assignment_weight),
                 assessment_weight: parseFloat(form.assessment_weight)
             });
-            showSuccess('Class created successfully');
+            showSuccess('Kelas berhasil dibuat');
             router.visit('/admin/classes');
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Failed to create class.');
+            showError('Kesalahan', err.response?.data?.message || 'Gagal membuat kelas.');
         } finally {
             setLoading(false);
         }
@@ -87,24 +87,24 @@ export default function Create() {
 
     return (
         <>
-            <Head title="Generate New Class" />
+            <Head title="Buat Kelas Baru" />
 
             <DashboardTemplate
                 activeTab="Classes"
-                title="Generate New Class"
-                viewLabel="Admin View"
+                title="Buat Kelas Baru"
+                viewLabel="Tampilan Admin"
                 showBack={true}
                 onBack={handleBack}
             >
                 <div className="max-w-3xl mx-auto bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 md:p-8 shadow-sm">
-                    <h2 className="font-headline-md text-headline-md font-bold mb-6">Class Configuration</h2>
+                    <h2 className="font-headline-md text-headline-md font-bold mb-6">Konfigurasi Kelas</h2>
                     
                     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-2">
-                                <label className="font-label-md text-on-surface-variant">Subject *</label>
+                                <label className="font-label-md text-on-surface-variant">Mata Pelajaran *</label>
                                 <select required name="subject_id" value={form.subject_id} onChange={handleChange} className="p-3 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary">
-                                    <option value="">Select a subject</option>
+                                    <option value="">Pilih mata pelajaran</option>
                                     {subjects?.map(s => (
                                         <option key={s.id} value={s.id}>{s.name || s.subject_name}</option>
                                     ))}
@@ -112,9 +112,9 @@ export default function Create() {
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label className="font-label-md text-on-surface-variant">Teacher *</label>
+                                <label className="font-label-md text-on-surface-variant">Guru *</label>
                                 <select required name="teacher_id" value={form.teacher_id} onChange={handleChange} className="p-3 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary" disabled={!form.subject_id}>
-                                    <option value="">{form.subject_id ? "Select a linked teacher" : "Select a subject first"}</option>
+                                    <option value="">{form.subject_id ? "Pilih guru yang terhubung" : "Pilih mata pelajaran terlebih dahulu"}</option>
                                     {teachers.map(t => (
                                         <option key={t.id} value={t.id}>{t.full_name}</option>
                                     ))}
@@ -123,15 +123,15 @@ export default function Create() {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="font-label-md text-on-surface-variant">Cohorts / Group Years *</label>
+                            <label className="font-label-md text-on-surface-variant">Kohort / Grup Tahun *</label>
                             <div 
                                 onClick={() => setIsCohortModalOpen(true)}
                                 className="p-3 bg-surface-container-low rounded-xl border border-outline-variant hover:border-primary cursor-pointer flex justify-between items-center transition-colors min-h-[50px]"
                             >
                                 <span className={form.group_years_ids.length > 0 ? "text-on-surface" : "text-on-surface-variant"}>
                                     {form.group_years_ids.length > 0 
-                                        ? `${form.group_years_ids.length} cohort(s) selected` 
-                                        : "Select cohorts..."}
+                                        ? `${form.group_years_ids.length} kohort dipilih` 
+                                        : "Pilih kohort..."}
                                 </span>
                                 <Icon name="expand_more" />
                             </div>
@@ -142,7 +142,7 @@ export default function Create() {
                                         const gy = groupYears.find(g => g.id === id);
                                         return gy ? (
                                             <span key={id} className="px-3 py-1 bg-primary-container text-on-primary-container rounded-lg text-sm font-medium flex items-center gap-1">
-                                                {gy.group_name} {gy.grade ? `- Grade ${gy.grade}` : ''}
+                                                {gy.group_name} {gy.grade ? `- Kelas ${gy.grade}` : ''}
                                                 <Icon name="close" className="text-[14px] cursor-pointer hover:text-error ml-1" onClick={(e) => {
                                                     e.stopPropagation();
                                                     setForm(prev => ({
@@ -159,40 +159,40 @@ export default function Create() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-2">
-                                <label className="font-label-md text-on-surface-variant">Day of Week (Optional)</label>
+                                <label className="font-label-md text-on-surface-variant">Hari (Opsional)</label>
                                 <select name="day_schedule" value={form.day_schedule} onChange={handleChange} className="p-3 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary">
-                                    <option value="">Not set</option>
-                                    <option value="0">Sunday</option>
-                                    <option value="1">Monday</option>
-                                    <option value="2">Tuesday</option>
-                                    <option value="3">Wednesday</option>
-                                    <option value="4">Thursday</option>
-                                    <option value="5">Friday</option>
-                                    <option value="6">Saturday</option>
+                                    <option value="">Belum diatur</option>
+                                    <option value="0">Minggu</option>
+                                    <option value="1">Senin</option>
+                                    <option value="2">Selasa</option>
+                                    <option value="3">Rabu</option>
+                                    <option value="4">Kamis</option>
+                                    <option value="5">Jumat</option>
+                                    <option value="6">Sabtu</option>
                                 </select>
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label className="font-label-md text-on-surface-variant">Time Schedule (Optional)</label>
+                                <label className="font-label-md text-on-surface-variant">Jadwal Waktu (Opsional)</label>
                                 <input type="time" name="time_schedule" value={form.time_schedule} onChange={handleChange} className="p-3 bg-surface-container-low rounded-xl border-none focus:ring-2 focus:ring-primary" />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-outline-variant rounded-xl bg-surface-container-low">
                             <div className="flex flex-col gap-2">
-                                <label className="font-label-md text-on-surface-variant">Assignment Weight (%)</label>
+                                <label className="font-label-md text-on-surface-variant">Bobot Tugas (%)</label>
                                 <input type="number" required name="assignment_weight" value={form.assignment_weight} onChange={handleChange} min="0" max="100" className="p-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary" />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="font-label-md text-on-surface-variant">Assessment Weight (%)</label>
+                                <label className="font-label-md text-on-surface-variant">Bobot Penilaian (%)</label>
                                 <input type="number" required name="assessment_weight" value={form.assessment_weight} onChange={handleChange} min="0" max="100" className="p-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary" />
                             </div>
-                            <p className="md:col-span-2 text-xs text-on-surface-variant">Must sum to 100%.</p>
+                            <p className="md:col-span-2 text-xs text-on-surface-variant">Total harus 100%.</p>
                         </div>
 
                         <div className="flex justify-end pt-4 border-t border-outline-variant">
                             <button disabled={loading} type="submit" className="bg-primary text-on-primary px-8 py-3 rounded-xl font-label-lg shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-50">
-                                {loading ? 'Saving...' : 'Create Class'}
+                                {loading ? 'Menyimpan...' : 'Buat Kelas'}
                             </button>
                         </div>
                     </form>

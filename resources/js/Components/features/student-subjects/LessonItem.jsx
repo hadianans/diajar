@@ -25,7 +25,7 @@ export default function LessonItem({
     return (
         <Link 
             href={route('student.subjects.chapters.lessons.show', { subjectId: subjectId, chapterId: chapterId, lessonId: id })}
-            className="group bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center gap-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+            className="group bg-surface-container-lowest border border-outline-variant/50 hover:border-primary/40 rounded-2xl p-4 flex items-center gap-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-md"
         >
             <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
                 isCompleted 

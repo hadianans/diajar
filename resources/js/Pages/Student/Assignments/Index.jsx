@@ -11,11 +11,11 @@ export default function Index() {
 
     const mappedAssignments = (assignmentsData || []).map(item => ({
         id: item.id,
-        subject: item.classModel?.subject?.subject_name || item.classModel?.subject?.name || 'Subject',
+        subject: item.classModel?.subject?.subject_name || item.classModel?.subject?.name || 'Mata Pelajaran',
         subjectIcon: 'book', // Default icon, could map based on subject name
         title: item.title,
-        status: item.display_status === 'not_submitted' ? 'To-do' : (item.display_status === 'graded' ? 'Graded' : 'Submitted'),
-        dueDate: item.due_date ? `Due ${new Date(item.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}` : 'No due date',
+        status: item.display_status === 'not_submitted' ? 'Akan Dikerjakan' : (item.display_status === 'graded' ? 'Dinilai' : 'Dikumpulkan'),
+        dueDate: item.due_date ? `Tenggat: ${new Date(item.due_date).toLocaleString('id-ID', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}` : 'Tidak ada tenggat waktu',
         progress: item.display_status === 'graded' ? 100 : (item.display_status === 'submitted' ? 100 : 0),
         typeTags: item.tags?.map(t => ({ label: t.name, type: 'primary' })) || [],
         originalId: item.id
@@ -28,25 +28,25 @@ export default function Index() {
 
     const headerSection = (
         <section className="mt-2 mb-6">
-            <p className="font-body-md text-body-md text-on-surface-variant">Track and manage your tasks across all subjects.</p>
+            <p className="font-body-md text-body-md text-on-surface-variant">Lacak dan kelola tugas Anda di semua mata pelajaran.</p>
         </section>
     );
 
     return (
         <DashboardTemplate 
             activeTab="tasks"
-            title="Assignments"
+            title="Tugas"
             headerSection={headerSection}
             showBack={false}
         >
-            <Head title="Assignments - Diajar LMS" />
+            <Head title="Tugas - LMS Diajar" />
 
             <div className="max-w-2xl mx-auto flex flex-col pb-12 mt-4">
                 <AssignmentFilters onSearch={setSearchQuery} />
                 
                 <div className="flex flex-col gap-4 mt-6">
                     {loading ? (
-                        <div className="text-center py-8 text-on-surface-variant">Loading assignments...</div>
+                        <div className="text-center py-8 text-on-surface-variant">Memuat tugas...</div>
                     ) : filteredAssignments.length > 0 ? (
                         filteredAssignments.map(assignment => (
                             <div key={assignment.id}>
@@ -58,7 +58,7 @@ export default function Index() {
                         ))
                     ) : (
                         <div className="text-center py-8 text-on-surface-variant bg-surface-container rounded-xl">
-                            No assignments found.
+                            Tidak ada tugas yang ditemukan.
                         </div>
                     )}
                 </div>

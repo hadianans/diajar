@@ -76,9 +76,9 @@ export default function Index() {
     const headerSection = (
         <section className="mb-stack-lg">
             <div className="flex flex-col gap-1">
-                <span className="text-primary font-label-md tracking-wider uppercase">Curriculum</span>
-                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">My Chapters</h2>
-                <p className="text-on-surface-variant font-body-md">Manage your curriculum chapters, review materials, and track overall structure.</p>
+                <span className="text-primary font-label-md tracking-wider uppercase">Kurikulum</span>
+                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Bab Saya</h2>
+                <p className="text-on-surface-variant font-body-md">Kelola bab kurikulum Anda, tinjau materi, dan lacak struktur keseluruhan.</p>
             </div>
         </section>
     );
@@ -89,19 +89,19 @@ export default function Index() {
     };
 
     const handleDeleteChapter = async (chapterId) => {
-        const confirmed = await confirmDelete('Delete Chapter?', 'This will permanently remove this chapter.');
+        const confirmed = await confirmDelete('Hapus Bab?', 'Tindakan ini akan menghapus bab ini secara permanen.');
         if (!confirmed) return;
         try {
             await api.delete(`/chapters/${chapterId}`);
             refetch();
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error deleting chapter');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus bab');
         }
     };
 
     return (
-        <DashboardTemplate role="teacher" activeTab="chapters" title="Chapters" headerSection={headerSection}>
-            <Head title="Chapters | Diajar LMS" />
+        <DashboardTemplate role="teacher" activeTab="chapters" title="Bab" headerSection={headerSection}>
+            <Head title="Bab | LMS Diajar" />
 
             <ChapterFilterBar onSearch={setSearchQuery} />
 
@@ -113,14 +113,14 @@ export default function Index() {
                             onClick={() => handleTabChange(grade)}
                             className={`px-6 py-4 font-title-sm text-title-sm transition-colors whitespace-nowrap border-b-2 ${activeTab === grade.toString() ? 'border-primary text-primary font-bold' : 'border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low'}`}
                         >
-                            Grade {grade}
+                            Kelas {grade}
                         </button>
                     ))}
                 </div>
             )}
 
             {loading ? (
-                <div className="text-center py-12 text-on-surface-variant">Loading chapters...</div>
+                <div className="text-center py-12 text-on-surface-variant">Memuat bab...</div>
             ) : (
                 <div className="flex flex-col gap-stack-md relative pb-24">
                     {displayedChapters.length > 0 ? (
@@ -130,7 +130,7 @@ export default function Index() {
                                 chapterId={ch.id}
                                 number={idx + 1}
                                 title={ch.name}
-                                description={ch.description || 'No description provided.'}
+                                description={ch.description || 'Tidak ada deskripsi yang diberikan.'}
                                 tags={ch.tags}
                                 targetGroups={ch.target_groups}
                                 availableGroups={gradesAndGroups[ch.target_grade] || []}
@@ -147,7 +147,7 @@ export default function Index() {
                         ))
                     ) : (
                         <div className="p-8 text-center text-on-surface-variant bg-surface-container rounded-2xl">
-                            You haven't created any chapters for this selection yet.
+                            Anda belum membuat bab apa pun untuk pilihan ini.
                         </div>
                     )}
                 </div>
@@ -160,7 +160,7 @@ export default function Index() {
             >
                 <Icon name="add" className="text-[32px] group-hover:rotate-90 transition-transform" />
                 <div className="absolute right-16 bg-inverse-surface text-inverse-on-surface px-3 py-1 rounded text-label-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                    New Chapter
+                    Bab Baru
                 </div>
             </button>
 

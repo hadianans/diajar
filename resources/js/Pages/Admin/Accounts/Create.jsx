@@ -17,12 +17,12 @@ export default function Create() {
 
     return (
         <>
-            <Head title="Invite New User - Diajar LMS" />
+            <Head title="Undang Pengguna Baru - Diajar LMS" />
 
             <DashboardTemplate
                 activeTab="Account"
-                title="New Account"
-                viewLabel="Admin View"
+                title="Akun Baru"
+                viewLabel="Tampilan Admin"
                 showBack={true}
                 onBack={handleBack}
             >

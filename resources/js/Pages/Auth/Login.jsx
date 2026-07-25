@@ -25,7 +25,7 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <div className="bg-background text-on-background min-h-screen flex flex-col justify-center items-center px-4 relative overflow-hidden transition-colors duration-300">
-            <Head title="Log in" />
+            <Head title="Masuk" />
 
             {/* Glowing Accent Orbs in the background */}
             <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
@@ -63,7 +63,7 @@ export default function Login({ status, canResetPassword }) {
                         <div className="space-y-1.5">
                             <div className="flex justify-between items-center">
                                 <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                                    Email Address
+                                    Alamat Email
                                 </label>
                             </div>
                             <div className="relative">
@@ -88,14 +88,14 @@ export default function Login({ status, canResetPassword }) {
                         <div className="space-y-1.5">
                             <div className="flex justify-between items-center">
                                 <label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                                    Password
+                                    Kata Sandi
                                 </label>
                                 {canResetPassword && (
                                     <Link
                                         href={route('password.request')}
                                         className="text-xs text-primary hover:underline hover:text-primary/80 transition-colors"
                                     >
-                                        Forgot?
+                                        Lupa?
                                     </Link>
                                 )}
                             </div>
@@ -135,7 +135,7 @@ export default function Login({ status, canResetPassword }) {
                                     className="rounded border-outline-variant bg-surface text-primary focus:ring-primary/20 w-4 h-4 transition-all cursor-pointer"
                                 />
                                 <span className="ml-2 text-xs font-medium text-on-surface-variant">
-                                    Remember me
+                                    Ingat saya
                                 </span>
                             </label>
                         </div>
@@ -150,7 +150,7 @@ export default function Login({ status, canResetPassword }) {
                                 <span className="inline-block w-4 h-4 border-2 border-on-primary border-t-transparent rounded-full animate-spin" />
                             ) : (
                                 <>
-                                    Sign In
+                                    Masuk
                                     <span className="material-symbols-outlined text-[18px]">login</span>
                                 </>
                             )}
@@ -161,18 +161,18 @@ export default function Login({ status, canResetPassword }) {
                 {/* Footer Credits */}
                 <footer className="mt-8 text-center space-y-4 w-full animate-fade-in">
                     <p className="text-xs text-on-surface-variant">
-                        Don't have an account?{' '}
+                        Belum punya akun?{' '}
                         <a className="text-primary font-semibold hover:underline" href="#">
-                            Contact your administrator
+                            Hubungi administrator anda
                         </a>
                     </p>
                     <div className="flex items-center justify-center space-x-4 text-xs text-outline">
                         <a className="hover:text-on-surface-variant transition-colors" href="#">
-                            Privacy Policy
+                            Kebijakan Privasi
                         </a>
                         <span className="w-1 h-1 bg-outline-variant rounded-full" />
                         <a className="hover:text-on-surface-variant transition-colors" href="#">
-                            Terms of Service
+                            Ketentuan Layanan
                         </a>
                     </div>
                 </footer>

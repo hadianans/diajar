@@ -13,30 +13,30 @@ export default function Show({ assessmentId }) {
 
         const { assessment, attempts_used, latest_attempt } = responseData;
 
-        let status = 'Upcoming';
+        let status = 'Mendatang';
         if (latest_attempt) {
-            status = latest_attempt.status === 'progress' ? 'In Progress' : 'Completed';
+            status = latest_attempt.status === 'progress' ? 'Sedang Berlangsung' : 'Selesai';
         } else if (assessment.due_date && new Date(assessment.due_date) < new Date()) {
-            status = 'Overdue';
+            status = 'Terlambat';
         } else if (assessment.start_date && new Date(assessment.start_date) > new Date()) {
-            status = 'Locked';
+            status = 'Terkunci';
         }
 
         return {
             id: assessment.id,
-            subject: assessment.chapter?.name || 'Assessment',
+            subject: assessment.chapter?.name || 'Penilaian',
             title: assessment.title,
             status: status,
-            deadline: assessment.due_date ? new Date(assessment.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'No deadline',
-            description: assessment.description || 'No description provided.',
+            deadline: assessment.due_date ? new Date(assessment.due_date).toLocaleString('id-ID', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Tidak ada tenggat waktu',
+            description: assessment.description || 'Tidak ada deskripsi yang diberikan.',
             stats: [
-                { icon: 'timer', value: assessment.duration_minutes ? `${assessment.duration_minutes} mins` : 'Untimed', label: 'Time Limit' },
-                { icon: 'history', value: `${attempts_used} of ${assessment.max_attempts || '∞'}`, label: 'Attempts Used' },
-                { icon: 'stars', value: latest_attempt?.grade !== undefined && latest_attempt?.grade !== null ? latest_attempt.grade : '--', label: 'Latest Score' }
+                { icon: 'timer', value: assessment.duration_minutes ? `${assessment.duration_minutes} mnt` : 'Tanpa batas waktu', label: 'Batas Waktu' },
+                { icon: 'history', value: `${attempts_used} dari ${assessment.max_attempts || '∞'}`, label: 'Upaya Digunakan' },
+                { icon: 'stars', value: latest_attempt?.grade !== undefined && latest_attempt?.grade !== null ? latest_attempt.grade : '--', label: 'Skor Terbaru' }
             ],
             reflectionGoals: [
-                { label: 'Refresh knowledge and identify gaps' },
-                { label: 'Achieve a high score' }
+                { label: 'Menyegarkan pengetahuan dan mengidentifikasi celah' },
+                { label: 'Mencapai skor tinggi' }
             ],
             canStart: (attempts_used < (assessment.max_attempts || 999)) && (!assessment.start_date || new Date(assessment.start_date) <= new Date()) && (!assessment.due_date || new Date(assessment.due_date) >= new Date())
         };
@@ -44,16 +44,16 @@ export default function Show({ assessmentId }) {
 
     if (loading) {
         return (
-            <DashboardTemplate activeTab="tasks" title="Loading..." showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Loading assessment details...</div>
+            <DashboardTemplate activeTab="tasks" title="Memuat..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12">Memuat detail penilaian...</div>
             </DashboardTemplate>
         );
     }
 
     if (!assessmentData) {
         return (
-            <DashboardTemplate activeTab="tasks" title="Not Found" showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Assessment not found.</div>
+            <DashboardTemplate activeTab="tasks" title="Tidak Ditemukan" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12">Penilaian tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -65,7 +65,7 @@ export default function Show({ assessmentId }) {
             showBack={true}
             onBack={() => window.history.back()}
         >
-            <Head title="Assessment View - Diajar" />
+            <Head title="Tampilan Penilaian - Diajar" />
 
             <div className="px-margin-mobile mt-6 max-w-3xl mx-auto space-y-stack-lg pb-32">
                 {/* Header Section */}
@@ -81,7 +81,7 @@ export default function Show({ assessmentId }) {
                     </h2>
                     <div className="flex items-center gap-2 text-on-surface-variant">
                         <Icon name="event" className="text-[18px]" />
-                        <p className="font-body-md text-body-md">Deadline: <span className="font-semibold text-primary">{assessmentData.deadline}</span></p>
+                        <p className="font-body-md text-body-md">Tenggat Waktu: <span className="font-semibold text-primary">{assessmentData.deadline}</span></p>
                     </div>
                 </section>
 
@@ -110,12 +110,12 @@ export default function Show({ assessmentId }) {
                             href={route('student.assessments.attempt', { assessmentId })}
                             className="w-full bg-primary hover:bg-primary-container text-on-primary py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
                         >
-                            <span>Start Assessment</span>
+                            <span>Mulai Penilaian</span>
                             <Icon name="play_arrow" className="text-[20px]" />
                         </Link>
                     ) : (
                         <div className="w-full bg-surface-container text-on-surface-variant py-4 px-6 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 text-center opacity-70">
-                            <span>Assessment Unavailable</span>
+                            <span>Penilaian Tidak Tersedia</span>
                         </div>
                     )}
                 </div>

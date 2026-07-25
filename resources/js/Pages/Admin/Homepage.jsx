@@ -31,17 +31,17 @@ export default function Homepage() {
         label: item.label,
         completed: item.complete,
         action: item.shortcut_url ? {
-            label: 'Go',
+            label: 'Buka',
             onClick: () => router.visit(item.shortcut_url)
         } : undefined
     }));
 
     // Quick Access Configuration
     const quickAccessItems = [
-        { label: 'Manage Accounts', icon: 'manage_accounts', onClick: () => handleActionClick('Accounts') },
-        { label: 'Academic Settings', icon: 'settings_suggest', onClick: () => handleActionClick('Academic Settings') },
-        { label: 'Manage Subjects', icon: 'book', onClick: () => handleActionClick('Subjects') },
-        { label: 'Manage Classes', icon: 'meeting_room', onClick: () => handleActionClick('Classes') },
+        { label: 'Kelola Akun', icon: 'manage_accounts', onClick: () => handleActionClick('Accounts') },
+        { label: 'Pengaturan Akademik', icon: 'settings_suggest', onClick: () => handleActionClick('Academic Settings') },
+        { label: 'Kelola Mata Pelajaran', icon: 'book', onClick: () => handleActionClick('Subjects') },
+        { label: 'Kelola Kelas', icon: 'meeting_room', onClick: () => handleActionClick('Classes') },
     ];
 
     // Transform API activities
@@ -52,14 +52,14 @@ export default function Homepage() {
         const now = new Date();
         const diffMs = now - date;
         const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-        let timeStr = `${diffHrs} hours ago`;
-        if (diffHrs < 1) timeStr = 'Just now';
-        else if (diffHrs > 24) timeStr = `${Math.floor(diffHrs / 24)} days ago`;
+        let timeStr = `${diffHrs} jam yang lalu`;
+        if (diffHrs < 1) timeStr = 'Baru saja';
+        else if (diffHrs > 24) timeStr = `${Math.floor(diffHrs / 24)} hari yang lalu`;
 
         return {
             title: act.description || act.action,
             time: timeStr,
-            meta: act.actor?.full_name || 'System',
+            meta: act.actor?.full_name || 'Sistem',
             dotColor: 'bg-primary'
         };
     });
@@ -71,7 +71,7 @@ export default function Homepage() {
             <section className="w-full my-6 bg-primary-container text-on-primary-container rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-md transition-shadow hover:shadow-lg">
                 <div className="z-10">
                     <h2 className="font-headline-md text-headline-md font-bold mb-1">
-                        {summaryData?.active_year?.name || 'Loading Academic Year...'}
+                        {summaryData?.active_year?.name || 'Memuat Tahun Akademik...'}
                     </h2>
                     <div className="flex items-center gap-2 opacity-90">
                         <Icon name="calendar_today" className="text-[18px]" />
@@ -83,7 +83,7 @@ export default function Homepage() {
                 <div className="z-10 flex items-center gap-3 bg-surface-container-lowest/20 backdrop-blur-md px-4 py-2 rounded-full w-fit">
                     <div className="w-2.5 h-2.5 bg-secondary-fixed rounded-full animate-pulse"></div>
                     <span className="font-label-md text-label-md font-bold tracking-wide">
-                        {summaryData?.active_year?.status === 'active' ? 'System Active' : 'System Offline'}
+                        {summaryData?.active_year?.status === 'active' ? 'Sistem Aktif' : 'Sistem Offline'}
                     </span>
                 </div>
             </section>
@@ -95,30 +95,30 @@ export default function Homepage() {
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-gutter mb-6">
             <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="group" className="text-primary text-2xl" />
-                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Total Students</p>
+                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Total Siswa</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
                     {summaryLoading ? '...' : summaryData?.student_count || 0}
                 </p>
             </div>
             <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="school" className="text-secondary text-2xl" />
-                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Active Teachers</p>
+                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Guru Aktif</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
                     {summaryLoading ? '...' : summaryData?.teacher_count || 0}
                 </p>
             </div>
             <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="menu_book" className="text-tertiary text-2xl" />
-                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Active Subjects</p>
+                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Mata Pelajaran Aktif</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
                     {summaryLoading ? '...' : summaryData?.subject_count || 0}
                 </p>
             </div>
             <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm flex flex-col gap-2 transition-all hover:scale-[1.02] hover:shadow-md cursor-default">
                 <Icon name="event" className="text-primary-container text-2xl" />
-                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Academic Year</p>
+                <p className="text-on-surface-variant font-label-sm text-[12px] uppercase tracking-wider">Tahun Akademik</p>
                 <p className="text-on-surface font-headline-md text-headline-md font-bold">
-                    {summaryLoading ? '...' : summaryData?.active_year?.name || 'None'}
+                    {summaryLoading ? '...' : summaryData?.active_year?.name || 'Tidak ada'}
                 </p>
             </div>
         </section>
@@ -126,12 +126,12 @@ export default function Homepage() {
 
     return (
         <>
-            <Head title="Admin Dashboard" />
+            <Head title="Dasbor Admin" />
 
             <DashboardTemplate
                 activeTab="Dashboard"
                 title="Diajar Admin"
-                viewLabel="Admin View"
+                viewLabel="Tampilan Admin"
                 showBack={false}
                 headerSection={bannerHeader}
                 statsSection={metricsSection}

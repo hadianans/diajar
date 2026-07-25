@@ -31,9 +31,9 @@ export default function Index() {
         if (!c.group_years || c.group_years.length === 0) {
             const classItem = {
                 ...baseClass,
-                title: 'Unassigned Group',
-                grade: 'Unassigned',
-                year: `AY ${c.school_year?.name || 'Unknown'}`,
+                title: 'Grup Belum Ditugaskan',
+                grade: 'Belum Ditugaskan',
+                year: `TA ${c.school_year?.name || 'Tidak Diketahui'}`,
                 groupId: null,
             };
             if (c.is_active) activeClasses.push(classItem);
@@ -42,9 +42,9 @@ export default function Index() {
             c.group_years.forEach(gy => {
                 const classItem = {
                     ...baseClass,
-                    title: gy.group?.name || 'Unknown Cohort',
-                    grade: gy.group?.name || 'Unknown',
-                    year: `AY ${gy.school_year?.name || c.school_year?.name || 'Unknown'}`,
+                    title: gy.group?.name || 'Kohort Tidak Diketahui',
+                    grade: gy.group?.name || 'Tidak Diketahui',
+                    year: `TA ${gy.school_year?.name || c.school_year?.name || 'Tidak Diketahui'}`,
                     groupId: gy.id,
                     // If we had per-group student counts from API, we'd use it here.
                 };
@@ -56,8 +56,8 @@ export default function Index() {
 
     const headerSection = (
         <section className="space-y-1 mb-6 mt-4">
-            <h1 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Classes</h1>
-            <p className="text-body-md font-body-md text-on-surface-variant">Manage your teaching groups</p>
+            <h1 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Kelas</h1>
+            <p className="text-body-md font-body-md text-on-surface-variant">Kelola grup pengajaran Anda</p>
         </section>
     );
 
@@ -65,16 +65,16 @@ export default function Index() {
         <DashboardTemplate
             role="teacher"
             activeTab="classes"
-            title="My Classes"
+            title="Kelas Saya"
             headerSection={headerSection}
         >
-            <Head title="Teacher Classes | Diajar LMS" />
+            <Head title="Kelas Guru | LMS Diajar" />
 
             <div className="w-full space-y-stack-lg pb-12">
                 <ClassFilters onSearch={setSearchQuery} />
 
                 {loading ? (
-                    <div className="text-center p-8 text-on-surface-variant">Loading classes...</div>
+                    <div className="text-center p-8 text-on-surface-variant">Memuat kelas...</div>
                 ) : (
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -95,14 +95,14 @@ export default function Index() {
                                 ))
                             ) : (
                                 <div className="p-6 bg-surface-container rounded-xl text-center text-on-surface-variant text-sm">
-                                    No active classes found.
+                                    Tidak ada kelas aktif yang ditemukan.
                                 </div>
                             )}
                         </div>
 
                         {archivedClasses.length > 0 && (
                             <section className="space-y-stack-sm pb-8 mt-8">
-                                <h2 className="text-label-sm font-label-sm tracking-wider text-outline uppercase px-1">Archived Classes</h2>
+                                <h2 className="text-label-sm font-label-sm tracking-wider text-outline uppercase px-1">Kelas Diarsipkan</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {archivedClasses.map((cls) => (
                                         <ArchivedClassCard

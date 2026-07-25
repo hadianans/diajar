@@ -14,7 +14,7 @@ export default function Attempt({ assessmentId }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answersState, setAnswersState] = useState({});
     const [assessmentDetails, setAssessmentDetails] = useState({
-        title: 'Assessment',
+        title: 'Penilaian',
         totalQuestions: 0,
         timeLimitSeconds: 0
     });
@@ -46,12 +46,12 @@ export default function Attempt({ assessmentId }) {
                     });
                     setAnswersState(initialAnswers);
                 } else {
-                    showError('Error', 'Could not start assessment: Unknown error');
+                    showError('Kesalahan', 'Tidak dapat memulai penilaian: Kesalahan tidak diketahui');
                     router.visit(`/student/assessments/${assessmentId}`);
                 }
             } catch (error) {
                 console.error('Error starting attempt:', error);
-                showWarning('Cannot Start', 'An error occurred. You might have reached the maximum attempts.');
+                showWarning('Tidak Dapat Memulai', 'Terjadi kesalahan. Anda mungkin telah mencapai batas upaya maksimal.');
                 router.visit(`/student/assessments/${assessmentId}`);
             } finally {
                 setLoading(false);
@@ -109,14 +109,14 @@ export default function Attempt({ assessmentId }) {
 
     const handleSubmit = async () => {
         const unansweredCount = questions.length - Object.values(answersState).filter(s => (s?.status === 'answered' || s?.status === 'flagged') && s?.selectedOptionId != null).length;
-        const confirmed = await confirmAction('Finish Attempt?', `You still have ${unansweredCount} unanswered questions. Are you sure you want to submit?`);
+        const confirmed = await confirmAction('Selesaikan Upaya?', `Anda masih memiliki ${unansweredCount} pertanyaan yang belum dijawab. Anda yakin ingin mengumpulkan?`);
         if (confirmed) {
             try {
                 await api.patch(`/attempts/${attemptId}/submit`);
                 router.visit(`/student/attempts/${attemptId}/result`);
             } catch (error) {
                 console.error('Error submitting:', error);
-                showError('Error', 'Failed to submit. Please try again.');
+                showError('Kesalahan', 'Gagal mengumpulkan. Silakan coba lagi.');
             }
         }
     };
@@ -130,7 +130,7 @@ export default function Attempt({ assessmentId }) {
             <div className="bg-background min-h-screen flex items-center justify-center font-body-md">
                 <div className="text-center space-y-4">
                     <Icon name="sync" className="animate-spin text-4xl text-primary" />
-                    <p className="text-on-surface-variant text-body-lg">Preparing your assessment...</p>
+                    <p className="text-on-surface-variant text-body-lg">Mempersiapkan penilaian Anda...</p>
                 </div>
             </div>
         );
@@ -140,8 +140,8 @@ export default function Attempt({ assessmentId }) {
         return (
             <div className="bg-background min-h-screen flex items-center justify-center font-body-md">
                 <div className="text-center">
-                    <p>No questions found for this assessment.</p>
-                    <button onClick={() => window.history.back()} className="mt-4 text-primary">Go Back</button>
+                    <p>Tidak ada pertanyaan yang ditemukan untuk penilaian ini.</p>
+                    <button onClick={() => window.history.back()} className="mt-4 text-primary">Kembali</button>
                 </div>
             </div>
         );
@@ -149,7 +149,7 @@ export default function Attempt({ assessmentId }) {
 
     return (
         <div className="bg-background min-h-screen flex flex-col font-body-md">
-            <Head title={`${assessmentDetails.title} - Diajar LMS`} />
+            <Head title={`${assessmentDetails.title} - LMS Diajar`} />
 
             <AttemptHeader 
                 title={assessmentDetails.title}
@@ -176,7 +176,7 @@ export default function Attempt({ assessmentId }) {
                             className={`flex flex-col items-center gap-1 transition-colors ${isMarkedForReview ? 'text-tertiary' : 'text-outline-variant hover:text-on-surface-variant'}`}
                         >
                             <Icon name={isMarkedForReview ? "flag" : "outlined_flag"} className="text-[24px]" />
-                            <span className="font-label-sm text-[10px] uppercase tracking-wider">Review</span>
+                            <span className="font-label-sm text-[10px] uppercase tracking-wider">Tinjau</span>
                         </button>
                     </div>
 
@@ -223,7 +223,7 @@ export default function Attempt({ assessmentId }) {
                     className="max-w-md w-full py-4 bg-on-surface text-white rounded-xl font-bold text-body-md hover:bg-primary transition-colors active:scale-95 shadow-lg flex items-center justify-center gap-3"
                 >
                     <Icon name="assignment_turned_in" />
-                    Finish & Submit Attempt
+                    Selesai & Kumpulkan Upaya
                 </button>
             </footer>
         </div>

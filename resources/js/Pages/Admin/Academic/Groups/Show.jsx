@@ -22,7 +22,7 @@ export default function Show({ groupId }) {
         if (actionName === 'Add Students') {
             setIsStudentModalOpen(true);
         } else {
-            showInfo('Action Initiated', `${actionName} flow...`);
+            showInfo('Tindakan Dimulai', `Alur ${actionName}...`);
         }
     };
 
@@ -36,32 +36,32 @@ export default function Show({ groupId }) {
     }, [data]);
 
     const handleRemoveStudent = async (studentId) => {
-        const confirmed = await confirmDelete('Remove Student?', 'Are you sure you want to remove this student from the group?');
+        const confirmed = await confirmDelete('Hapus Siswa?', 'Apakah Anda yakin ingin menghapus siswa ini dari grup?');
         if (confirmed) {
             try {
                 await api.delete(`/groups/${groupId}/students/${studentId}`, {
                     data: { year_id: data?.group_year?.year_id }
                 });
-                showSuccess('Student removed successfully.');
+                showSuccess('Siswa berhasil dihapus.');
                 refetch();
             } catch (err) {
-                showError('Error', err.response?.data?.message || 'Failed to remove student.');
+                showError('Kesalahan', err.response?.data?.message || 'Gagal menghapus siswa.');
             }
         }
     };
 
     if (loading) {
         return (
-            <DashboardTemplate activeTab="Academic" title="Loading..." viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading group details...</div>
+            <DashboardTemplate activeTab="Academic" title="Memuat..." viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-on-surface-variant">Memuat detail grup...</div>
             </DashboardTemplate>
         );
     }
 
     if (!data || !data.group) {
         return (
-            <DashboardTemplate activeTab="Academic" title="Not Found" viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-error">Group not found.</div>
+            <DashboardTemplate activeTab="Academic" title="Tidak Ditemukan" viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-error">Grup tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -76,21 +76,21 @@ export default function Show({ groupId }) {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <Badge>{groupYear?.grade || 'No Grade'}</Badge>
-                        <span className="text-on-surface-variant text-sm font-medium">Academic Year</span>
+                        <Badge>{groupYear?.grade || 'Tidak Ada Kelas'}</Badge>
+                        <span className="text-on-surface-variant text-sm font-medium">Tahun Akademik</span>
                     </div>
                     <h2 className="font-headline-lg text-headline-lg font-extrabold text-on-surface tracking-tight">
-                        {groupDisplay} {groupYear?.grade ? `- ${groupYear.grade}` : ''}
+                        {groupDisplay} {groupYear?.grade ? `- Kelas ${groupYear.grade}` : ''}
                     </h2>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button onClick={() => handleActionClick('Add Students')} className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-3 rounded-xl font-label-md transition-all flex items-center gap-2 shadow-sm" type="button">
+                    <button onClick={() => handleActionClick('Tambah Siswa')} className="bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary px-6 py-3 rounded-xl font-label-md transition-all flex items-center gap-2 shadow-sm" type="button">
                         <Icon name="person_add" className="text-sm" />
-                        Add Students
+                        Tambah Siswa
                     </button>
-                    <button onClick={() => handleActionClick('Import CSV')} className="bg-surface-container-highest text-on-surface-variant hover:bg-surface-dim px-6 py-3 rounded-xl font-label-md transition-all flex items-center gap-2" type="button">
+                    <button onClick={() => handleActionClick('Impor CSV')} className="bg-surface-container-highest text-on-surface-variant hover:bg-surface-dim px-6 py-3 rounded-xl font-label-md transition-all flex items-center gap-2" type="button">
                         <Icon name="upload_file" className="text-sm" />
-                        Import CSV
+                        Impor CSV
                     </button>
                 </div>
             </div>
@@ -99,12 +99,12 @@ export default function Show({ groupId }) {
 
     return (
         <>
-            <Head title={`Academic Group ${groupDisplay}`} />
+            <Head title={`Grup Akademik ${groupDisplay}`} />
             
             <DashboardTemplate
                 activeTab="Academic"
-                title="Group Details"
-                viewLabel="Admin View"
+                title="Detail Grup"
+                viewLabel="Tampilan Admin"
                 showBack={true}
                 onBack={handleBack}
                 headerSection={headerSection}

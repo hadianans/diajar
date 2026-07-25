@@ -22,9 +22,9 @@ export default function Show({ classId }) {
 
     const classDetails = classData ? {
         id: classData.id,
-        title: `${classData.subject?.subject_name} - ${(classData.group_years || []).map(gy => gy.group?.name).join(', ') || 'Unassigned Group'}`,
-        year: `AY ${(classData.group_years || [])[0]?.school_year?.name || classData.school_year?.name || 'Unknown'}`,
-        grade: (classData.group_years || []).map(gy => gy.group?.name).join(', ') || 'Unassigned',
+        title: `${classData.subject?.subject_name} - ${(classData.group_years || []).map(gy => gy.group?.name).join(', ') || 'Grup Belum Ditugaskan'}`,
+        year: `TA ${(classData.group_years || [])[0]?.school_year?.name || classData.school_year?.name || 'Tidak Diketahui'}`,
+        grade: (classData.group_years || []).map(gy => gy.group?.name).join(', ') || 'Belum Ditugaskan',
         studentsCount: classData.students?.length || 0,
         groupsCount: Math.max(1, (classData.group_years || []).length),
         attentionCount: (classData.students || []).filter(s => s.is_urgent).length
@@ -33,10 +33,10 @@ export default function Show({ classId }) {
     const students = (classData?.students || []).map(s => ({
         id: s.id,
         name: s.full_name || s.username,
-        group: s.group_name || 'Unknown',
+        group: s.group_name || 'Tidak Diketahui',
         avatar: s.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.full_name || s.username)}&background=random`,
         completion: s.material_completion || 0,
-        grade: s.assignment_avg > 0 ? `${Math.round(s.assignment_avg)}%` : 'No grade',
+        grade: s.assignment_avg > 0 ? `${Math.round(s.assignment_avg)}%` : 'Belum dinilai',
         assmScore: Math.round(s.assessment_avg || 0),
         isUrgent: s.is_urgent,
         srlBadge: false // Can be hooked up to plans later
@@ -59,8 +59,8 @@ export default function Show({ classId }) {
                     <p className="font-body-md text-body-md text-on-surface-variant mt-1">{classDetails.year} • {classDetails.grade}</p>
                 </div>
                 <div className="flex flex-row md:flex-col items-center md:items-end gap-3 md:gap-1 flex-shrink-0">
-                    <span className="font-label-md text-label-md text-white bg-primary-container px-3 py-1 rounded-full">{classDetails.studentsCount} Students</span>
-                    <span className="font-label-sm text-label-sm text-on-surface-variant mt-1">{classDetails.groupsCount} Groups</span>
+                    <span className="font-label-md text-label-md text-white bg-primary-container px-3 py-1 rounded-full">{classDetails.studentsCount} Siswa</span>
+                    <span className="font-label-sm text-label-sm text-on-surface-variant mt-1">{classDetails.groupsCount} Grup</span>
                 </div>
             </div>
         </section>
@@ -68,16 +68,16 @@ export default function Show({ classId }) {
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" activeTab="classes" title="Loading..." showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12 text-on-surface-variant">Loading class details...</div>
+            <DashboardTemplate role="teacher" activeTab="classes" title="Memuat..." showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Memuat detail kelas...</div>
             </DashboardTemplate>
         );
     }
 
     if (!classData) {
         return (
-            <DashboardTemplate role="teacher" activeTab="classes" title="Class Not Found" showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12 text-on-surface-variant">Class not found.</div>
+            <DashboardTemplate role="teacher" activeTab="classes" title="Kelas Tidak Ditemukan" showBack={true} onBack={() => window.history.back()}>
+                <div className="text-center py-12 text-on-surface-variant">Kelas tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -86,19 +86,19 @@ export default function Show({ classId }) {
         <DashboardTemplate
             role="teacher"
             activeTab="classes"
-            title="Class Detail"
+            title="Detail Kelas"
             showBack={true}
             onBack={() => window.location.href = '/teacher/classes'}
             headerSection={headerSection}
         >
-            <Head title="Class Detail | Diajar LMS" />
+            <Head title="Detail Kelas | LMS Diajar" />
 
             <div className="max-w-[1280px] mx-auto pb-12 w-full px-4 lg:px-8 mt-6">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     {/* Left Sidebar (Analytics & Attention) - Sticky on Desktop */}
                     <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
                         {classDetails.attentionCount > 0 && (
-                            <AttentionSummary count={classDetails.attentionCount} message="Low completion or missing tasks" />
+                            <AttentionSummary count={classDetails.attentionCount} message="Penyelesaian rendah atau tugas hilang" />
                         )}
                         <ClassHealthMetrics
                             completion={avgCompletion}
@@ -125,7 +125,7 @@ export default function Show({ classId }) {
                             ) : (
                                 <div className="text-center py-12 text-on-surface-variant bg-surface-container-lowest rounded-2xl border border-outline-variant/50 shadow-sm">
                                     <span className="material-symbols-rounded text-4xl mb-3 block opacity-50">search_off</span>
-                                    No students found matching your search.
+                                    Tidak ada siswa yang cocok dengan pencarian Anda.
                                 </div>
                             )}
                         </section>

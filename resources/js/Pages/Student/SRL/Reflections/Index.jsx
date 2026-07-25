@@ -45,7 +45,7 @@ export default function ReflectionsIndex() {
 
     const handleDelete = async (id, e) => {
         if (e) e.stopPropagation();
-        const confirmed = await confirmDelete('Delete Reflection?', 'Are you sure you want to delete this reflection?');
+        const confirmed = await confirmDelete('Hapus Refleksi?', 'Apakah Anda yakin ingin menghapus refleksi ini?');
         if (!confirmed) return;
         try {
             await api.delete(`/reflections/${id}`);
@@ -69,12 +69,12 @@ export default function ReflectionsIndex() {
                 material_quality: data.material_quality,
                 emotions: data.emotions,
             });
-            showSuccess('Reflection updated successfully!');
+            showSuccess('Refleksi berhasil diperbarui!');
             refetch();
             setSelectedRef(null);
         } catch (err) {
             console.error(err);
-            showError('Error', 'Failed to update reflection.');
+            showError('Kesalahan', 'Gagal memperbarui refleksi.');
         } finally {
             setIsUpdating(false);
         }
@@ -100,8 +100,8 @@ export default function ReflectionsIndex() {
 
     const headerSection = (
         <section className="flex flex-col gap-stack-sm pt-4">
-            <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Growth Journal</h2>
-            <p className="text-body-md text-on-surface-variant">Review your past reflections and strategies.</p>
+            <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Jurnal Pertumbuhan</h2>
+            <p className="text-body-md text-on-surface-variant">Tinjau refleksi dan strategi Anda sebelumnya.</p>
         </section>
     );
 
@@ -117,25 +117,25 @@ export default function ReflectionsIndex() {
         <DashboardTemplate
             role="student"
             activeTab="dashboard"
-            title="Reflections"
+            title="Refleksi"
             headerSection={headerSection}
             onBack={handleBack}
         >
-            <Head title="My Reflections - Diajar" />
+            <Head title="Refleksiku - Diajar" />
 
             <div className="flex flex-col md:flex-row gap-gutter pb-12 items-start">
 
                 {/* Left Column: Details Form */}
                 <div className="md:w-1/3 flex flex-col gap-stack-md w-full sticky top-24">
                     <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30 min-h-[400px]">
-                        <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">Reflection Details</h3>
+                        <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">Detail Refleksi</h3>
 
                         {selectedRef ? (
                             <div className="flex flex-col gap-6 animate-fadeIn">
                                 <div className="border-b border-outline-variant/50 pb-4 flex justify-between items-start gap-4">
                                     <div>
-                                        <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Target Task</p>
-                                        <p className="text-headline-sm font-headline-sm mt-1">{selectedRef.reflectables?.[0]?.reflectable?.title || selectedRef.title || 'Untitled'}</p>
+                                        <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Tugas Target</p>
+                                        <p className="text-headline-sm font-headline-sm mt-1">{selectedRef.reflectables?.[0]?.reflectable?.title || selectedRef.title || 'Tanpa Judul'}</p>
                                         <p className="text-label-md text-on-surface-variant mt-2 flex items-center gap-1">
                                             <Icon name="event" className="text-[16px]" />
                                             {moment(selectedRef.created_at).format('MMMM D, YYYY h:mm A')}
@@ -147,7 +147,7 @@ export default function ReflectionsIndex() {
                                     <div className="mb-4">
                                         <span className="text-label-md font-label-md text-primary block mb-2 flex items-center gap-2">
                                             <Icon name="forum" className="text-[18px]" />
-                                            Teacher Feedback
+                                            Umpan Balik Guru
                                         </span>
                                         <div className="text-body-md whitespace-pre-wrap bg-primary-container text-on-primary-container p-4 rounded-xl leading-relaxed shadow-sm">
                                             {selectedRef.teacher_comment}
@@ -168,7 +168,7 @@ export default function ReflectionsIndex() {
                                         <>
                                             <Link href={getTargetLink(selectedRef.reflectables?.[0])} className="flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-on-secondary-container rounded-full text-label-md font-label-md hover:opacity-90 transition-opacity">
                                                 <Icon name="arrow_forward" className="text-[18px]" />
-                                                View Task
+                                                Lihat Tugas
                                             </Link>
                                             <button
                                                 onClick={(e) => handleDelete(selectedRef.id, e)}
@@ -176,7 +176,7 @@ export default function ReflectionsIndex() {
                                                 type="button"
                                             >
                                                 <Icon name="delete" className="text-[18px]" />
-                                                Delete
+                                                Hapus
                                             </button>
                                         </>
                                     }
@@ -185,8 +185,8 @@ export default function ReflectionsIndex() {
                         ) : (
                             <div className="h-full flex flex-col items-center justify-center text-center p-6 text-on-surface-variant opacity-70 mt-12">
                                 <Icon name="touch_app" className="text-display-md mb-4 text-primary" />
-                                <p className="text-body-lg font-medium">Select a Reflection</p>
-                                <p className="text-body-md mt-2">Click on any entry from the list to view its complete details and teacher feedback.</p>
+                                <p className="text-body-lg font-medium">Pilih Refleksi</p>
+                                <p className="text-body-md mt-2">Klik entri mana pun dari daftar untuk melihat detail lengkapnya dan umpan balik guru.</p>
                             </div>
                         )}
                     </div>
@@ -201,7 +201,7 @@ export default function ReflectionsIndex() {
                             <Icon name="search" className="text-on-surface-variant mr-2" />
                             <input
                                 type="text"
-                                placeholder="Search journal..."
+                                placeholder="Cari jurnal..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="w-full bg-transparent border-none rounded-md px-4 py-2 text-body-md text-on-surface outline-none focus:border-primary transition-colors"
@@ -214,7 +214,7 @@ export default function ReflectionsIndex() {
                                 onChange={(e) => { setSubjectFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
                             >
-                                <option value="">All Subjects</option>
+                                <option value="">Semua Mata Pelajaran</option>
                                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                             </select>
                             <select
@@ -222,10 +222,10 @@ export default function ReflectionsIndex() {
                                 onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
                                 className="bg-surface border border-outline-variant rounded-md px-3 py-1.5 text-label-md text-on-surface outline-none focus:border-primary flex-1 min-w-[120px]"
                             >
-                                <option value="">All Types</option>
-                                <option value="lesson">Lesson</option>
-                                <option value="assignment">Assignment</option>
-                                <option value="assessment">Assessment</option>
+                                <option value="">Semua Jenis</option>
+                                <option value="lesson">Materi</option>
+                                <option value="assignment">Tugas</option>
+                                <option value="assessment">Penilaian</option>
                             </select>
                         </div>
                     </div>
@@ -233,7 +233,7 @@ export default function ReflectionsIndex() {
                     {/* List */}
                     <div className="flex flex-col gap-3 min-h-[400px]">
                         {loading ? (
-                            <div className="text-center p-12 text-on-surface-variant">Loading journal entries...</div>
+                            <div className="text-center p-12 text-on-surface-variant">Memuat entri jurnal...</div>
                         ) : reflections.length > 0 ? (
                             reflections.map(ref => {
                                 const reflectable = ref.reflectables?.[0]?.reflectable;
@@ -257,7 +257,7 @@ export default function ReflectionsIndex() {
                                         <div className="flex justify-between items-start gap-4">
                                             <div className="flex-1">
                                                 <h3 className="font-headline-sm text-headline-sm text-on-surface line-clamp-1">
-                                                    {reflectable?.title || ref.title || 'Untitled'}
+                                                    {reflectable?.title || ref.title || 'Tanpa Judul'}
                                                 </h3>
                                                 <div className="flex flex-wrap items-center gap-3 mt-2">
                                                     <span className="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
@@ -271,14 +271,14 @@ export default function ReflectionsIndex() {
                                                     )}
                                                     {ref.teacher_comment && (
                                                         <span className="text-label-sm font-label-sm bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1">
-                                                            <Icon name="forum" className="text-[14px]" /> Feedback
+                                                            <Icon name="forum" className="text-[14px]" /> Umpan Balik
                                                         </span>
                                                     )}
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col items-center gap-1 shrink-0">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-sm ${compColors[ref.comprehension_level] || 'bg-surface border border-outline-variant text-on-surface-variant'}`} title={`Comprehension Level: ${ref.comprehension_level}/5`}>
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-sm ${compColors[ref.comprehension_level] || 'bg-surface border border-outline-variant text-on-surface-variant'}`} title={`Tingkat Pemahaman: ${ref.comprehension_level}/5`}>
                                                     {ref.comprehension_level}
                                                 </div>
                                             </div>
@@ -289,9 +289,9 @@ export default function ReflectionsIndex() {
                         ) : (
                             <div className="text-center p-12 bg-surface-container-low rounded-2xl border border-outline-variant/30">
                                 <Icon name="history_edu" className="text-primary text-display-md mb-2 opacity-50" />
-                                <h4 className="text-headline-sm font-headline-sm text-on-surface">No Entries Found</h4>
+                                <h4 className="text-headline-sm font-headline-sm text-on-surface">Tidak Ada Entri Ditemukan</h4>
                                 <p className="text-body-md text-on-surface-variant mt-2 max-w-sm mx-auto">
-                                    You don't have any reflections matching these filters. Try completing a task and writing a reflection!
+                                    Anda tidak memiliki refleksi yang cocok dengan filter ini. Coba selesaikan tugas dan tulis refleksi!
                                 </p>
                             </div>
                         )}

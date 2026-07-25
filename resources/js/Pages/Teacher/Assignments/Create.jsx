@@ -64,7 +64,7 @@ export default function Create() {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
             } else {
-                showError('Error', err.response?.data?.message || 'Error creating assignment');
+                showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat membuat tugas');
             }
         } finally {
             setIsSaving(false);
@@ -81,11 +81,11 @@ export default function Create() {
                 <div className="flex items-center gap-2 text-on-surface-variant mb-2">
                     <button onClick={handleBack} className="hover:text-primary transition-colors flex items-center gap-1 text-label-md">
                         <Icon name="arrow_back" className="text-[18px]" />
-                        Back to Assignments
+                        Kembali ke Tugas
                     </button>
                 </div>
-                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Create Assignment</h2>
-                <p className="text-on-surface-variant font-body-md">Set up a new assignment for your class.</p>
+                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Buat Tugas</h2>
+                <p className="text-on-surface-variant font-body-md">Siapkan tugas baru untuk kelas Anda.</p>
             </div>
         </section>
     );
@@ -94,10 +94,10 @@ export default function Create() {
         <DashboardTemplate 
             role="teacher" 
             activeTab="assignments" 
-            title="Create Assignment" 
+            title="Buat Tugas" 
             headerSection={headerSection}
         >
-            <Head title="Create Assignment" />
+            <Head title="Buat Tugas" />
 
             <div className="space-y-stack-lg max-w-screen-md mx-auto w-full pb-32">
                 <AssignmentBasicInfoForm 
@@ -111,7 +111,7 @@ export default function Create() {
                     rubric={rubric} 
                     onChange={setRubric} 
                     onClear={async () => {
-                        const confirmed = await confirmAction('Clear Rubric?', 'Are you sure you want to clear the rubric?');
+                        const confirmed = await confirmAction('Bersihkan Rubrik?', 'Apakah Anda yakin ingin membersihkan rubrik?');
                         if (confirmed) {
                             setRubric({ title: '', description: '', criteria: [] });
                         }
@@ -127,21 +127,21 @@ export default function Create() {
                 <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-outline-variant/50 mt-8">
                     <div className="hidden md:flex items-center gap-2 text-outline mr-auto">
                         <Icon name="info" className="text-[18px]" />
-                        <span className="text-label-sm">Fill in all required fields to publish.</span>
+                        <span className="text-label-sm">Isi semua bidang yang wajib diisi untuk menerbitkan.</span>
                     </div>
                     <button 
                         onClick={() => handleSave('closed')}
                         disabled={isSaving}
                         className="w-full sm:w-auto px-6 h-12 rounded-full border border-outline text-on-surface-variant font-label-md hover:bg-surface transition-colors active:scale-95 disabled:opacity-50"
                     >
-                        {isSaving ? 'Saving...' : 'Save Draft'}
+                        {isSaving ? 'Menyimpan...' : 'Simpan Draf'}
                     </button>
                     <button 
                         onClick={() => handleSave('open')}
                         disabled={isSaving}
                         className="w-full sm:w-auto px-8 h-12 rounded-full bg-primary text-on-primary font-label-md shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
                     >
-                        {isSaving ? 'Publishing...' : 'Publish Now'}
+                        {isSaving ? 'Menerbitkan...' : 'Terbitkan Sekarang'}
                     </button>
                 </div>
             </div>

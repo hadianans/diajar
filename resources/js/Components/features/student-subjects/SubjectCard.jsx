@@ -13,7 +13,7 @@ export default function SubjectCard({
     iconBgClass = 'bg-primary-fixed'
 }) {
     return (
-        <div className="grid lg: grid-cols-2">
+        <div>
             <Link
                 href={route('student.subjects.show', { subjectId: id })}
                 className="block bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/30 shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05),0_2px_4px_-2px_rgba(15,23,42,0.05)] active:scale-[0.98] transition-transform duration-150 cursor-pointer flex flex-col gap-4"

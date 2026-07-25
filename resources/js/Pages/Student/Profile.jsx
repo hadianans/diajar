@@ -3,9 +3,9 @@ import { Head } from '@inertiajs/react';
 export default function Profile() {
     return (
         <>
-            <Head title="Student Profile" />
+            <Head title="Profil Siswa" />
             <div style={{ padding: '2rem' }}>
-                <h1>This is Student Profile page</h1>
+                <h1>Ini adalah halaman Profil Siswa</h1>
             </div>
         </>
     );

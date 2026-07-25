@@ -30,7 +30,7 @@ export default function Result({ attemptId }) {
     if (loading) {
         return (
             <DashboardTemplate activeTab="tasks" title="Loading..." showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Loading results...</div>
+                <div className="text-center py-12">Memuat hasil...</div>
             </DashboardTemplate>
         );
     }
@@ -38,7 +38,7 @@ export default function Result({ attemptId }) {
     if (!resultData) {
         return (
             <DashboardTemplate activeTab="tasks" title="Not Found" showBack={true} onBack={() => window.history.back()}>
-                <div className="text-center py-12">Result not found.</div>
+                <div className="text-center py-12">Hasil tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -50,30 +50,30 @@ export default function Result({ attemptId }) {
     return (
         <DashboardTemplate 
             activeTab="tasks"
-            title="Assessment Result"
+            title="Hasil Penilaian"
             showBack={true}
             onBack={() => window.location.href = '/student/assessments'}
         >
-            <Head title="Assessment Result - Diajar LMS" />
+            <Head title="Hasil Penilaian - LMS Diajar" />
 
             <div className="max-w-3xl mx-auto py-8 space-y-6">
                 <div className="bg-surface-container rounded-2xl p-8 text-center space-y-4">
                     <Icon name="emoji_events" className="text-6xl text-primary" />
-                    <h2 className="text-headline-md text-on-surface">Assessment Completed</h2>
+                    <h2 className="text-headline-md text-on-surface">Penilaian Selesai</h2>
                     <p className="text-body-md text-on-surface-variant">
-                        You have successfully submitted your assessment.
+                        Anda telah berhasil mengumpulkan penilaian Anda.
                     </p>
                     
                     {isGraded && (
                         <div className="mt-6 inline-block bg-surface-container-lowest px-8 py-4 rounded-xl shadow-sm border border-outline-variant/30">
-                            <span className="block text-label-md text-outline-variant uppercase mb-1">Your Score</span>
+                            <span className="block text-label-md text-outline-variant uppercase mb-1">Skor Anda</span>
                             <span className="text-display-sm text-primary font-bold">{grade}</span>
                         </div>
                     )}
                 </div>
 
                 <div className="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-title-lg text-on-surface mb-6">Review Answers</h3>
+                    <h3 className="text-title-lg text-on-surface mb-6">Tinjau Jawaban</h3>
                     
                     <div className="space-y-6">
                         {answers?.map((answer, index) => (
@@ -86,7 +86,7 @@ export default function Result({ attemptId }) {
                                         <div className="font-body-md text-on-surface" dangerouslySetInnerHTML={{ __html: answer.classQuestion?.question }} />
                                         
                                         <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/30">
-                                            <span className="text-label-sm text-outline-variant uppercase block mb-2">Your Answer</span>
+                                            <span className="text-label-sm text-outline-variant uppercase block mb-2">Jawaban Anda</span>
                                             {answer.selectedOption ? (
                                                 <div className="flex items-center gap-2">
                                                     <Icon 
@@ -96,7 +96,7 @@ export default function Result({ attemptId }) {
                                                     <span className="text-body-md" dangerouslySetInnerHTML={{ __html: answer.selectedOption.option }} />
                                                 </div>
                                             ) : (
-                                                <span className="text-body-md text-outline italic">No answer provided</span>
+                                                <span className="text-body-md text-outline italic">Tidak ada jawaban yang diberikan</span>
                                             )}
                                         </div>
                                     </div>
@@ -111,7 +111,7 @@ export default function Result({ attemptId }) {
                         href="/student/assessments"
                         className="bg-primary text-on-primary px-8 py-3 rounded-xl font-label-md shadow-sm hover:bg-primary-container hover:text-on-primary-container transition-colors"
                     >
-                        Back to Assessments
+                        Kembali ke Penilaian
                     </Link>
                 </div>
             </div>

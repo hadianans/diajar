@@ -16,13 +16,13 @@ export default function Index() {
     };
 
     const handleDelete = async (id) => {
-        const confirmed = await confirmDelete('Delete Question?', 'This will permanently remove this question.');
+        const confirmed = await confirmDelete('Hapus Soal?', 'Tindakan ini akan menghapus soal ini secara permanen.');
         if (!confirmed) return;
         try {
             await api.delete(`/questions/${id}`);
             window.location.reload();
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error deleting question');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus soal');
         }
     };
 
@@ -31,8 +31,8 @@ export default function Index() {
 
     const customTitleSection = (
         <div>
-            <h2 className="font-headline-md text-headline-md font-bold text-primary">Question Bank</h2>
-            <span className="text-xs text-on-surface-variant hidden md:block mt-1">{totalQuestions} questions available</span>
+            <h2 className="font-headline-md text-headline-md font-bold text-primary">Bank Soal</h2>
+            <span className="text-xs text-on-surface-variant hidden md:block mt-1">{totalQuestions} soal tersedia</span>
         </div>
     );
 
@@ -42,7 +42,7 @@ export default function Index() {
             className="bg-primary-container text-on-primary-container hover:bg-primary transition-colors px-6 py-2 rounded-full font-label-md text-label-md shadow-sm active:scale-95 flex items-center gap-2"
         >
             <Icon name="add" className="text-sm" />
-            Create Question
+            Buat Soal
         </button>
     );
 
@@ -79,18 +79,18 @@ export default function Index() {
 
     return (
         <DashboardTemplate role="teacher" activeTab="assessments" headerSection={headerSection}>
-            <Head title="Question Bank | Diajar LMS" />
+            <Head title="Bank Soal | LMS Diajar" />
 
             <div className="max-w-6xl mx-auto w-full pb-20 md:pb-0">
                 <QuestionFilters />
 
                 {/* List Metadata & Sorting */}
                 <div className="flex items-center justify-between mb-stack-md mt-4">
-                    <p className="text-body-md text-on-surface-variant">Showing <span className="font-bold text-on-surface">{questions.length}</span> of {totalQuestions} questions</p>
+                    <p className="text-body-md text-on-surface-variant">Menampilkan <span className="font-bold text-on-surface">{questions.length}</span> dari {totalQuestions} soal</p>
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-outline">Sort by:</span>
+                        <span className="text-sm text-outline">Urutkan berdasarkan:</span>
                         <button className="flex items-center gap-2 px-3 py-2 bg-surface-container-lowest rounded-xl border border-outline-variant hover:bg-surface transition-colors font-label-md text-label-md">
-                            Newest First
+                            Terbaru Dahulu
                             <Icon name="expand_more" className="text-sm" />
                         </button>
                     </div>
@@ -98,7 +98,7 @@ export default function Index() {
 
                 {/* Question Cards Container */}
                 {loading ? (
-                    <div className="text-center py-12 text-on-surface-variant">Loading questions...</div>
+                    <div className="text-center py-12 text-on-surface-variant">Memuat soal...</div>
                 ) : (
                     <div className="grid grid-cols-1 gap-4">
                         {questions.length > 0 ? (
@@ -107,7 +107,7 @@ export default function Index() {
                             ))
                         ) : (
                             <div className="p-8 text-center text-on-surface-variant bg-surface-container rounded-2xl">
-                                No questions found in your bank.
+                                Tidak ada soal yang ditemukan di bank Anda.
                             </div>
                         )}
                     </div>

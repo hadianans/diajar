@@ -31,7 +31,7 @@ export default function Create() {
 
     const handleSave = async () => {
         if (!subjectId) {
-            setErrors({ subject_id: ['Subject is required.'] });
+            setErrors({ subject_id: ['Mata pelajaran wajib diisi.'] });
             return;
         }
         
@@ -68,9 +68,9 @@ export default function Create() {
         } catch (err) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors || {});
-                showWarning('Form Errors', 'Please check the form for errors.');
+                showWarning('Kesalahan Formulir', 'Harap periksa formulir untuk menemukan kesalahan.');
             } else {
-                showError('Error', err.response?.data?.message || 'Error saving question');
+                showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menyimpan soal');
             }
         } finally {
             setIsSaving(false);
@@ -105,8 +105,8 @@ export default function Create() {
     const headerSection = (
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-                <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">New Question</h2>
-                <p className="font-body-md text-body-md text-on-surface-variant mt-1">Create a new question for your assessments.</p>
+                <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Soal Baru</h2>
+                <p className="font-body-md text-body-md text-on-surface-variant mt-1">Buat soal baru untuk penilaian Anda.</p>
             </div>
             <div className="flex items-center gap-2">
                 <button 
@@ -114,7 +114,7 @@ export default function Create() {
                     className="flex items-center justify-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-label-md text-label-md hover:bg-surface-container-highest active:scale-95 transition-all shadow-sm"
                 >
                     <Icon name="close" />
-                    Cancel
+                    Batal
                 </button>
                 <button 
                     onClick={handleSave}
@@ -122,7 +122,7 @@ export default function Create() {
                     className="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-md disabled:opacity-50"
                 >
                     <Icon name="save" />
-                    {isSaving ? 'Saving...' : 'Save Question'}
+                    {isSaving ? 'Menyimpan...' : 'Simpan Soal'}
                 </button>
             </div>
         </div>
@@ -130,17 +130,17 @@ export default function Create() {
 
     return (
         <DashboardTemplate role="teacher" activeTab="assessments" headerSection={headerSection} showBack={true} onBack={handleCancel}>
-            <Head title="New Question | Diajar LMS" />
+            <Head title="Soal Baru | LMS Diajar" />
 
             <div className="space-y-stack-lg max-w-4xl mx-auto">
                 <div className="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-sm space-y-2">
-                    <label className="block font-label-md text-label-md text-on-surface-variant">Subject</label>
+                    <label className="block font-label-md text-label-md text-on-surface-variant">Mata Pelajaran</label>
                     <select 
                         value={subjectId}
                         onChange={(e) => setSubjectId(e.target.value)}
                         className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 font-body-md focus:border-primary focus:ring-0 transition-colors"
                     >
-                        <option value="">Select a subject...</option>
+                        <option value="">Pilih mata pelajaran...</option>
                         {(subjectsData || []).map(subject => (
                             <option key={subject.id} value={subject.id}>
                                 {subject.subject_name}
@@ -151,11 +151,11 @@ export default function Create() {
                 </div>
 
                 <div className="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-sm space-y-2">
-                    <label className="block font-label-md text-label-md text-on-surface-variant mb-2">Question Content</label>
+                    <label className="block font-label-md text-label-md text-on-surface-variant mb-2">Isi Soal</label>
                     <RichTextEditor 
                         content={questionText}
                         onChange={setQuestionText}
-                        placeholder="Write your question here..."
+                        placeholder="Tulis soal Anda di sini..."
                     />
                     {errors.question && <p className="text-error text-label-sm mt-1">{errors.question[0]}</p>}
                 </div>

@@ -21,35 +21,35 @@ export default function Show({ subjectId }) {
     };
 
     const handleActionClick = (actionName) => {
-        if (actionName === 'Link Teacher') {
+        if (actionName === 'Tautkan Guru') {
             setIsTeacherModalOpen(true);
         } else {
-            showInfo('Action Initiated', `${actionName} flow...`);
+            showInfo('Tindakan Dimulai', `Alur ${actionName}...`);
         }
     };
 
     const handleUnlinkTeacher = async (teacher) => {
-        const confirmed = await confirmDelete('Unlink Teacher?', `Are you sure you want to unlink ${teacher.name}?`);
+        const confirmed = await confirmDelete('Putuskan Tautan Guru?', `Apakah Anda yakin ingin memutuskan tautan ${teacher.name}?`);
         if (confirmed) {
             try {
                 await api.delete(`/subjects/${subjectId}/teachers/${teacher.id}`);
-                showSuccess('Teacher unlinked successfully.');
+                showSuccess('Tautan guru berhasil diputuskan.');
                 refetch();
             } catch (err) {
-                showError('Error', err.response?.data?.message || 'Failed to unlink teacher.');
+                showError('Kesalahan', err.response?.data?.message || 'Gagal memutuskan tautan guru.');
             }
         }
     };
 
     const handleDeleteSubject = async () => {
-        const confirmed = await confirmDelete('Delete Subject?', 'This will permanently remove this subject.');
+        const confirmed = await confirmDelete('Hapus Mata Pelajaran?', 'Ini akan menghapus mata pelajaran ini secara permanen.');
         if (confirmed) {
             try {
                 await api.delete(`/subjects/${subjectId}`);
-                showSuccess('Subject deleted successfully.');
+                showSuccess('Mata Pelajaran berhasil dihapus.');
                 router.visit('/admin/academic');
             } catch (err) {
-                showError('Error', err.response?.data?.message || 'Failed to delete subject.');
+                showError('Kesalahan', err.response?.data?.message || 'Gagal menghapus mata pelajaran.');
             }
         }
     };
@@ -71,12 +71,12 @@ export default function Show({ subjectId }) {
         if (!subject?.classes) return [];
         return subject.classes.map(c => {
             const groupName = c.group_years && c.group_years.length > 0 
-                ? c.group_years.map(gy => gy.group?.name ? gy.group.name : 'Unknown').join(', ') 
-                : 'Unknown Group';
-            const yearName = c.group_years?.[0]?.school_year?.name || c.school_year?.name || 'Unknown Year';
+                ? c.group_years.map(gy => gy.group?.name ? gy.group.name : 'Tidak diketahui').join(', ') 
+                : 'Grup Tidak Diketahui';
+            const yearName = c.group_years?.[0]?.school_year?.name || c.school_year?.name || 'Tahun Tidak Diketahui';
             return {
                 group: groupName,
-                teacher: c.teacher?.full_name || 'Unassigned',
+                teacher: c.teacher?.full_name || 'Belum ditugaskan',
                 academicYear: yearName
             };
         });
@@ -84,38 +84,38 @@ export default function Show({ subjectId }) {
 
     const statsData = useMemo(() => {
         return [
-            { label: 'Linked Teachers', value: teachers.length.toString() },
-            { label: 'Active Classes', value: activeClasses.length.toString() }
+            { label: 'Guru yang Ditautkan', value: teachers.length.toString() },
+            { label: 'Kelas Aktif', value: activeClasses.length.toString() }
         ];
     }, [teachers, activeClasses]);
 
     if (loading) {
         return (
-            <DashboardTemplate activeTab="Academic" title="Loading..." viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading subject details...</div>
+            <DashboardTemplate activeTab="Academic" title="Memuat..." viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-on-surface-variant">Memuat detail mata pelajaran...</div>
             </DashboardTemplate>
         );
     }
 
     if (!subject) {
         return (
-            <DashboardTemplate activeTab="Academic" title="Not Found" viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-error">Subject not found.</div>
+            <DashboardTemplate activeTab="Academic" title="Tidak Ditemukan" viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-error">Mata pelajaran tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
 
-    const subjectDisplay = subject.subject_name || 'Subject';
+    const subjectDisplay = subject.subject_name || 'Mata Pelajaran';
     const canDelete = activeClasses.length === 0 && teachers.length === 0;
 
     return (
         <>
-            <Head title={`Subject Details - ${subjectDisplay}`} />
+            <Head title={`Detail Mata Pelajaran - ${subjectDisplay}`} />
 
             <DashboardTemplate
                 activeTab="Academic"
-                title="Subject Details"
-                viewLabel="Admin View"
+                title="Detail Mata Pelajaran"
+                viewLabel="Tampilan Admin"
                 showBack={true}
                 onBack={handleBack}
             >
@@ -140,13 +140,13 @@ export default function Show({ subjectId }) {
                                         {subjectDisplay}
                                     </h2>
                                     <span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-sm font-label-sm rounded-full font-bold">
-                                        Subject
+                                        Mata Pelajaran
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-on-surface-variant mt-6">
                                     <Icon name="calendar_today" className="text-[18px]" />
                                     <span className="font-label-md text-label-md font-medium">
-                                        Created on: {new Date(subject.created_at).toLocaleDateString()}
+                                        Dibuat pada: {new Date(subject.created_at).toLocaleDateString()}
                                     </span>
                                 </div>
                             </div>
@@ -155,7 +155,7 @@ export default function Show({ subjectId }) {
                         {/* Linked Teachers List Section */}
                         <LinkedTeachersBox
                             teachers={teachers}
-                            onLinkTeacherClick={() => handleActionClick('Link Teacher')}
+                            onLinkTeacherClick={() => handleActionClick('Tautkan Guru')}
                             onUnlinkTeacher={handleUnlinkTeacher}
                         />
 
@@ -163,7 +163,7 @@ export default function Show({ subjectId }) {
                         <section className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
                             <div className="p-6 border-b border-outline-variant">
                                 <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
-                                    Active Classes
+                                    Kelas Aktif
                                 </h3>
                             </div>
                             <div className="p-6">
@@ -179,7 +179,7 @@ export default function Show({ subjectId }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-on-surface-variant font-body-md">No active classes for this subject.</p>
+                                    <p className="text-on-surface-variant font-body-md">Tidak ada kelas aktif untuk mata pelajaran ini.</p>
                                 )}
                             </div>
                         </section>
@@ -189,12 +189,12 @@ export default function Show({ subjectId }) {
                             <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-xl border ${canDelete ? 'bg-error/10 border-error' : 'bg-error/5 border-error/10'}`}>
                                 <div className="flex flex-col">
                                     <span className="font-label-md text-label-md text-error font-bold">
-                                        Danger Zone
+                                        Zona Bahaya
                                     </span>
                                     <p className="font-body-md text-body-md text-on-surface-variant mt-1">
                                         {canDelete 
-                                            ? "This subject is not linked to any classes or teachers and can be deleted."
-                                            : "Deletion is restricted while classes or teachers are actively linked to this subject."}
+                                            ? "Mata pelajaran ini tidak ditautkan ke kelas atau guru mana pun dan dapat dihapus."
+                                            : "Penghapusan dibatasi selama kelas atau guru aktif ditautkan ke mata pelajaran ini."}
                                     </p>
                                 </div>
                                 <button
@@ -208,7 +208,7 @@ export default function Show({ subjectId }) {
                                     type="button"
                                 >
                                     <Icon name="delete" className="text-[18px]" />
-                                    Delete Subject
+                                    Hapus Mata Pelajaran
                                 </button>
                             </div>
                         </div>

@@ -3,10 +3,10 @@ import { Head } from '@inertiajs/react';
 export default function Show({ subjectId }) {
     return (
         <>
-            <Head title={`Gradebook - Subject ${subjectId || ''}`} />
+            <Head title={`Buku Nilai - Mata Pelajaran ${subjectId || ''}`} />
             <div style={{ padding: '2rem' }}>
-                <h1>This is Student Gradebook Subject Detail page</h1>
-                <p>Subject ID: {subjectId}</p>
+                <h1>Ini adalah halaman Detail Mata Pelajaran Buku Nilai Siswa</h1>
+                <p>ID Mata Pelajaran: {subjectId}</p>
             </div>
         </>
     );

@@ -86,12 +86,12 @@ function PlanWidget() {
         setIsUpdatingPlan(true);
         try {
             await api.put(`/plans/${selectedPlan.id}`, formData);
-            showSuccess('Study plan updated successfully!');
+            showSuccess('Rencana belajar berhasil diperbarui!');
             refetch();
             setSelectedPlan(null);
         } catch (error) {
             console.error(error);
-            showError('Error', 'Failed to update study plan.');
+            showError('Kesalahan', 'Gagal memperbarui rencana belajar.');
         } finally {
             setIsUpdatingPlan(false);
         }
@@ -100,13 +100,13 @@ function PlanWidget() {
     return (
         <div className="flex flex-col gap-stack-md">
             <div className="flex items-center justify-between">
-                <h3 className="text-headline-md font-headline-md text-on-surface">Up Next</h3>
+                <h3 className="text-headline-md font-headline-md text-on-surface">Selanjutnya</h3>
                 <div className="flex gap-3 items-center">
                     <button
                         onClick={() => router.visit('/student/plans')}
                         className="text-primary font-label-md hover:underline"
                     >
-                        View All
+                        Lihat Semua
                     </button>
                 </div>
             </div>
@@ -117,7 +117,7 @@ function PlanWidget() {
                     onChange={(e) => { setSubjectId(e.target.value); setPage(1); }}
                     className="bg-surface border border-outline-variant rounded-md px-2.5 py-1 text-label-sm text-on-surface focus:border-primary outline-none"
                 >
-                    <option value="">All Subjects</option>
+                    <option value="">Semua Mata Pelajaran</option>
                     {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
                 <select
@@ -125,29 +125,29 @@ function PlanWidget() {
                     onChange={(e) => { setType(e.target.value); setPage(1); }}
                     className="bg-surface border border-outline-variant rounded-md px-2.5 py-1 text-label-sm text-on-surface focus:border-primary outline-none"
                 >
-                    <option value="">All Types</option>
-                    <option value="lesson">Lesson</option>
-                    <option value="assignment">Assignment</option>
-                    <option value="assessment">Assessment</option>
+                    <option value="">Semua Jenis</option>
+                    <option value="lesson">Pelajaran</option>
+                    <option value="assignment">Tugas</option>
+                    <option value="assessment">Penilaian</option>
                 </select>
             </div>
 
             <div className="flex flex-col gap-3">
                 {loading ? (
-                    <div className="text-on-surface-variant text-body-md py-6 text-center">Loading plans...</div>
+                    <div className="text-on-surface-variant text-body-md py-6 text-center">Memuat rencana...</div>
                 ) : plans.length > 0 ? (
                     plans.map(plan => {
                         const isCompleted = plan.progress >= 1;
                         let typeLabel = 'Target';
                         let typeColor = 'bg-surface-container text-on-surface-variant';
                         if (plan.planables?.[0]?.planable_type?.includes('Material')) {
-                            typeLabel = 'Lesson';
+                            typeLabel = 'Pelajaran';
                             typeColor = 'bg-secondary-container text-on-secondary-container';
                         } else if (plan.planables?.[0]?.planable_type?.includes('Assignment')) {
-                            typeLabel = 'Assignment';
+                            typeLabel = 'Tugas';
                             typeColor = 'bg-tertiary-container text-on-tertiary-container';
                         } else if (plan.planables?.[0]?.planable_type?.includes('Assessment')) {
-                            typeLabel = 'Assessment';
+                            typeLabel = 'Penilaian';
                             typeColor = 'bg-primary-container text-on-primary-container';
                         }
 
@@ -190,7 +190,7 @@ function PlanWidget() {
                 ) : (
                     <div className="text-on-surface-variant text-body-md p-6 bg-surface-container-low rounded-xl text-center border border-outline-variant/30 flex flex-col items-center gap-2">
                         <Icon name="event_busy" className="text-on-surface-variant text-[32px]" />
-                        No upcoming plans found.
+                        Tidak ada rencana yang akan datang ditemukan.
                     </div>
                 )}
             </div>
@@ -211,9 +211,9 @@ function PlanWidget() {
                     <div className="p-6 max-h-[85vh] overflow-y-auto">
                         <div className="border-b border-outline-variant/50 pb-4 mb-6 flex justify-between items-start gap-4">
                             <div>
-                                <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Target Task</p>
+                                <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Tugas Target</p>
                                 <p className="text-headline-sm font-headline-sm mt-1">
-                                    {selectedPlan.planables?.[0]?.planable?.title || selectedPlan.title || 'Untitled'}
+                                    {selectedPlan.planables?.[0]?.planable?.title || selectedPlan.title || 'Tanpa Judul'}
                                 </p>
                                 <p className="text-label-md text-on-surface-variant mt-2 flex items-center gap-1">
                                     <Icon name="event" className="text-[16px]" />
@@ -224,7 +224,7 @@ function PlanWidget() {
 
                         <form onSubmit={handleUpdatePlan} className="flex flex-col gap-4">
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Goal Title</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Judul Tujuan</label>
                                 <input
                                     type="text"
                                     required
@@ -236,7 +236,7 @@ function PlanWidget() {
                             </div>
 
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Target Date</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Tanggal Target</label>
                                 <input
                                     type="date"
                                     required
@@ -248,7 +248,7 @@ function PlanWidget() {
                             </div>
 
                             <div>
-                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Study Strategy (Description)</label>
+                                <label className="block text-label-md font-label-md text-on-surface-variant mb-1">Strategi Belajar (Deskripsi)</label>
                                 <textarea
                                     rows="3"
                                     required
@@ -265,7 +265,7 @@ function PlanWidget() {
                                     disabled={isUpdatingPlan}
                                     className="w-full bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm disabled:opacity-50"
                                 >
-                                    {isUpdatingPlan ? 'Updating...' : 'Update Plan'}
+                                    {isUpdatingPlan ? 'Memperbarui...' : 'Perbarui Rencana'}
                                 </button>
 
                                 <div className="flex gap-2">
@@ -274,14 +274,14 @@ function PlanWidget() {
                                         className="flex-1 flex justify-center items-center gap-2 py-3 bg-secondary-container text-on-secondary-container rounded-xl text-label-md font-label-md hover:opacity-90 transition-opacity"
                                     >
                                         <Icon name="arrow_forward" className="text-[18px]" />
-                                        View Task
+                                        Lihat Tugas
                                     </Link>
                                     <button
                                         type="button"
                                         onClick={() => setSelectedPlan(null)}
                                         className="flex-1 flex justify-center items-center gap-2 py-3 bg-surface-container text-on-surface rounded-xl text-label-md font-label-md hover:bg-surface-variant transition-opacity border border-outline-variant"
                                     >
-                                        Cancel
+                                        Batal
                                     </button>
                                 </div>
                             </div>
@@ -320,12 +320,12 @@ function ReflectionWidget() {
                 material_quality: formData.material_quality,
                 emotions: formData.emotions,
             });
-            showSuccess('Reflection updated successfully!');
+            showSuccess('Refleksi berhasil diperbarui!');
             refetch();
             setSelectedRef(null);
         } catch (error) {
             console.error(error);
-            showError('Error', 'Failed to update reflection.');
+            showError('Kesalahan', 'Gagal memperbarui refleksi.');
         } finally {
             setIsUpdatingRef(false);
         }
@@ -334,12 +334,12 @@ function ReflectionWidget() {
     return (
         <div className="flex flex-col gap-stack-md">
             <div className="flex items-center justify-between">
-                <h3 className="text-headline-md font-headline-md text-on-surface">Completed Reflections</h3>
+                <h3 className="text-headline-md font-headline-md text-on-surface">Refleksi Selesai</h3>
                 <button
                     onClick={() => router.visit('/student/reflections')}
                     className="text-primary font-label-md hover:underline"
                 >
-                    View All
+                    Lihat Semua
                 </button>
             </div>
 
@@ -349,7 +349,7 @@ function ReflectionWidget() {
                     onChange={(e) => { setSubjectId(e.target.value); setPage(1); }}
                     className="bg-surface border border-outline-variant rounded-md px-2.5 py-1 text-label-sm text-on-surface focus:border-primary outline-none"
                 >
-                    <option value="">All Subjects</option>
+                    <option value="">Semua Mata Pelajaran</option>
                     {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
                 <select
@@ -357,16 +357,16 @@ function ReflectionWidget() {
                     onChange={(e) => { setType(e.target.value); setPage(1); }}
                     className="bg-surface border border-outline-variant rounded-md px-2.5 py-1 text-label-sm text-on-surface focus:border-primary outline-none"
                 >
-                    <option value="">All Types</option>
-                    <option value="lesson">Lesson</option>
-                    <option value="assignment">Assignment</option>
-                    <option value="assessment">Assessment</option>
+                    <option value="">Semua Jenis</option>
+                    <option value="lesson">Pelajaran</option>
+                    <option value="assignment">Tugas</option>
+                    <option value="assessment">Penilaian</option>
                 </select>
             </div>
 
             <div className="flex flex-col gap-3">
                 {loading ? (
-                    <div className="text-on-surface-variant text-body-md py-6 text-center">Loading reflections...</div>
+                    <div className="text-on-surface-variant text-body-md py-6 text-center">Memuat refleksi...</div>
                 ) : reflections.length > 0 ? (
                     reflections.map(ref => {
                         const levelColors = {
@@ -385,10 +385,10 @@ function ReflectionWidget() {
                             >
                                 <div className="flex-1 min-w-0">
                                     <p className="text-label-lg font-semibold text-on-surface truncate mb-1">
-                                        {ref.title || 'Untitled Reflection'}
+                                        {ref.title || 'Refleksi Tanpa Judul'}
                                     </p>
                                     <p className="text-label-sm text-on-surface-variant truncate">
-                                        {ref.content || 'No content written'}
+                                        {ref.content || 'Tidak ada konten yang ditulis'}
                                     </p>
                                 </div>
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-label-md flex-shrink-0 ${levelColors[ref.comprehension_level] || 'bg-surface-variant text-on-surface-variant'}`} title={`Level ${ref.comprehension_level}/5`}>
@@ -400,7 +400,7 @@ function ReflectionWidget() {
                 ) : (
                     <div className="text-on-surface-variant text-body-md p-6 bg-surface-container-low rounded-xl text-center border border-outline-variant/30 flex flex-col items-center gap-2">
                         <Icon name="done_all" className="text-primary text-[32px]" />
-                        No reflections found.
+                        Tidak ada refleksi yang ditemukan.
                     </div>
                 )}
             </div>
@@ -421,9 +421,9 @@ function ReflectionWidget() {
                     <div className="p-6 max-h-[85vh] overflow-y-auto">
                         <div className="border-b border-outline-variant/50 pb-4 mb-4 flex justify-between items-start gap-4">
                             <div>
-                                <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Target Task</p>
+                                <p className="text-label-sm text-on-surface-variant font-label-sm uppercase tracking-wider">Tugas Target</p>
                                 <p className="text-headline-sm font-headline-sm mt-1">
-                                    {selectedRef.reflectables?.[0]?.reflectable?.title || selectedRef.title || 'Untitled'}
+                                    {selectedRef.reflectables?.[0]?.reflectable?.title || selectedRef.title || 'Tanpa Judul'}
                                 </p>
                                 <p className="text-label-md text-on-surface-variant mt-2 flex items-center gap-1">
                                     <Icon name="event" className="text-[16px]" />
@@ -436,7 +436,7 @@ function ReflectionWidget() {
                             <div className="mb-4">
                                 <span className="text-label-md font-label-md text-primary block mb-2 flex items-center gap-2">
                                     <Icon name="forum" className="text-[18px]" />
-                                    Teacher Feedback
+                                    Umpan Balik Guru
                                 </span>
                                 <div className="text-body-md whitespace-pre-wrap bg-primary-container text-on-primary-container p-4 rounded-xl leading-relaxed shadow-sm">
                                     {selectedRef.teacher_comment}
@@ -460,7 +460,7 @@ function ReflectionWidget() {
                                     className="flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-on-secondary-container rounded-full text-label-md font-label-md hover:opacity-90 transition-opacity"
                                 >
                                     <Icon name="arrow_forward" className="text-[18px]" />
-                                    View Task
+                                    Lihat Tugas
                                 </Link>
                             }
                         />
@@ -498,18 +498,18 @@ export default function Dashboard() {
                 total: 0,
                 averageScore: 0,
                 level5: 0, level4: 0, level3: 0, level2: 0, level1: 0,
-                label: 'No ratings yet'
+                label: 'Belum ada penilaian'
             };
         }
 
         const calculatedAvg = avgScore || ((level5 * 5 + level4 * 4 + level3 * 3 + level2 * 2 + level1 * 1) / total).toFixed(1);
 
-        let label = 'Strong';
-        if (calculatedAvg >= 4.5) label = 'Excellent';
-        else if (calculatedAvg >= 3.5) label = 'Strong';
-        else if (calculatedAvg >= 2.5) label = 'Good';
-        else if (calculatedAvg >= 1.5) label = 'Fair';
-        else label = 'Needs Work';
+        let label = 'Kuat';
+        if (calculatedAvg >= 4.5) label = 'Sangat Baik';
+        else if (calculatedAvg >= 3.5) label = 'Kuat';
+        else if (calculatedAvg >= 2.5) label = 'Baik';
+        else if (calculatedAvg >= 1.5) label = 'Cukup';
+        else label = 'Perlu Perbaikan';
 
         return {
             total,
@@ -526,8 +526,8 @@ export default function Dashboard() {
     const headerSection = (
         <section className="flex flex-row items-center justify-between gap-4 pt-4">
             <div className="flex flex-col gap-1">
-                <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Learning Hub</h2>
-                <p className="text-body-md text-on-surface-variant">Your personal snapshot for planning, monitoring, and reflection.</p>
+                <h2 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Pusat Pembelajaran</h2>
+                <p className="text-body-md text-on-surface-variant">Ringkasan pribadi Anda untuk perencanaan, pemantauan, dan refleksi.</p>
             </div>
             <div className="flex items-center justify-end flex-shrink-0">
                 <button
@@ -536,7 +536,7 @@ export default function Dashboard() {
                     type="button"
                 >
                     <Icon name="add" className="text-lg" />
-                    <span>Add Plan</span>
+                    <span>Tambah Rencana</span>
                 </button>
             </div>
         </section>
@@ -544,8 +544,8 @@ export default function Dashboard() {
 
     if (loading) {
         return (
-            <DashboardTemplate role="student" activeTab="dashboard" title="Learning Hub">
-                <div className="flex justify-center p-12 text-on-surface-variant">Loading hub data...</div>
+            <DashboardTemplate role="student" activeTab="dashboard" title="Pusat Pembelajaran">
+                <div className="flex justify-center p-12 text-on-surface-variant">Memuat data pusat pembelajaran...</div>
             </DashboardTemplate>
         );
     }
@@ -554,23 +554,23 @@ export default function Dashboard() {
         <DashboardTemplate
             role="student"
             activeTab="dashboard"
-            title="Learning Hub"
+            title="Pusat Pembelajaran"
             headerSection={headerSection}
             showBack={false}
         >
-            <Head title="Student Hub - Diajar" />
+            <Head title="Pusat Siswa - Diajar" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter pb-12 items-start">
 
                 <div className="flex flex-col gap-stack-md">
                     <div className="flex items-center justify-between flex-wrap gap-2">
-                        <h3 className="text-headline-md font-headline-md text-on-surface">Monitoring Snapshot</h3>
+                        <h3 className="text-headline-md font-headline-md text-on-surface">Ringkasan Pemantauan</h3>
                         <select
                             value={subjectFilter}
                             onChange={(e) => setSubjectFilter(e.target.value)}
                             className="bg-surface border border-outline-variant rounded-xl px-3 py-1.5 text-label-sm text-on-surface focus:border-primary outline-none transition-colors"
                         >
-                            <option value="">All Subjects</option>
+                            <option value="">Semua Mata Pelajaran</option>
                             {subjects.map(s => (
                                 <option key={s.id} value={s.id}>{s.name}</option>
                             ))}
@@ -580,7 +580,7 @@ export default function Dashboard() {
                     <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/30 flex flex-col gap-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-label-md font-label-md text-on-surface-variant mb-1">Weekly Plan Progress</p>
+                                <p className="text-label-md font-label-md text-on-surface-variant mb-1">Kemajuan Rencana Mingguan</p>
                                 <p className="text-display-sm font-display-sm text-on-surface">
                                     {stats.completed} <span className="text-headline-sm text-on-surface-variant">/ {stats.total}</span>
                                 </p>
@@ -599,24 +599,24 @@ export default function Dashboard() {
                         <hr className="border-outline-variant/30" />
 
                         <div className="flex flex-col gap-3">
-                            <p className="text-label-md font-label-md text-on-surface-variant">LMS Completion Rate</p>
+                            <p className="text-label-md font-label-md text-on-surface-variant">Tingkat Penyelesaian LMS</p>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-2">
-                                    <span className="w-24 text-label-sm text-on-surface-variant">Materials</span>
+                                    <span className="w-24 text-label-sm text-on-surface-variant">Materi</span>
                                     <div className="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
                                         <div className="h-full bg-secondary transition-all" style={{ width: `${lmsProgress.material}%` }}></div>
                                     </div>
                                     <span className="w-8 text-right text-label-sm text-on-surface">{lmsProgress.material}%</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="w-24 text-label-sm text-on-surface-variant">Assignments</span>
+                                    <span className="w-24 text-label-sm text-on-surface-variant">Tugas</span>
                                     <div className="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
                                         <div className="h-full bg-tertiary transition-all" style={{ width: `${lmsProgress.assignment}%` }}></div>
                                     </div>
                                     <span className="w-8 text-right text-label-sm text-on-surface">{lmsProgress.assignment}%</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="w-24 text-label-sm text-on-surface-variant">Assessments</span>
+                                    <span className="w-24 text-label-sm text-on-surface-variant">Penilaian</span>
                                     <div className="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
                                         <div className="h-full bg-primary transition-all" style={{ width: `${lmsProgress.assessment}%` }}></div>
                                     </div>
@@ -629,7 +629,7 @@ export default function Dashboard() {
 
                         <div className="flex flex-col gap-3">
                             <div className="flex items-center justify-between">
-                                <p className="text-label-md font-label-md text-on-surface-variant">Average Comprehension Stats</p>
+                                <p className="text-label-md font-label-md text-on-surface-variant">Statistik Rata-rata Pemahaman</p>
                                 {/* {comprehension.total > 0 && (
                                     <span className="px-2.5 py-0.5 rounded-full text-label-sm font-bold bg-primary-container text-on-primary-container">
                                         5-Point Scale
@@ -646,7 +646,7 @@ export default function Dashboard() {
                                             </div>
                                             <div>
                                                 <p className="font-label-lg font-bold text-on-surface">{comprehension.label}</p>
-                                                <p className="text-label-sm text-on-surface-variant">Based on {comprehension.total} reflection{comprehension.total > 1 ? 's' : ''}</p>
+                                                <p className="text-label-sm text-on-surface-variant">Berdasarkan {comprehension.total} refleksi</p>
                                             </div>
                                         </div>
                                         <div className="text-label-sm font-bold text-primary">/ 5.0</div>
@@ -668,7 +668,7 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             ) : (
-                                <p className="text-label-sm text-on-surface-variant italic">No reflections recorded yet.</p>
+                                <p className="text-label-sm text-on-surface-variant italic">Belum ada refleksi yang dicatat.</p>
                             )}
                         </div>
                     </div>

@@ -17,15 +17,15 @@ export default function Show({ yearId }) {
     };
 
     const handleArchive = async () => {
-        const confirmed = await confirmAction('Archive this year?', 'It will lock all data as read-only.');
+        const confirmed = await confirmAction('Arsipkan tahun ini?', 'Ini akan mengunci semua data menjadi hanya-baca.');
         if (confirmed) {
             setActionLoading(true);
             try {
                 await api.post(`/school-years/${yearId}/archive`);
-                showSuccess('Academic year archived successfully.');
+                showSuccess('Tahun akademik berhasil diarsipkan.');
                 refetch();
             } catch (err) {
-                showError('Error', err.response?.data?.message || 'Failed to archive year.');
+                showError('Kesalahan', err.response?.data?.message || 'Gagal mengarsipkan tahun.');
             } finally {
                 setActionLoading(false);
             }
@@ -33,15 +33,15 @@ export default function Show({ yearId }) {
     };
 
     const handleReactivate = async () => {
-        const confirmed = await confirmAction('Reactivate this year?', 'Only one year can be active at a time.');
+        const confirmed = await confirmAction('Aktifkan kembali tahun ini?', 'Hanya satu tahun yang dapat aktif pada satu waktu.');
         if (confirmed) {
             setActionLoading(true);
             try {
                 await api.post(`/school-years/${yearId}/reactivate`);
-                showSuccess('Academic year reactivated successfully.');
+                showSuccess('Tahun akademik berhasil diaktifkan kembali.');
                 refetch();
             } catch (err) {
-                showError('Error', err.response?.data?.message || 'Failed to reactivate year.');
+                showError('Kesalahan', err.response?.data?.message || 'Gagal mengaktifkan kembali tahun.');
             } finally {
                 setActionLoading(false);
             }
@@ -61,16 +61,16 @@ export default function Show({ yearId }) {
 
     if (loading) {
         return (
-            <DashboardTemplate activeTab="Academic" title="Loading..." viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading year details...</div>
+            <DashboardTemplate activeTab="Academic" title="Memuat..." viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-on-surface-variant">Memuat detail tahun...</div>
             </DashboardTemplate>
         );
     }
 
     if (!year) {
         return (
-            <DashboardTemplate activeTab="Academic" title="Not Found" viewLabel="Admin View" showBack={true} onBack={handleBack}>
-                <div className="w-full flex justify-center py-12 text-error">Academic year not found.</div>
+            <DashboardTemplate activeTab="Academic" title="Tidak Ditemukan" viewLabel="Tampilan Admin" showBack={true} onBack={handleBack}>
+                <div className="w-full flex justify-center py-12 text-error">Tahun akademik tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -92,11 +92,11 @@ export default function Show({ yearId }) {
                         {isActive ? (
                             <span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-md rounded-full font-label-md flex items-center gap-1">
                                 <span className="w-1.5 h-1.5 bg-secondary rounded-full"></span>
-                                ACTIVE
+                                AKTIF
                             </span>
                         ) : (
                             <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-label-md rounded-full font-label-md flex items-center gap-1">
-                                ARCHIVED
+                                DIARSIPKAN
                             </span>
                         )}
                     </div>
@@ -111,12 +111,12 @@ export default function Show({ yearId }) {
 
     return (
         <>
-            <Head title={`Academic Year Details - ${yearDisplay}`} />
+            <Head title={`Detail Tahun Akademik - ${yearDisplay}`} />
 
             <DashboardTemplate
                 activeTab="Academic"
-                title="Academic Year"
-                viewLabel="Admin View"
+                title="Tahun Akademik"
+                viewLabel="Tampilan Admin"
                 showBack={true}
                 onBack={handleBack}
                 headerSection={headerSection}
@@ -142,7 +142,7 @@ export default function Show({ yearId }) {
                     <div className="lg:col-span-4 order-1 lg:order-2">
                         <section className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
                             <h3 className={`font-label-md text-label-md ${isActive ? 'text-error' : 'text-primary'} font-bold mb-4 uppercase tracking-wider`}>
-                                Status Management
+                                Manajemen Status
                             </h3>
                             {isActive ? (
                                 <button
@@ -152,7 +152,7 @@ export default function Show({ yearId }) {
                                     type="button"
                                 >
                                     <Icon name="archive" className="text-[20px]" />
-                                    Archive This Year
+                                    Arsipkan Tahun Ini
                                 </button>
                             ) : (
                                 <button
@@ -162,7 +162,7 @@ export default function Show({ yearId }) {
                                     type="button"
                                 >
                                     <Icon name="unarchive" className="text-[20px]" />
-                                    Reactivate This Year
+                                    Aktifkan Kembali Tahun Ini
                                 </button>
                             )}
                             
@@ -170,8 +170,8 @@ export default function Show({ yearId }) {
                                 <Icon name="info" className="text-[18px] text-tertiary flex-shrink-0 mt-0.5" />
                                 <p className="text-label-sm font-label-sm leading-relaxed">
                                     {isActive 
-                                        ? "Archiving locks all data as read-only. This action is consequential."
-                                        : "Reactivating this year will allow edits again. Make sure no other year is active."}
+                                        ? "Pengarsipan mengunci semua data menjadi hanya-baca. Tindakan ini berdampak."
+                                        : "Mengaktifkan kembali tahun ini akan memungkinkan pengeditan lagi. Pastikan tidak ada tahun lain yang aktif."}
                                 </p>
                             </div>
                         </section>

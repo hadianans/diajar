@@ -15,14 +15,14 @@ export default function Index() {
     const classes = useMemo(() => {
         if (!classesData) return [];
         return classesData.map(c => {
-            const subjectName = c.subject?.name || c.subject?.subject_name || 'Unknown Subject';
-            const teacherName = c.teacher?.full_name || 'Unassigned';
+            const subjectName = c.subject?.name || c.subject?.subject_name || 'Mata Pelajaran Tidak Diketahui';
+            const teacherName = c.teacher?.full_name || 'Belum ditugaskan';
             const groupName = c.group_years && c.group_years.length > 0 
-                ? c.group_years.map(gy => gy.group?.name ? gy.group.name : 'Unknown').join(', ') 
-                : 'Unknown Group';
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const yearName = c.group_years?.[0]?.school_year?.name || c.school_year?.name || 'Unknown Year';
-            const schedule = (c.day_schedule !== null && c.day_schedule !== undefined) ? `${days[c.day_schedule]} • ${c.time_schedule}` : 'Not set';
+                ? c.group_years.map(gy => gy.group?.name ? gy.group.name : 'Tidak diketahui').join(', ') 
+                : 'Grup Tidak Diketahui';
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const yearName = c.group_years?.[0]?.school_year?.name || c.school_year?.name || 'Tahun Tidak Diketahui';
+            const schedule = (c.day_schedule !== null && c.day_schedule !== undefined) ? `${days[c.day_schedule]} • ${c.time_schedule}` : 'Belum diatur';
 
             return {
                 id: c.id,
@@ -43,10 +43,10 @@ export default function Index() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-extrabold tracking-tight">
-                        Subject Classes
+                        Kelas Mata Pelajaran
                     </h2>
                     <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-                        {loading ? 'Loading...' : `${classes.length} total classes registered`}
+                        {loading ? 'Memuat...' : `${classes.length} total kelas terdaftar`}
                     </p>
                 </div>
             </div>
@@ -55,17 +55,17 @@ export default function Index() {
 
     return (
         <>
-            <Head title="Registry - Subject Classes" />
+            <Head title="Registri - Kelas Mata Pelajaran" />
 
             <DashboardTemplate
                 activeTab="Classes"
-                title="Subject Classes"
-                viewLabel="Admin View"
+                title="Kelas Mata Pelajaran"
+                viewLabel="Tampilan Admin"
                 showBack={false}
                 headerSection={headerSection}
             >
                 {loading ? (
-                    <div className="w-full flex justify-center py-12 text-on-surface-variant">Loading classes...</div>
+                    <div className="w-full flex justify-center py-12 text-on-surface-variant">Memuat kelas...</div>
                 ) : (
                     <>
                         <ClassesBentoGrid

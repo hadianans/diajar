@@ -74,7 +74,7 @@ export default function Create() {
                 const hasBasicError = Object.keys(err.response.data.errors || {}).some(k => basicFields.includes(k));
                 if (hasBasicError) setCurrentStep(1);
             } else {
-                showError('Error', err.response?.data?.message || 'Error creating assessment');
+                showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat membuat penilaian');
             }
         } finally {
             setIsSaving(false);
@@ -83,7 +83,7 @@ export default function Create() {
 
     return (
         <AssessmentWizardLayout 
-            title="Create Assessment"
+            title="Buat Penilaian"
             currentStep={currentStep}
             onStepChange={setCurrentStep}
             onBack={handleBack}
@@ -92,7 +92,7 @@ export default function Create() {
             totalPoints={totalPoints}
             selectedQuestions={selectedQuestions}
         >
-            <Head title="Create Assessment | Diajar LMS" />
+            <Head title="Buat Penilaian | LMS Diajar" />
 
             {currentStep === 1 && (
                 <WizardStepBasicInfo 

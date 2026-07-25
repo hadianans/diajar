@@ -24,13 +24,13 @@ export default function Show({ assignmentId }) {
     };
 
     const handleDelete = async () => {
-        const confirmed = await confirmDelete('Delete Assignment?', 'This cannot be undone.');
+        const confirmed = await confirmDelete('Hapus Tugas?', 'Tindakan ini tidak dapat dibatalkan.');
         if (!confirmed) return;
         try {
             await api.delete(`/assignments/${assignmentId}`);
             router.visit(route('teacher.assignments.index'));
         } catch (err) {
-            showError('Error', err.response?.data?.message || 'Error deleting assignment');
+            showError('Kesalahan', err.response?.data?.message || 'Kesalahan saat menghapus tugas');
         }
     };
 
@@ -40,22 +40,22 @@ export default function Show({ assignmentId }) {
             await api.patch(`/assignments/${assignmentId}/${action}`);
             refetch();
         } catch (err) {
-            showError('Error', err.response?.data?.message || `Error trying to ${action} assignment`);
+            showError('Kesalahan', err.response?.data?.message || `Kesalahan saat mencoba memproses tugas`);
         }
     };
 
     if (loading) {
         return (
-            <DashboardTemplate role="teacher" activeTab="assignments" title="Loading..." showBack={true} onBack={handleBack}>
-                <div className="text-center py-12 text-on-surface-variant">Loading assignment...</div>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Memuat..." showBack={true} onBack={handleBack}>
+                <div className="text-center py-12 text-on-surface-variant">Memuat tugas...</div>
             </DashboardTemplate>
         );
     }
 
     if (!assignment) {
         return (
-            <DashboardTemplate role="teacher" activeTab="assignments" title="Not Found" showBack={true} onBack={handleBack}>
-                <div className="text-center py-12 text-on-surface-variant">Assignment not found.</div>
+            <DashboardTemplate role="teacher" activeTab="assignments" title="Tidak Ditemukan" showBack={true} onBack={handleBack}>
+                <div className="text-center py-12 text-on-surface-variant">Tugas tidak ditemukan.</div>
             </DashboardTemplate>
         );
     }
@@ -85,7 +85,7 @@ export default function Show({ assignmentId }) {
     const attachments = (assignment.attachments || []).map(att => ({
         name: att.title || att.file_url.split('/').pop(),
         type: 'file',
-        size: 'Unknown',
+        size: 'Tidak Diketahui',
         date: moment(att.created_at).format('MMM D'),
         url: att.file_url
     }));
@@ -93,7 +93,7 @@ export default function Show({ assignmentId }) {
     const students = (assignment.submissions || []).map(sub => ({
         id: sub.student.id,
         name: sub.student.full_name || sub.student.username,
-        group: 'Class',
+        group: 'Kelas',
         initials: (sub.student.full_name || sub.student.username).substring(0, 2).toUpperCase(),
         avatarColorClass: sub.status === 'graded' ? 'bg-primary-fixed-dim text-on-primary-fixed' : 'bg-surface-variant text-on-surface-variant',
         submittedAt: moment(sub.created_at).format('MMM D, hh:mm A'),
@@ -111,19 +111,19 @@ export default function Show({ assignmentId }) {
                     }`}
             >
                 <Icon name={assignment.status === 'open' ? 'lock' : 'lock_open'} className="text-[18px]" />
-                {assignment.status === 'open' ? 'Close' : 'Reopen'}
+                {assignment.status === 'open' ? 'Tutup' : 'Buka Kembali'}
             </button>
             <button
                 onClick={handleEdit}
                 className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high"
-                title="Edit Assignment"
+                title="Edit Tugas"
             >
                 <Icon name="edit" className="text-primary" />
             </button>
             <button
                 onClick={handleDelete}
                 className="active:scale-95 transition-transform duration-200 w-10 h-10 flex items-center justify-center rounded-full hover:bg-error-container/20"
-                title="Delete Assignment"
+                title="Hapus Tugas"
             >
                 <Icon name="delete" className="text-error" />
             </button>
@@ -134,29 +134,29 @@ export default function Show({ assignmentId }) {
         <DashboardTemplate
             role="teacher"
             activeTab="assignments"
-            title="Assignment Details"
+            title="Detail Tugas"
             showBack={true}
             onBack={handleBack}
             actions={actions}
         >
-            <Head title={`Assignment ${assignment.title || 'Details'} | Diajar LMS`} />
+            <Head title={`Tugas ${assignment.title || 'Detail'} | LMS Diajar`} />
 
             <div className="max-w-3xl mx-auto space-y-stack-lg w-full pb-24 mt-4">
                 {/* Title Section */}
                 <section className="space-y-stack-sm">
                     <div>
                         <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">{assignment.title}</h2>
-                        <p className="font-body-md text-on-surface-variant mt-1">{assignment.chapter?.name || 'Uncategorized'}</p>
+                        <p className="font-body-md text-on-surface-variant mt-1">{assignment.chapter?.name || 'Tidak Dikategorikan'}</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/20 text-on-secondary-container">
                             <Icon name="grade" className="text-sm" />
-                            <span className="font-label-md text-label-md">Max Grade: {assignment.grade} pts</span>
+                            <span className="font-label-md text-label-md">Nilai Maks: {assignment.grade} poin</span>
                         </div>
                         {assignment.due_date && (
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-on-primary-container">
                                 <Icon name="schedule" className="text-sm" />
-                                <span className="font-label-md text-label-md">Due: {moment(assignment.due_date).format('MMM D, YYYY HH:mm')}</span>
+                                <span className="font-label-md text-label-md">Tenggat: {moment(assignment.due_date).format('MMM D, YYYY HH:mm')}</span>
                             </div>
                         )}
                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${assignment.status === 'open' ? 'bg-secondary-container/20 text-secondary' : 'bg-error-container/20 text-error'
@@ -172,7 +172,7 @@ export default function Show({ assignmentId }) {
 
                 {attachments.length > 0 && (
                     <section className="space-y-stack-sm">
-                        <h3 className="font-headline-sm text-on-surface">Attachments</h3>
+                        <h3 className="font-headline-sm text-on-surface">Lampiran</h3>
                         <AttachmentList attachments={attachments} />
                     </section>
                 )}
