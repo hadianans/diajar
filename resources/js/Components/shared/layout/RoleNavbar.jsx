@@ -5,48 +5,48 @@ import Icon from '@/Components/shared/ui/Icon';
 const linksConfig = {
     student: {
         desktop: [
-            { label: 'Home', icon: 'home', href: '/student/homepage' },
+            { label: 'Beranda', icon: 'home', href: '/student/homepage' },
             { label: 'Dashboard', icon: 'dashboard', href: '/student/dashboard' },
-            { label: 'Subject', icon: 'book', href: '/student/subjects' },
-            { label: 'Assignment', icon: 'assignment', href: '/student/assignments' },
-            { label: 'Assessment', icon: 'analytics', href: '/student/assessments' },
+            { label: 'Mapel', icon: 'book', href: '/student/subjects' },
+            { label: 'Tugas', icon: 'assignment', href: '/student/assignments' },
+            { label: 'Asesmen', icon: 'analytics', href: '/student/assessments' },
         ],
         mobile: [
-            { label: 'Assessment', icon: 'analytics', href: '/student/assessments' },
-            { label: 'Assignment', icon: 'assignment', href: '/student/assignments' },
+            { label: 'Asesmen', icon: 'analytics', href: '/student/assessments' },
+            { label: 'Tugas', icon: 'assignment', href: '/student/assignments' },
             { label: 'Home', icon: 'home', href: '/student/homepage' },
-            { label: 'Subject', icon: 'book', href: '/student/subjects' },
+            { label: 'Mapel', icon: 'book', href: '/student/subjects' },
             { label: 'Dashboard', icon: 'dashboard', href: '/student/dashboard' },
         ]
     },
     teacher: {
         desktop: [
-            { label: 'Home', icon: 'home', href: '/teacher/homepage' },
-            { label: 'Class', icon: 'school', href: '/teacher/classes' },
-            { label: 'Chapter', icon: 'menu_book', href: '/teacher/chapters' },
-            { label: 'Assignment', icon: 'assignment', href: '/teacher/assignments' },
-            { label: 'Assessment', icon: 'analytics', href: '/teacher/assessments' },
+            { label: 'Beranda', icon: 'home', href: '/teacher/homepage' },
+            { label: 'Kelas', icon: 'school', href: '/teacher/classes' },
+            { label: 'Materi', icon: 'menu_book', href: '/teacher/chapters' },
+            { label: 'Tugas', icon: 'assignment', href: '/teacher/assignments' },
+            { label: 'Asesmen', icon: 'analytics', href: '/teacher/assessments' },
         ],
         mobile: [
-            { label: 'Assessment', icon: 'analytics', href: '/teacher/assessments' },
-            { label: 'Assignment', icon: 'assignment', href: '/teacher/assignments' },
-            { label: 'Home', icon: 'home', href: '/teacher/homepage' },
-            { label: 'Chapter', icon: 'menu_book', href: '/teacher/chapters' },
-            { label: 'Class', icon: 'school', href: '/teacher/classes' },
+            { label: 'Asesmen', icon: 'analytics', href: '/teacher/assessments' },
+            { label: 'Tugas', icon: 'assignment', href: '/teacher/assignments' },
+            { label: 'Beranda', icon: 'home', href: '/teacher/homepage' },
+            { label: 'Materi', icon: 'menu_book', href: '/teacher/chapters' },
+            { label: 'Kelas', icon: 'school', href: '/teacher/classes' },
         ]
     },
     admin: {
         desktop: [
             { label: 'Dashboard', icon: 'dashboard', href: '/admin/homepage' },
-            { label: 'Account', icon: 'person', href: '/admin/accounts' },
-            { label: 'Academic', icon: 'group', href: '/admin/academic' },
-            { label: 'Classes', icon: 'school', href: '/admin/classes' },
+            { label: 'Akun', icon: 'person', href: '/admin/accounts' },
+            { label: 'Akademik', icon: 'group', href: '/admin/academic' },
+            { label: 'Kelas', icon: 'school', href: '/admin/classes' },
         ],
         mobile: [
-            { label: 'Account', icon: 'person', href: '/admin/accounts' },
+            { label: 'Akun', icon: 'person', href: '/admin/accounts' },
             { label: 'Dashboard', icon: 'dashboard', href: '/admin/homepage' },
-            { label: 'Academic', icon: 'group', href: '/admin/academic' },
-            { label: 'Classes', icon: 'school', href: '/admin/classes' },
+            { label: 'Akademik', icon: 'group', href: '/admin/academic' },
+            { label: 'Kelas', icon: 'school', href: '/admin/classes' },
         ]
     }
 };
@@ -57,15 +57,15 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
     const user = auth?.user || {};
     const role = user.role || 'admin';
     const activeRole = role.toLowerCase();
-    
+
     const config = linksConfig[activeRole] || linksConfig.admin;
-    
+
     // Ensure we have a default active tab based on role if none is provided
     const currentActiveTab = activeTab || (activeRole === 'admin' ? 'Dashboard' : 'Home');
     const pathname = (page.url || '').split('?')[0];
-    
-    const hasUrlMatch = (items) => items.some(item => 
-        item.href && item.href !== '#' && item.href !== '/' && 
+
+    const hasUrlMatch = (items) => items.some(item =>
+        item.href && item.href !== '#' && item.href !== '/' &&
         (pathname === item.href || pathname.startsWith(item.href + '/'))
     );
     const useUrlMatchOnly = hasUrlMatch(config.desktop.concat(config.mobile));
@@ -100,7 +100,7 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
 
         return false;
     };
-    
+
     const roleLabelMap = {
         admin: 'Lead Administrator',
         teacher: 'Subject Instructor',
@@ -133,11 +133,10 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
                                 key={item.label}
                                 href={item.href || '#'}
                                 onClick={() => onTabChange && onTabChange(item.label)}
-                                className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all text-left ${
-                                    isActive
-                                        ? 'bg-primary-container text-on-primary-container font-bold scale-[0.98] shadow-sm'
-                                        : 'text-on-surface-variant hover:bg-surface-container-highest'
-                                }`}
+                                className={`flex items-center gap-4 px-4 py-3 rounded-full transition-all text-left ${isActive
+                                    ? 'bg-primary-container text-on-primary-container font-bold scale-[0.98] shadow-sm'
+                                    : 'text-on-surface-variant hover:bg-surface-container-highest'
+                                    }`}
                             >
                                 <Icon name={item.icon} style={{ fontVariationSettings: isActive ? '"FILL" 1' : '"FILL" 0' }} />
                                 <span className="font-label-md">{item.label}</span>
@@ -156,11 +155,10 @@ export default function RoleNavbar({ activeTab, onTabChange }) {
                             <Link
                                 href={item.href || '#'}
                                 onClick={() => onTabChange && onTabChange(item.label)}
-                                className={`flex flex-col items-center justify-center w-full max-w-[72px] py-1 px-1 rounded-xl transition-all ${
-                                    isActive
-                                        ? 'bg-primary-container text-on-primary-container font-bold shadow-sm scale-95'
-                                        : 'text-on-surface-variant'
-                                }`}
+                                className={`flex flex-col items-center justify-center w-full max-w-[72px] py-1 px-1 rounded-xl transition-all ${isActive
+                                    ? 'bg-primary-container text-on-primary-container font-bold shadow-sm scale-95'
+                                    : 'text-on-surface-variant'
+                                    }`}
                             >
                                 <Icon name={item.icon} style={{ fontVariationSettings: isActive ? '"FILL" 1' : '"FILL" 0' }} className="text-[20px]" />
                                 <span className="text-[10px] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-full text-center font-medium">
