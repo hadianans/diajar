@@ -76,17 +76,15 @@ export default function Index() {
                         <button className="text-primary font-label-md hover:underline">Filter</button>
                     </div>
 
-                    <div className="grid lg: grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         {loading ? (
-                            <div className="text-center py-12 text-on-surface-variant font-body-lg">Memuat mata pelajaran...</div>
+                            <div className="col-span-full text-center py-12 text-on-surface-variant font-body-lg">Memuat mata pelajaran...</div>
                         ) : filteredSubjects.length > 0 ? (
                             filteredSubjects.map(subject => (
-                                <div key={subject.id} onClick={() => router.visit(`/student/subjects/${subject.id}`)}>
-                                    <SubjectCard {...subject} />
-                                </div>
+                                <SubjectCard key={subject.id} {...subject} />
                             ))
                         ) : (
-                            <p className="text-body-md text-on-surface-variant italic p-4 text-center border rounded-xl bg-surface-container-low border-outline-variant/50">Tidak ada materi pembelajaran aktif yang ditemukan.</p>
+                            <p className="col-span-full text-body-md text-on-surface-variant italic p-6 text-center border rounded-xl bg-surface-container-low border-outline-variant/50">Tidak ada materi pembelajaran aktif yang ditemukan.</p>
                         )}
                     </div>
                 </section>

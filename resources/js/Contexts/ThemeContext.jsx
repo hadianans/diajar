@@ -3,12 +3,12 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    // Check localStorage or fallback to system preference
+    // Check localStorage or fallback to light theme as default
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             const stored = localStorage.getItem('theme');
             if (stored) return stored;
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            return 'light';
         }
         return 'light'; // Default SSR fallback
     });

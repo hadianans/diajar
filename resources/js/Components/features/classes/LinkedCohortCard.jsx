@@ -15,14 +15,14 @@ export default function LinkedCohortCard({
 
             <div
                 onClick={onCohortClick}
-                className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between hover:bg-surface-container-low transition-all cursor-pointer group shadow-sm"
+                className="p-4 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between gap-3 hover:bg-surface-container-low transition-all cursor-pointer group shadow-sm min-w-0"
             >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
                         <Icon name="group" className="text-[24px]" />
                     </div>
-                    <div className="min-w-0">
-                        <h4 className="font-label-md text-label-md font-bold text-on-surface truncate">
+                    <div className="min-w-0 flex-1">
+                        <h4 className="font-title-sm text-title-sm font-bold text-on-surface break-words line-clamp-2 leading-relaxed">
                             {cohortName}
                         </h4>
                         <p className="text-on-surface-variant font-label-sm text-label-sm mt-0.5">
@@ -30,7 +30,7 @@ export default function LinkedCohortCard({
                         </p>
                     </div>
                 </div>
-                <Icon name="chevron_right" className="text-outline group-hover:text-primary transition-colors text-[20px]" />
+                <Icon name="chevron_right" className="text-outline group-hover:text-primary transition-colors text-[20px] flex-shrink-0 ml-1" />
             </div>
 
             <button

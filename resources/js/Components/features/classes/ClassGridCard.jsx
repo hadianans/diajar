@@ -57,36 +57,38 @@ export default function ClassGridCard({
                 </h3>
 
                 {/* Meta Rows */}
-                <div className="space-y-2 mt-4">
+                <div className="space-y-2.5 mt-4">
                     {/* Teacher */}
                     {isComplete ? (
-                        <div className="flex items-center gap-3 text-on-surface-variant">
-                            <Icon name="person" className="text-outline text-lg" />
-                            <span className="font-body-md text-body-md">{teacher}</span>
+                        <div className="flex items-start gap-3 text-on-surface-variant">
+                            <Icon name="person" className="text-outline text-lg flex-shrink-0 mt-0.5" />
+                            <span className="font-body-md text-body-md min-w-0 break-words leading-normal">{teacher}</span>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-3 text-tertiary font-medium">
-                            <Icon name="person_off" className="text-tertiary/60 text-lg" />
-                            <span className="font-body-md text-body-md">{teacher}</span>
+                        <div className="flex items-start gap-3 text-tertiary font-medium">
+                            <Icon name="person_off" className="text-tertiary/60 text-lg flex-shrink-0 mt-0.5" />
+                            <span className="font-body-md text-body-md min-w-0 break-words leading-normal">{teacher}</span>
                         </div>
                     )}
 
-                    {/* Group */}
-                    <div className="flex items-center gap-3 text-on-surface-variant">
-                        <Icon name="group" className="text-outline text-lg" />
-                        <span className="font-body-md text-body-md">{group}</span>
+                    {/* Group / Class List */}
+                    <div className="flex items-start gap-3 text-on-surface-variant">
+                        <Icon name="group" className="text-outline text-lg flex-shrink-0 mt-0.5" />
+                        <span className="font-body-md text-body-md text-on-surface-variant min-w-0 break-words leading-relaxed">
+                            {group}
+                        </span>
                     </div>
 
                     {/* Schedule */}
                     {isComplete ? (
-                        <div className="flex items-center gap-3 text-on-surface-variant">
-                            <Icon name="calendar_today" className="text-outline text-lg" />
-                            <span className="font-body-md text-body-md">{schedule}</span>
+                        <div className="flex items-start gap-3 text-on-surface-variant">
+                            <Icon name="calendar_today" className="text-outline text-lg flex-shrink-0 mt-0.5" />
+                            <span className="font-body-md text-body-md min-w-0 break-words leading-normal">{schedule}</span>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-3 text-tertiary/60 italic">
-                            <Icon name="event_busy" className="text-tertiary/40 text-lg" />
-                            <span className="font-body-md text-body-md">{schedule}</span>
+                        <div className="flex items-start gap-3 text-tertiary/60 italic">
+                            <Icon name="event_busy" className="text-tertiary/40 text-lg flex-shrink-0 mt-0.5" />
+                            <span className="font-body-md text-body-md min-w-0 break-words leading-normal">{schedule}</span>
                         </div>
                     )}
                 </div>
