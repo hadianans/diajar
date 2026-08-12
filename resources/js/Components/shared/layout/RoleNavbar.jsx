@@ -7,7 +7,7 @@ const linksConfig = {
         desktop: [
             { label: 'Beranda', icon: 'home', href: '/student/homepage' },
             { label: 'Dashboard', icon: 'dashboard', href: '/student/dashboard' },
-            { label: 'Mapel', icon: 'book', href: '/student/subjects' },
+            { label: 'Pelajaran', icon: 'book', href: '/student/subjects' },
             { label: 'Tugas', icon: 'assignment', href: '/student/assignments' },
             { label: 'Asesmen', icon: 'analytics', href: '/student/assessments' },
         ],
@@ -15,7 +15,7 @@ const linksConfig = {
             { label: 'Asesmen', icon: 'analytics', href: '/student/assessments' },
             { label: 'Tugas', icon: 'assignment', href: '/student/assignments' },
             { label: 'Home', icon: 'home', href: '/student/homepage' },
-            { label: 'Mapel', icon: 'book', href: '/student/subjects' },
+            { label: 'Pelajaran', icon: 'book', href: '/student/subjects' },
             { label: 'Dashboard', icon: 'dashboard', href: '/student/dashboard' },
         ]
     },
