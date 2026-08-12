@@ -29,12 +29,12 @@ class ClassController extends Controller
 
         if ($request->filled('search')) {
             $s = $request->search;
-            $query->whereHas('subject', fn ($q) => $q->where('subject_name', 'like', "%{$s}%"))
-                ->orWhereHas('groupYears.group', fn ($q) => $q->where('name', 'like', "%{$s}%"));
+            $query->whereHas('subject', fn($q) => $q->where('subject_name', 'like', "%{$s}%"))
+                ->orWhereHas('groupYears.group', fn($q) => $q->where('name', 'like', "%{$s}%"));
         }
 
         if ($request->filled('year_id')) {
-            $query->whereHas('groupYears', fn ($q) => $q->where('year_id', $request->year_id));
+            $query->whereHas('groupYears', fn($q) => $q->where('year_id', $request->year_id));
         }
 
         $classes = $query->get();
@@ -73,7 +73,7 @@ class ClassController extends Controller
         $allStudentGroups = $class->groupYears->flatMap->studentGroups;
         $students = $allStudentGroups->map(function ($sg) use ($class) {
             $student = $sg->student;
-            if (! $student) {
+            if (!$student) {
                 return null;
             }
 
@@ -89,7 +89,7 @@ class ClassController extends Controller
 
             $completedMaterials = \App\Models\MaterialCompletion::where('student_id', $studentId)
                 ->where('is_completed', true)
-                ->whereHas('material.chapter', fn ($q) => $q->where('teacher_id', auth()->id()))
+                ->whereHas('material.chapter', fn($q) => $q->where('teacher_id', auth()->id()))
                 ->count();
 
             $student->material_completion = round(($completedMaterials / $totalMaterials) * 100, 1);

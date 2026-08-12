@@ -223,25 +223,31 @@ export default function ReflectionForm({
                 </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-outline-variant/30">
-                {extraActions}
-                {onCancel && (
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        disabled={loading}
-                        className="px-6 py-2.5 border border-outline-variant text-on-surface-variant rounded-full font-label-lg hover:bg-surface-container transition-colors disabled:opacity-50"
-                    >
-                        Cancel
-                    </button>
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-5 border-t border-outline-variant/30 w-full">
+                {extraActions && (
+                    <div className="w-full sm:w-auto flex justify-center sm:justify-start order-2 sm:order-1">
+                        {extraActions}
+                    </div>
                 )}
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="py-2.5 px-6 bg-primary text-on-primary rounded-full font-label-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                    {loading ? 'Saving...' : (initialData ? 'Update' : 'Save')}
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-end order-1 sm:order-2 sm:ml-auto">
+                    {onCancel && (
+                        <button
+                            type="button"
+                            onClick={onCancel}
+                            disabled={loading}
+                            className="w-full sm:w-auto px-6 py-2.5 border border-outline-variant text-on-surface-variant rounded-full font-label-lg hover:bg-surface-container transition-colors disabled:opacity-50 flex items-center justify-center"
+                        >
+                            Cancel
+                        </button>
+                    )}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full sm:w-auto py-2.5 px-6 bg-primary text-on-primary rounded-full font-label-lg hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                        {loading ? 'Saving...' : (initialData ? 'Update' : 'Save')}
+                    </button>
+                </div>
             </div>
         </form>
     );

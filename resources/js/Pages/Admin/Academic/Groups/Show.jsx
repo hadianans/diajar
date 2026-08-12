@@ -19,7 +19,7 @@ export default function Show({ groupId }) {
     };
 
     const handleActionClick = (actionName) => {
-        if (actionName === 'Add Students') {
+        if (actionName === 'Tambah Siswa') {
             setIsStudentModalOpen(true);
         } else {
             showInfo('Tindakan Dimulai', `Alur ${actionName}...`);

@@ -56,8 +56,9 @@ class MaterialController extends Controller
     {
         $material = Material::with(['chapter', 'subchapter', 'attachments', 'tags'])->findOrFail($id);
 
-        // Verify teacher ownership via chapter
-        if ($material->chapter->teacher_id !== auth()->id()) {
+        // Verify teacher ownership via chapter or subchapter->chapter
+        $teacherId = $material->chapter?->teacher_id ?? $material->subchapter?->chapter?->teacher_id;
+        if (!$teacherId || (int) $teacherId !== (int) auth()->id()) {
             return $this->forbidden();
         }
 

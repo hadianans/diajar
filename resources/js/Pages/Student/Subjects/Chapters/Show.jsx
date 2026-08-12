@@ -20,7 +20,7 @@ export default function Show({ subjectId, chapterId }) {
     const subjectTitle = classModel?.subject?.subject_name || classModel?.subject?.name || 'Subject';
 
     const { data: chaptersData, loading: loadingChapters } = useApiGet(actualSubjectId ? `/subjects/${actualSubjectId}/chapters` : null);
-    
+
     const { data: assignmentsData, loading: loadingAssignments } = useApiGet(actualSubjectId ? `/assignments?subject_id=${actualSubjectId}` : null);
     const { data: assessmentsData, loading: loadingAssessments } = useApiGet(actualSubjectId ? `/assessments?subject_id=${actualSubjectId}` : null);
 
@@ -47,20 +47,36 @@ export default function Show({ subjectId, chapterId }) {
                 id: subId,
                 title: subTitle,
                 order: subOrder,
-                lessons: mats.map(m => ({
+                lessons: mats
+            });
+        });
+
+        result.sort((a, b) => a.order - b.order);
+
+        let isPreviousCompleted = true; // The first lesson is always unlocked
+
+        result.forEach(sub => {
+            sub.lessons = sub.lessons.map(m => {
+                const isCompleted = m.is_completed;
+                const isLocked = !isPreviousCompleted;
+                isPreviousCompleted = isCompleted; // Update for the next lesson
+
+                return {
                     id: m.id,
                     title: m.title,
                     type: m.file_type === 'video' ? 'Video' : 'Reading',
                     fileUrl: m.file_url,
                     duration: m.duration || 'N/A',
                     tag: m.tags && m.tags.length > 0 ? m.tags[0].name : '',
-                    status: m.is_completed ? 'completed' : 'pending',
+                    status: isCompleted ? 'completed' : 'pending',
                     isBookmarked: m.is_bookmarked,
-                    originalId: m.id
-                }))
+                    originalId: m.id,
+                    isLocked: isLocked
+                };
             });
         });
-        return result.sort((a, b) => a.order - b.order);
+
+        return result;
     }, [materialsData]);
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -68,7 +84,7 @@ export default function Show({ subjectId, chapterId }) {
     const [selectedItemForPlan, setSelectedItemForPlan] = useState(null);
     const [selectedItemTypeForPlan, setSelectedItemTypeForPlan] = useState('App\\Models\\Material');
     const [selectedExistingPlan, setSelectedExistingPlan] = useState(null);
-    
+
     const getInitialTab = () => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
@@ -220,7 +236,7 @@ export default function Show({ subjectId, chapterId }) {
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                     {subchapter.lessons.map((lesson, idx) => {
                                         const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
-                                        const hasPlan = plansArray.some(plan => 
+                                        const hasPlan = plansArray.some(plan =>
                                             plan.planables?.some(p => p.planable_type === 'App\\Models\\Material' && p.planable_id === lesson.id)
                                         );
                                         return (
@@ -246,7 +262,7 @@ export default function Show({ subjectId, chapterId }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {chapterAssignments.map(a => {
                                     const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
-                                    const hasPlan = plansArray.some(plan => 
+                                    const hasPlan = plansArray.some(plan =>
                                         plan.planables?.some(p => p.planable_type === 'App\\Models\\ClassAssignment' && p.planable_id === a.id)
                                     );
                                     return (
@@ -273,7 +289,7 @@ export default function Show({ subjectId, chapterId }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {chapterAssessments.map(a => {
                                     const plansArray = Array.isArray(plansData) ? plansData : (plansData?.data || []);
-                                    const hasPlan = plansArray.some(plan => 
+                                    const hasPlan = plansArray.some(plan =>
                                         plan.planables?.some(p => p.planable_type === 'App\\Models\\ClassAssessment' && p.planable_id === a.id)
                                     );
                                     return (
